@@ -15,20 +15,39 @@ public class CreateGameField : MonoBehaviour {
     private Vector3 FIRSTHEXAGON_POSITION = new Vector3(250, 0,-650);
     private Vector3 ROTATION = new Vector3(90, 30, 0);
     private Vector3 newHexPosition;
+    public Material defaultMaterial;
 
 
 	// Use this for initialization
 	void Start () {
+
+        initiateMaterial();
+
         for (int i = 0; i < FIELD_SIZE; i++)
                 {       
                     for (int j = 0; j < FIELD_SIZE/2; j++)
                     {
                         newHexPosition = positionHexagons(i, j);
                         GameObject hex = Instantiate(hexagon, newHexPosition, FIELD_ROTATION) as GameObject;       // Instantiates hexagon prefabs as gameobjects
+                        assignMaterialToObject(hex);
                         addComponentsAndScale(hex);
                     }
                 }
             }
+
+    private void assignMaterialToObject(GameObject obj)
+    {
+        obj.renderer.material = defaultMaterial;
+    }
+
+    private void initiateMaterial()
+    {
+        defaultMaterial = Resources.Load("DefaultGamefield", typeof(Material)) as Material;
+        if (defaultMaterial == null)
+        {
+            Debug.Log("loading failed, check existence of Resources folder in Assets");
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
