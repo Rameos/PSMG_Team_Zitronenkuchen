@@ -9,11 +9,11 @@ public class CreateGameField : MonoBehaviour {
     public GameObject terrain;
     public Transform terrainPosition;
 
-    private const float GAP_SIZE = 5; // 0-5 seems reasonable
-    private const float FIELD_SIZE = 40; // startmenu function to select the fieldsize?
+    private const float GAP_SIZE = 0.05f; // 0-5 seems reasonable
+    private const float FIELD_SIZE = 50; // startmenu function to select the fieldsize?
 
     private Quaternion FIELD_ROTATION = new Quaternion(0, 0, 0, 0);
-    private Vector3 HEX_SIZE = new Vector3(500, 500, 2000);
+    private Vector3 HEX_SIZE = new Vector3(5, 5, 20);
     private Vector3 FIRSTHEXAGON_POSITION;
     private Vector3 ROTATION = new Vector3(90, 0, 0);
     private Vector3 newHexPosition;
@@ -51,7 +51,7 @@ public class CreateGameField : MonoBehaviour {
 
     private void initiateMaterial()
     {
-        defaultMaterial = Resources.Load("DefaultGamefield", typeof(Material)) as Material;
+        defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
         if (defaultMaterial == null)
         {
             Debug.Log("loading failed, check existence of Resources folder in Assets");
@@ -68,8 +68,8 @@ public class CreateGameField : MonoBehaviour {
     {
         hex.transform.parent = field.transform;
         hex.AddComponent("ChangeFieldStateOnClick");
-        hex.AddComponent("SphereCollider");
-        hex.GetComponent<SphereCollider>().radius = 1000;
+        hex.AddComponent("MeshCollider");
+        hex.GetComponent<MeshCollider>().sharedMesh = GameObject.FindGameObjectWithTag("MeshContainer").GetComponent<MeshCollider>().sharedMesh;        
     }
 
     // Calculates the individual Position of every Hexagon to create a mesh
