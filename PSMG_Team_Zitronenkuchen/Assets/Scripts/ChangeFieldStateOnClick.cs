@@ -4,9 +4,6 @@ using iViewX;
 
 public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 {
-    private Material defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
-    private Material highlightedMaterial = Resources.Load("HighlightedMaterial", typeof(Material)) as Material;
-
     public override void OnGazeEnter(RaycastHit hit)
     {
         Debug.Log("Enter");
@@ -16,18 +13,28 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     public override void OnGazeStay(RaycastHit hit)
     {
         Debug.Log("Stay");
-        gameObject.transform.renderer.material = highlightedMaterial;
+        highlightMaterial();
         if (Input.GetKeyDown(KeyCode.Space))
         {
             showPopupMenu();
         }
     }
 
+    private void highlightMaterial()
+    {
+        gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+    }
+
     //Reset the Element.Transform when the gaze leaves the Collider
     public override void OnGazeExit()
     {
         Debug.Log("Exit");
-        gameObject.transform.renderer.material = defaultMaterial;
+        resetMaterial();
+    }
+
+    private void resetMaterial()
+    {
+        gameObject.transform.renderer.material.shader = Shader.Find("Diffuse");
     }
 
     // show the popup menu when a field was clicked
