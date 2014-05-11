@@ -7,15 +7,17 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     private Material defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
     private Material highlightedMaterial = Resources.Load("HighlightedMaterial", typeof(Material)) as Material;
 
+    public PopUpMenu popUpMenu;
+
     public override void OnGazeEnter(RaycastHit hit)
     {
-        Debug.Log("Enter");
+        //Debug.Log("Enter");
     }
 
     //Rotate the Element if the Gaze stays on the Collider
     public override void OnGazeStay(RaycastHit hit)
     {
-        Debug.Log("Stay");
+        //Debug.Log("Stay");
         gameObject.transform.renderer.material = highlightedMaterial;
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -26,7 +28,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     //Reset the Element.Transform when the gaze leaves the Collider
     public override void OnGazeExit()
     {
-        Debug.Log("Exit");
+        //Debug.Log("Exit");
         gameObject.transform.renderer.material = defaultMaterial;
     }
 
@@ -34,5 +36,6 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     private void showPopupMenu()
     {
         Debug.Log("showPopupMenu");
+        //popUpMenu.PopUp();
     }
 }
