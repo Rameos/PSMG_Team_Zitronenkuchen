@@ -51,10 +51,21 @@ public class PopUpMenu : MonoBehaviour {
         gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Create Research Node", myStyle, createResearchNodeButton));
         gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Create Economy Node", myStyle, createEconomyNodeButton));
 
-   
-        //isDrawing = true;
-     
-        
+    }
+
+    void closeMenu()
+    {
+        Debug.Log("closeMenu");
+        GameObject field = GameObject.FindGameObjectWithTag("Field");
+        int layerDef = LayerMask.NameToLayer("Default");
+        moveToLayer(field.transform, layerDef);
+    }
+
+    void moveToLayer(Transform root, int layer)
+    {
+        root.gameObject.layer = layer;
+        foreach (Transform child in root)
+            moveToLayer(child, layer);
     }
 
     void OnGUI()
@@ -94,6 +105,7 @@ public class PopUpMenu : MonoBehaviour {
         {
             isDrawing = false;
             gazeUI.Clear();
+            closeMenu();
         }
 	}
 }
