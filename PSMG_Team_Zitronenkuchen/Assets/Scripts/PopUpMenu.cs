@@ -34,18 +34,27 @@ public class PopUpMenu : MonoBehaviour {
     #endregion
 
 	// Use this for initialization
-	public void Start () {
+	void Start (){
 
-        Debug.Log("Reached PopUp");
+    }
+
+    public void openMenu(Vector3 pos)
+    {
+        Debug.Log(pos);
         //Set the Actions of the Buttons
         buttonCallbackListener createMilitaryNodeButton = button1_Action;
         buttonCallbackListener createResearchNodeButton = button2_Action;
         buttonCallbackListener createEconomyNodeButton = button3_Action;
 
         //Create new Buttonelements and add them to the gazeUI
-        gazeUI.Add(new GazeButton(new Rect(Screen.width * 0.35f, Screen.height * 0.05f, 200, 100), "Create Military Node", myStyle, createMilitaryNodeButton));
-        gazeUI.Add(new GazeButton(new Rect(Screen.width * 0.35f, Screen.height * 0.35f, 200, 100), "Create Research Node", myStyle, createResearchNodeButton));
-        gazeUI.Add(new GazeButton(new Rect(Screen.width * 0.35f, Screen.height * 0.65f, 200, 100), "Create Economy Node", myStyle, createEconomyNodeButton));
+        gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Create Military Node", myStyle, createMilitaryNodeButton));
+        gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Create Research Node", myStyle, createResearchNodeButton));
+        gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Create Economy Node", myStyle, createEconomyNodeButton));
+
+   
+        //isDrawing = true;
+     
+        
     }
 
     void OnGUI()
@@ -71,7 +80,6 @@ public class PopUpMenu : MonoBehaviour {
             }
         }
 
-        // Important Note: Please create a "SelectGUI" input in the InputManager of Unity.
         if (Input.GetButtonDown("SelectGUI"))
         {
             if (isDrawing)
@@ -85,6 +93,7 @@ public class PopUpMenu : MonoBehaviour {
         else if (Input.GetButtonUp("SelectGUI"))
         {
             isDrawing = false;
+            gazeUI.Clear();
         }
 	}
 }

@@ -7,7 +7,8 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     private Material defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
     private Material highlightedMaterial = Resources.Load("HighlightedMaterial", typeof(Material)) as Material;
 
-    public PopUpMenu popUpMenu;
+    private bool showPopUp = false;
+    PopUpMenu popUpMenu;
 
     public override void OnGazeEnter(RaycastHit hit)
     {
@@ -21,7 +22,8 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
         gameObject.transform.renderer.material = highlightedMaterial;
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            showPopupMenu();
+            Vector3 posGaze = (gazeModel.posGazeLeft + gazeModel.posGazeRight) * 0.5f;
+            showPopupMenu(posGaze);
         }
     }
 
@@ -29,13 +31,29 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     public override void OnGazeExit()
     {
         //Debug.Log("Exit");
-        gameObject.transform.renderer.material = defaultMaterial;
+        if (showPopUp == false)
+        {
+            gameObject.transform.renderer.material = defaultMaterial;
+        }
+        
     }
 
     // show the popup menu when a field was clicked
-    private void showPopupMenu()
+    private void showPopupMenu(Vector3 pos)
     {
         Debug.Log("showPopupMenu");
-        //popUpMenu.PopUp();
+        popUpMenu = GameObject.FindWithTag("PointLight").GetComponent<PopUpMenu>();
+        popUpMenu.openMenu(pos);
+        showPopUp = true;
+    }
+
+    void OnGUI()
+    {
+        /*if (showPopUp == true)
+        {
+            GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 + 50, 200, 100), "Create Military Node");
+            GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "Create Research Node");
+            GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 150, 200, 100), "Create Economy Node");
+        }*/
     }
 }
