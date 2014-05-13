@@ -21,12 +21,18 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     public override void OnGazeStay(RaycastHit hit)
     {
 
-        Debug.Log("Stay");
+        //Debug.Log("Stay");
         highlightMaterial();
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Vector3 posGaze = (gazeModel.posGazeLeft + gazeModel.posGazeRight) * 0.5f;
+            Vector3 nullVect = new Vector3(0, 0, 0);
+            if (posGaze == nullVect)
+            {
+                posGaze = new Vector3(Input.mousePosition.x, ((Input.mousePosition.y)-Screen.height)*(-1), 0);
+                Debug.Log(posGaze);
+            }
             showPopupMenu(posGaze);
         }
 

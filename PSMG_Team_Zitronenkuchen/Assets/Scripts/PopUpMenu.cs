@@ -40,8 +40,9 @@ public class PopUpMenu : MonoBehaviour {
 
     public void openMenu(Vector3 pos)
     {
-        Debug.Log(pos);
+        //Debug.Log(pos);
         //Set the Actions of the Buttons
+       
         buttonCallbackListener createMilitaryNodeButton = button1_Action;
         buttonCallbackListener createResearchNodeButton = button2_Action;
         buttonCallbackListener createEconomyNodeButton = button3_Action;
