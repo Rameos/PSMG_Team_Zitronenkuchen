@@ -94,19 +94,13 @@ public class PopUpMenu : MonoBehaviour {
 
         if (Input.GetButtonDown("SelectGUI"))
         {
-            if (isDrawing)
+            if (isDrawing) {
                 isDrawing = false;
+                gazeUI.Clear();
+                closeMenu();
+            }     
             else
                 isDrawing = true;
-
-        }
-
-        // Important Note: Please create a "SelectGUI" input in the InputManager of Unity.
-        else if (Input.GetButtonUp("SelectGUI"))
-        {
-            isDrawing = false;
-            gazeUI.Clear();
-            closeMenu();
         }
 	}
 }
