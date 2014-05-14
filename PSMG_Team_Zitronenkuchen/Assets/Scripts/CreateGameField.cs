@@ -69,7 +69,7 @@ public class CreateGameField : MonoBehaviour {
         hex.transform.parent = field.transform;
         hex.AddComponent("ChangeFieldStateOnClick");
         hex.AddComponent("MeshCollider");
-        hex.GetComponent<MeshCollider>().sharedMesh = GameObject.FindGameObjectWithTag("MeshContainer").GetComponent<MeshCollider>().sharedMesh;        
+        hex.GetComponent<MeshCollider>().sharedMesh = Resources.Load("hexagonbig", typeof(Mesh)) as Mesh;
     }
 
     // Calculates the individual Position of every Hexagon to create a mesh
