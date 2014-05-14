@@ -12,11 +12,12 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     //Rotate the Element if the Gaze stays on the Collider
     public override void OnGazeStay(RaycastHit hit)
     {
-        Debug.Log("Stay");
+        //Debug.Log("Stay");
         highlightMaterial();
         if (Input.GetKeyDown(KeyCode.Space))
         {
             showPopupMenu();
+            Debug.Log("Hey Space");
         }
     }
 
@@ -28,7 +29,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     //Reset the Element.Transform when the gaze leaves the Collider
     public override void OnGazeExit()
     {
-        Debug.Log("Exit");
+        //Debug.Log("Exit");
         resetMaterial();
     }
 
