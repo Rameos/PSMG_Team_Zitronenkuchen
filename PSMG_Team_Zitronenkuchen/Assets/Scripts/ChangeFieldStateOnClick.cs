@@ -34,12 +34,14 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
                 Debug.Log(posGaze);
             }
             showPopupMenu(posGaze);
+                
         }
 
     }
 
     private void highlightMaterial()
     {
+        Debug.Log(gameObject);
         gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
     }
 
