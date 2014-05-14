@@ -23,6 +23,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
         //Debug.Log("Stay");
         highlightMaterial();
 
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
 
@@ -41,7 +42,6 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 
     private void highlightMaterial()
     {
-        Debug.Log(gameObject);
         gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
     }
 
@@ -62,12 +62,15 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     {
         Debug.Log("showPopupMenu");
 
+        Debug.Log(pos);
+
         GameObject field = GameObject.FindGameObjectWithTag("Field");
         int layer = LayerMask.NameToLayer("Ignore Raycast");
         moveToLayer(field.transform, layer);
 
         popUpMenu = GameObject.FindWithTag("PointLight").GetComponent<PopUpMenu>();
-        popUpMenu.openMenu(pos);
+        Debug.Log(popUpMenu);
+        popUpMenu.openMenu(pos, gameObject);
     }
 
     void moveToLayer(Transform root, int layer)
