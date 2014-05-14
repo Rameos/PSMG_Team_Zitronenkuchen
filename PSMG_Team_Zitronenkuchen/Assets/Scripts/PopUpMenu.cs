@@ -24,17 +24,36 @@ public class PopUpMenu : MonoBehaviour {
     public void button1_Action()
     {
         Debug.Log("Button1_Pressed");
+        GameObject milBuilding = Resources.Load("military-building", typeof(GameObject)) as GameObject;
+        GameObject militaryBuilding = Instantiate(milBuilding, gameObject.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        militaryBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
+        Debug.Log(militaryBuilding.transform.position.ToString());
+        gameObject.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
+
+        collapseMenu();
     }
 
     // Action for Button_2: 
     public void button2_Action()
     {
         Debug.Log("Button2_Pressed");
+        GameObject resBuilding = Resources.Load("research-building", typeof(GameObject)) as GameObject;
+        GameObject researchBuilding = Instantiate(resBuilding, gameObject.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        researchBuilding.transform.position = gameObject.transform.position;
+        researchBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
+        gameObject.renderer.material = Resources.Load("researchMaterial", typeof(Material)) as Material;
+        collapseMenu();
     }
     // Action for Button_3: 
     public void button3_Action()
     {
         Debug.Log("Button3_Pressed");
+        GameObject ecoBuilding = Resources.Load("economy-building 1", typeof(GameObject)) as GameObject;
+        GameObject economyBuilding = Instantiate(ecoBuilding, gameObject.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
+        economyBuilding.transform.position = gameObject.transform.position;
+        economyBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
+        gameObject.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
+        collapseMenu();
     }
     #endregion
 
@@ -45,7 +64,6 @@ public class PopUpMenu : MonoBehaviour {
 
     public void openMenu(Vector3 pos)
     {
-        positionOfHexagon = pos;
         //Debug.Log(pos);
         //Set the Actions of the Buttons
        
@@ -86,7 +104,7 @@ public class PopUpMenu : MonoBehaviour {
             }
         }
     }
-	
+
 	// Update is called once per frame
 	void Update () {
         //Update only if the buttons are visible (Plea
@@ -97,10 +115,6 @@ public class PopUpMenu : MonoBehaviour {
                 button.Update();
             }
         }
-
-        checkForSubmittedSelection();
-
-       
 
         if (Input.GetButtonDown("SelectGUI"))
         {
@@ -114,40 +128,6 @@ public class PopUpMenu : MonoBehaviour {
         }
 	}
 
-    private void checkForSubmittedSelection()
-    {
-        if (Input.GetButtonDown("Create Military Node"))
-        {
-            GameObject milBuilding = Resources.Load("military-building", typeof(GameObject)) as GameObject;
-            GameObject militaryBuilding = Instantiate(milBuilding, gameObject.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
-            militaryBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
-            Debug.Log(militaryBuilding.transform.position.ToString());
-            gameObject.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
-            
-            collapseMenu();
-
-        }
-
-        if (Input.GetButtonDown("Create Research Node"))
-        {
-            GameObject resBuilding = Resources.Load("research-building", typeof(GameObject)) as GameObject;
-            GameObject researchBuilding = Instantiate(resBuilding, gameObject.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
-            researchBuilding.transform.position = gameObject.transform.position;
-            researchBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
-            gameObject.renderer.material = Resources.Load("researchMaterial", typeof(Material)) as Material;
-            collapseMenu();
-        }
-
-        if (Input.GetButtonDown("Create Economy Node"))
-        {
-            GameObject ecoBuilding = Resources.Load("economy-building 1", typeof(GameObject)) as GameObject;
-            GameObject economyBuilding = Instantiate(ecoBuilding, gameObject.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
-            economyBuilding.transform.position = gameObject.transform.position;
-            economyBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
-            gameObject.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
-            collapseMenu();
-        }
-    }
 
     private void collapseMenu()
     {
