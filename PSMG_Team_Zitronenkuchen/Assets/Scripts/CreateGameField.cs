@@ -9,7 +9,7 @@ public class CreateGameField : MonoBehaviour {
     public GameObject terrain;
     public Transform terrainPosition;
 
-    private const float GAP_SIZE = 0.05f; // 0-5 seems reasonable
+    private const float GAP_SIZE = 0.01f; // 0-5 seems reasonable
     private const float FIELD_SIZE = 50; // startmenu function to select the fieldsize?
 
     private Quaternion FIELD_ROTATION = new Quaternion(0, 0, 0, 0);

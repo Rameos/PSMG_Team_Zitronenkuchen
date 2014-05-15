@@ -20,6 +20,8 @@ public class PopUpMenu : MonoBehaviour {
 
     private GameObject selectedHexagon;
 
+    private ChangeFieldStateOnClick fieldScript;
+
     #region ButtonActions
     // Action for Button_1: 
     public void button1_Action()
@@ -30,6 +32,7 @@ public class PopUpMenu : MonoBehaviour {
         militaryBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
         Debug.Log(militaryBuilding.transform.position.ToString());
         selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
+        fieldScript.fieldSet();
     }
 
     // Action for Button_2: 
@@ -40,6 +43,7 @@ public class PopUpMenu : MonoBehaviour {
         GameObject researchBuilding = Instantiate(resBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         researchBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
         selectedHexagon.renderer.material = Resources.Load("researchMaterial", typeof(Material)) as Material;
+        fieldScript.fieldSet();
     }
     // Action for Button_3: 
     public void button3_Action()
@@ -49,6 +53,8 @@ public class PopUpMenu : MonoBehaviour {
         GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
         economyBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
         selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
+        fieldScript.fieldSet();
+
     }
     #endregion
 
@@ -57,10 +63,11 @@ public class PopUpMenu : MonoBehaviour {
 
     }
 
-    public void openMenu(Vector3 pos, GameObject hex)
+    public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
     {
         //Debug.Log(pos);
         //Set the Actions of the Buttons
+        fieldScript = script;
 
         selectedHexagon = hex;
        

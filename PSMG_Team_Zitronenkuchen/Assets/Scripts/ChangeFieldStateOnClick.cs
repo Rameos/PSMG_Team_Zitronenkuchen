@@ -7,6 +7,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 
     private Material defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
     private Material highlightedMaterial = Resources.Load("HighlightedMaterial", typeof(Material)) as Material;
+    private bool set = false;
 
     PopUpMenu popUpMenu;
     
@@ -29,12 +30,16 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 
             Vector3 posGaze = (gazeModel.posGazeLeft + gazeModel.posGazeRight) * 0.5f;
             Vector3 nullVect = new Vector3(0, 0, 0);
-            if (posGaze == nullVect)
             {
                 posGaze = new Vector3(Input.mousePosition.x, ((Input.mousePosition.y)-Screen.height)*(-1), 0);
                 Debug.Log(posGaze);
             }
-            showPopupMenu(posGaze);
+           
+            if (!set)
+            {
+                showPopupMenu(posGaze);
+            }
+            
                 
         }
 
@@ -70,7 +75,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 
         popUpMenu = GameObject.FindWithTag("PointLight").GetComponent<PopUpMenu>();
         Debug.Log(popUpMenu);
-        popUpMenu.openMenu(pos, gameObject);
+        popUpMenu.openMenu(pos, gameObject, this);
     }
 
     void moveToLayer(Transform root, int layer)
@@ -78,6 +83,11 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
         root.gameObject.layer = layer;
         foreach (Transform child in root)
             moveToLayer(child, layer);
+    }
+
+    public void fieldSet()
+    {
+        set = true;
     }
 
 }
