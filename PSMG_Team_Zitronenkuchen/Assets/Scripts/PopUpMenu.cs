@@ -72,8 +72,8 @@ public class PopUpMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start (){
+        Debug.Log("StartPopup");
         mainController = GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>();
-        mainController.init();
     }
 
     public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)

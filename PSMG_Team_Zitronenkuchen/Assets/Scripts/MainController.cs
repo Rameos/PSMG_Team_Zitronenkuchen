@@ -12,6 +12,7 @@ public class MainController : MonoBehaviour {
 	void Start () {
         tirkid = 100;
         researchPoints = 0;
+        Debug.Log("Start");
         InvokeRepeating("updateRessources", 1, 1);
 	}
 
