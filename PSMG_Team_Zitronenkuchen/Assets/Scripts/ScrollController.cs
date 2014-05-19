@@ -25,14 +25,15 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     public override void OnGazeEnter(RaycastHit hit)
     {
         Debug.Log("Helloooo!!");
-        GameObject field = GameObject.FindGameObjectWithTag("Field");
+        /*GameObject field = GameObject.FindGameObjectWithTag("Field");
         int layer = LayerMask.NameToLayer("Ignore Raycast");
-        moveToLayer(field.transform, layer);
+        moveToLayer(field.transform, layer); */
         highlightMaterial();
     }
 
     public override void OnGazeStay(RaycastHit hit)
     {
+        Debug.Log("Stay");
         float currentTime = Time.time;
         Debug.Log(Time.time);
         Debug.Log(gameObject);
@@ -44,6 +45,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 
     public override void OnGazeExit()
     {
+        Debug.Log("Exit");
         resetMaterial();
     }
 
