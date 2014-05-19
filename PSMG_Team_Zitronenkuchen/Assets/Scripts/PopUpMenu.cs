@@ -28,10 +28,11 @@ public class PopUpMenu : MonoBehaviour {
     public void button1_Action()
     {
         Debug.Log("Button1_Pressed");
-        if (mainController.build("Military"))
+        Vector3 pos = selectedHexagon.transform.position;
+        if (mainController.build("Military", pos))
         {
             GameObject milBuilding = Resources.Load("military-building", typeof(GameObject)) as GameObject;
-            GameObject militaryBuilding = Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+            GameObject militaryBuilding = Instantiate(milBuilding, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
             militaryBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
             Debug.Log(militaryBuilding.transform.position.ToString());
             selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
@@ -45,10 +46,11 @@ public class PopUpMenu : MonoBehaviour {
     public void button2_Action()
     {
         Debug.Log("Button2_Pressed");
-        if (mainController.build("Research"))
+        Vector3 pos = selectedHexagon.transform.position;
+        if (mainController.build("Research", pos))
         {
             GameObject resBuilding = Resources.Load("research-building", typeof(GameObject)) as GameObject;
-            GameObject researchBuilding = Instantiate(resBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+            GameObject researchBuilding = Instantiate(resBuilding, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
             researchBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
             selectedHexagon.renderer.material = Resources.Load("researchMaterial", typeof(Material)) as Material;
             fieldScript.fieldSet();
@@ -58,10 +60,11 @@ public class PopUpMenu : MonoBehaviour {
     public void button3_Action()
     {
         Debug.Log("Button3_Pressed");
-        if (mainController.build("Economy"))
+        Vector3 pos = selectedHexagon.transform.position;
+        if (mainController.build("Economy", pos))
         {
             GameObject ecoBuilding = Resources.Load("economy-building 1", typeof(GameObject)) as GameObject;
-            GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
+            GameObject economyBuilding = Instantiate(ecoBuilding, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
             economyBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
             selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
             fieldScript.fieldSet();
