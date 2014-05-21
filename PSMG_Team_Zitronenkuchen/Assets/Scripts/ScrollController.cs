@@ -5,6 +5,15 @@ using iViewX;
 public class ScrollController : MonoBehaviourWithGazeComponent
 {
 
+    private int selectionIndex; //0 for left, 1 for right, 2 for up, 3 for down
+
+    private int framesSinceEntering = 0;
+    private bool entered = false;
+
+    private int xDirection = 1; //default 1, -1 if opposite direction
+    private int yDirection = 1; //default 1, -1 if opposite direction
+
+    private float enterTime;
 	// Use this for initialization
 	void Start () {
        
@@ -19,33 +28,83 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 	
 	// Update is called once per frame
 	void Update () {
-	
+        if (entered)
+        {
+            framesSinceEntering++;
+            if (framesSinceEntering == 5)
+            {
+                moveCamera();
+                
+            }
+        }
+        
+       
 	}
+
+    private void moveCamera()
+    {
+        determineDirection();
+        Vector3 movement = new Vector3(0.2f * xDirection, 0, 0.05f * yDirection);
+
+        if (Camera.current != null)
+        {
+            Camera.current.transform.Translate(movement);
+        }
+
+        moveArrows(movement);
+
+    }
+
+    private void moveArrows(Vector3 movement)
+    {
+        GameObject rightArrow = GameObject.FindGameObjectWithTag("RightArrowParent");
+        GameObject upArrow = GameObject.FindGameObjectWithTag("UpArrowParent");
+        GameObject leftArrow = GameObject.FindGameObjectWithTag("LeftArrowParent");
+        GameObject downArrow = GameObject.FindGameObjectWithTag("DownArrowParent");
+
+        rightArrow.transform.Translate(movement);
+        upArrow.transform.Translate(movement);
+        leftArrow.transform.Translate(movement);
+        downArrow.transform.Translate(movement);
+    }
+
+    private void determineDirection()
+    {
+        switch (gameObject.tag)
+        {
+            case "LeftArrow":
+                xDirection = -1;
+                yDirection = 0;
+                break;
+            case "RightArrow":
+                xDirection = 1;
+                yDirection = 0;
+                break;
+            case "UpArrow":
+                xDirection = 0;
+                yDirection = 1;
+                break;
+            case "DownArrow":
+                xDirection = 0;
+                yDirection = -1;
+                break;
+        }
+    }
 
     public override void OnGazeEnter(RaycastHit hit)
     {
-        Debug.Log("Helloooo!!");
-        /*GameObject field = GameObject.FindGameObjectWithTag("Field");
-        int layer = LayerMask.NameToLayer("Ignore Raycast");
-        moveToLayer(field.transform, layer); */
+        entered = true;
         highlightMaterial();
     }
 
     public override void OnGazeStay(RaycastHit hit)
     {
-        Debug.Log("Stay");
-        float currentTime = Time.time;
-        Debug.Log(Time.time);
-        Debug.Log(gameObject);
-        GameObject leftArrow = GameObject.FindGameObjectWithTag("LeftArrow");
-        GameObject rightArrow = GameObject.FindGameObjectWithTag("RightArrow");
-        GameObject upArrow = GameObject.FindGameObjectWithTag("UpArrow");
-        GameObject downArrow = GameObject.FindGameObjectWithTag("DownArrow");
     }
 
     public override void OnGazeExit()
     {
-        Debug.Log("Exit");
+        framesSinceEntering = 0;
+        entered = false;
         resetMaterial();
     }
 
