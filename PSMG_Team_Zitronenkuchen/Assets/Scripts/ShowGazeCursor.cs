@@ -22,6 +22,13 @@ public class ShowGazeCursor : MonoBehaviour
 
     void OnGUI()
     {
+        if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Escape)
+        {
+            Debug.Log("Escape");
+            Screen.lockCursor = false;
+
+        }
+
         Vector3 posGaze = (gazeModel.posGazeLeft + gazeModel.posGazeRight) * 0.5f;
         GUI.DrawTexture(new Rect(posGaze.x, posGaze.y, gazeCursor.width, gazeCursor.height), gazeCursor);
         

@@ -42,8 +42,13 @@ public class MainController : MonoBehaviour {
             }
         }
 
+<<<<<<< HEAD
+       Debug.Log("Tirkid: " + tirkid);
+       Debug.Log("Researchpoints: " + researchPoints);
+=======
         Debug.Log("Researchpoints: " + researchPoints);
         Debug.Log("Tirkid: " + tirkid);
+>>>>>>> d8a63d14cc91033259b69e8d1bf61ddb6a9c6f88
     }
 
     public bool build(string type, GameObject hex, Vector3 pos)
