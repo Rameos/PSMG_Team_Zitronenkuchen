@@ -10,7 +10,7 @@ public class MainController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        tirkid = 100;
+        tirkid = 500;
         researchPoints = 0;
         Debug.Log("Start");
         InvokeRepeating("updateRessources", 1, 1);
@@ -23,36 +23,46 @@ public class MainController : MonoBehaviour {
 
     void updateRessources()
     {
-        earn(1);
-        research(1);
+        earn(5);
+        research(5);
         foreach(Specialisation node in spezialisedNodes){
             if (node is EconomySpecialisation)
             {
-                earn(node.Level);
+                earn(node.Level*5);
             }
             else if (node is ResearchSpecialisation)
             {
-                research(node.Level);
+                research(node.Level*5);
+            }
+            else if (node is MilitarySpecialisation)
+            {
+                ((MilitarySpecialisation) node).recruit();
+                Debug.Log(((MilitarySpecialisation) node).Troops + " troops on " + node.Pos);
             }
         }
 
+<<<<<<< HEAD
        Debug.Log("Tirkid: " + tirkid);
        Debug.Log("Researchpoints: " + researchPoints);
+=======
+        Debug.Log("Researchpoints: " + researchPoints);
+        Debug.Log("Tirkid: " + tirkid);
+>>>>>>> d8a63d14cc91033259b69e8d1bf61ddb6a9c6f88
     }
 
-    public bool build(string type)
+    public bool build(string type, Vector3 pos)
     {
         Specialisation newBuilt;
         switch (type)
         {
             case "Economy":
-                newBuilt = new EconomySpecialisation();
+                newBuilt = new EconomySpecialisation(pos);
                 break;
             case "Military":
-                newBuilt = new MilitarySpecialisation();
+                newBuilt = new MilitarySpecialisation(pos);
                 break;
             case "Research":
-                newBuilt = new ResearchSpecialisation();
+                newBuilt = new ResearchSpecialisation(pos);
                 break;
             default:
                 newBuilt = null;

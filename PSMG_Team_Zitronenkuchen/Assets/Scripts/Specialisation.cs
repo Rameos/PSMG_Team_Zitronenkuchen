@@ -3,7 +3,14 @@ using System.Collections;
 
 public abstract class Specialisation {
 
+    private Vector3 pos;
     private int level = 1;
+
+    public Specialisation(Vector3 pos)
+    {
+        this.pos = pos;
+    }
+
 
     abstract public int Cost
     {
@@ -21,5 +28,14 @@ public abstract class Specialisation {
             level = value;
         }
     }
+
+    public Vector3 Pos
+    {
+        get
+        {
+            return pos;
+        }
+    }
+
 
 }
