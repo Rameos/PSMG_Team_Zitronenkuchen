@@ -34,11 +34,10 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     private void moveCamera()
     {
         determineDirection();
-        Vector3 movement = new Vector3(0.2f * xDirection, 0.0f,  0.2f * zDirection);
-
+        Vector3 movement = new Vector3(0.2f * xDirection, 0,  0.2f * zDirection);
         GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
         camera.transform.Translate(movement*Time.deltaTime*2);
-        moveArrows(movement);
+        moveArrows();
 
         reEnableMovement();
     }
@@ -48,16 +47,17 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         framesSinceEntering = 0;
     }
 
-    private void moveArrows(Vector3 movement)
+    private void moveArrows()
     {
+        Vector3 movement = new Vector3(0.2f * xDirection, 0, 0.2f * zDirection);
         GameObject rightArrow = GameObject.FindGameObjectWithTag("RightArrowParent");
         GameObject upArrow = GameObject.FindGameObjectWithTag("UpArrowParent");
         GameObject leftArrow = GameObject.FindGameObjectWithTag("LeftArrowParent");
         GameObject downArrow = GameObject.FindGameObjectWithTag("DownArrowParent");
 
         rightArrow.transform.Translate(movement * Time.deltaTime * 2);
-        upArrow.transform.Translate(movement * Time.deltaTime * 2);
         leftArrow.transform.Translate(movement * Time.deltaTime * 2);
+        upArrow.transform.Translate(movement * Time.deltaTime * 2);
         downArrow.transform.Translate(movement * Time.deltaTime * 2);
     }
 
