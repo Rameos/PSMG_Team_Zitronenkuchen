@@ -5,7 +5,7 @@ public class MilitarySpecialisation : Specialisation {
 
     private int troops = 0;
 
-    public MilitarySpecialisation(Vector3 pos) : base(pos) { }
+    public MilitarySpecialisation(GameObject hex, Vector3 pos) : base(hex, pos) { }
 
     public override int Cost
     {

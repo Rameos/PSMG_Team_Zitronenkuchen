@@ -3,12 +3,15 @@ using System.Collections;
 
 public abstract class Specialisation {
 
+    private GameObject hex;
     private Vector3 pos;
     private int level = 1;
 
-    public Specialisation(Vector3 pos)
+    public Specialisation(GameObject hex, Vector3 pos)
     {
+        this.hex = hex;
         this.pos = pos;
+        Debug.Log("pos " + pos);
     }
 
 
@@ -34,6 +37,14 @@ public abstract class Specialisation {
         get
         {
             return pos;
+        }
+    }
+
+    public GameObject Hex
+    {
+        get
+        {
+            return hex;
         }
     }
 

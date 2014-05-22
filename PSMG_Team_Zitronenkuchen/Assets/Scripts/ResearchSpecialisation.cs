@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ResearchSpecialisation : Specialisation {
 
-    public ResearchSpecialisation(Vector3 pos) : base(pos) { }
+    public ResearchSpecialisation(GameObject hex, Vector3 pos) : base(hex, pos) { }
     
     public override int Cost
     {

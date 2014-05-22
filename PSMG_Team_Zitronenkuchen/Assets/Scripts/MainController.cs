@@ -7,6 +7,7 @@ public class MainController : MonoBehaviour {
     private int researchPoints;
     private ArrayList ui = new ArrayList();
     private ArrayList spezialisedNodes = new ArrayList();
+    private ArrayList labelUI = new ArrayList();
 
 	// Use this for initialization
 	void Start () {
@@ -45,19 +46,24 @@ public class MainController : MonoBehaviour {
         Debug.Log("Tirkid: " + tirkid);
     }
 
-    public bool build(string type, Vector3 pos)
+    public bool build(string type, GameObject hex, Vector3 pos)
     {
         Specialisation newBuilt;
         switch (type)
         {
             case "Economy":
-                newBuilt = new EconomySpecialisation(pos);
+                newBuilt = new EconomySpecialisation(hex, pos);
+                //hex.guiText.font = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<GUIText>().font;
+                //hex.guiText.material.color = new Color(1.0f, 1.0f, 1.0f);
+                //hex.guiText.transform.position = pos;
+                //hex.guiText.text = "Economy";
+                //labelUI.Add(hex.guiText);
                 break;
             case "Military":
-                newBuilt = new MilitarySpecialisation(pos);
+                newBuilt = new MilitarySpecialisation(hex, pos);
                 break;
             case "Research":
-                newBuilt = new ResearchSpecialisation(pos);
+                newBuilt = new ResearchSpecialisation(hex, pos);
                 break;
             default:
                 newBuilt = null;
@@ -104,5 +110,22 @@ public class MainController : MonoBehaviour {
             return true;
         }
         else return false;
+    }
+
+    void OnGUI()
+    {
+
+        GUI.Label(new Rect(0, 0, 300, 150), ("Tirkid: " + tirkid + "   Research: " + researchPoints));
+        
+        foreach (Specialisation node in spezialisedNodes)
+        {
+            if (node is MilitarySpecialisation)
+            {
+                //Vector3 pos = Camera.main.WorldToViewportPoint(node.Pos);
+                //Debug.Log(pos);
+            }
+           
+        }
+        
     }
 }
