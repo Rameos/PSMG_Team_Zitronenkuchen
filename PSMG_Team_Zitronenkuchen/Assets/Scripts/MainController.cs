@@ -20,35 +20,33 @@ public class MainController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            Application.LoadLevel("Main_Menu");
+        }
 	}
 
     void updateRessources()
     {
         earn(5);
         research(5);
-        foreach(Specialisation node in spezialisedNodes){
+        foreach (Specialisation node in spezialisedNodes)
+        {
             if (node is EconomySpecialisation)
             {
-                earn(node.Level*5);
+                earn(node.Level * 5);
             }
             else if (node is ResearchSpecialisation)
             {
-                research(node.Level*5);
+                research(node.Level * 5);
             }
             else if (node is MilitarySpecialisation)
             {
-                ((MilitarySpecialisation) node).recruit();
-                Debug.Log(((MilitarySpecialisation) node).Troops + " troops on " + node.Pos);
+                ((MilitarySpecialisation)node).recruit();
+                Debug.Log(((MilitarySpecialisation)node).Troops + " troops on " + node.Pos);
             }
         }
-
-<<<<<<< HEAD
-       Debug.Log("Tirkid: " + tirkid);
-       Debug.Log("Researchpoints: " + researchPoints);
-=======
-        Debug.Log("Researchpoints: " + researchPoints);
-        Debug.Log("Tirkid: " + tirkid);
->>>>>>> d8a63d14cc91033259b69e8d1bf61ddb6a9c6f88
     }
 
     public bool build(string type, GameObject hex, Vector3 pos)

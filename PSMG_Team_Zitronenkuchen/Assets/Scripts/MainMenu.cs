@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using iViewX;
 
 public class MainMenu : MonoBehaviour {
 
@@ -18,6 +19,8 @@ public class MainMenu : MonoBehaviour {
 
     void OnGUI()
     {
+
+        Screen.lockCursor = false;
         // draw background
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), backgroundTexture);
 
@@ -30,7 +33,7 @@ public class MainMenu : MonoBehaviour {
         }
         if (GUI.Button(new Rect(Screen.width * btnPosX2, Screen.height * btnPosY2, Screen.width * btnWidth2, Screen.height * btnHeight2), ""))
         {
-            //options here
+            GazeControlComponent.Instance.StartCalibration();
         }
     }
 	
