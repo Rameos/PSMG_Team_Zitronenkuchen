@@ -17,7 +17,7 @@ public class ShowGazeCursor : MonoBehaviour
 
     void Start()
     {
-        //Screen.lockCursor = true;
+        Screen.lockCursor = true;
     }
 
     void OnGUI()

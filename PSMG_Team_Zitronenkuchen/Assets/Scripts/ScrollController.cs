@@ -21,6 +21,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         if (entered)
         {
             framesSinceEntering++;
+            //camera moves if gaze stays an arrow for 6 frames
             if (framesSinceEntering == 6)
             {
                 moveCamera();
@@ -34,7 +35,6 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     private void moveCamera()
     {
         determineDirection();
-        Vector3 movement = new Vector3(0.2f * xDirection, 0,  0.2f * zDirection);
         GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
         camera.transform.Translate(0.2f * xDirection * Time.deltaTime * 2, 0, 0.2f * zDirection * Time.deltaTime * 2, Space.World);
         moveArrows();

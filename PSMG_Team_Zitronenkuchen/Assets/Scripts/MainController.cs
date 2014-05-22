@@ -36,8 +36,8 @@ public class MainController : MonoBehaviour {
             }
         }
 
-       // Debug.Log("Tirkid: " + tirkid);
-        // Debug.Log("Researchpoints: " + researchPoints);
+       Debug.Log("Tirkid: " + tirkid);
+       Debug.Log("Researchpoints: " + researchPoints);
     }
 
     public bool build(string type)
