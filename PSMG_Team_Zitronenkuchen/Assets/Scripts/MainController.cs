@@ -64,6 +64,16 @@ public class MainController : MonoBehaviour {
                 break;
             case "Military":
                 newBuilt = new MilitarySpecialisation(hex, pos);
+                GameObject unitText = new GameObject();
+                TextMesh text = unitText.AddComponent<TextMesh>();
+                text.characterSize = 0.1f;
+                Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+                text.font = font;
+                text.renderer.material = font.material;
+                text.anchor = TextAnchor.MiddleCenter;
+                unitText.transform.parent = hex.transform;
+                unitText.transform.position = hex.transform.position;
+                unitText.transform.Rotate(new Vector3(45, 0, 0));
                 break;
             case "Research":
                 newBuilt = new ResearchSpecialisation(hex, pos);
@@ -118,14 +128,15 @@ public class MainController : MonoBehaviour {
     void OnGUI()
     {
 
-        GUI.Label(new Rect(0, 0, 300, 150), ("Tirkid: " + tirkid + "   Research: " + researchPoints));
+        //GUI.Label(new Rect(0, 0, 300, 150), ("Tirkid: " + tirkid + "   Research: " + researchPoints));
+        GameObject ressourcelabel = GameObject.FindGameObjectWithTag("GUIRessources");
+        ressourcelabel.guiText.text = "Tirkid: " + tirkid + "   Research: " + researchPoints;
         
         foreach (Specialisation node in spezialisedNodes)
         {
             if (node is MilitarySpecialisation)
             {
-                //Vector3 pos = Camera.main.WorldToViewportPoint(node.Pos);
-                //Debug.Log(pos);
+                node.Hex.transform.GetComponentInChildren<TextMesh>().text = ""+((MilitarySpecialisation)node).Troops;
             }
            
         }
