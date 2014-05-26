@@ -36,7 +36,9 @@ public class PopUpMenu : MonoBehaviour {
             GameObject militaryBuilding = Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
             militaryBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
             Debug.Log(militaryBuilding.transform.position.ToString());
+            Mesh militaryBuild = Resources.Load("military-building", typeof(Mesh)) as Mesh;
             selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
+            militaryBuilding.transform.parent = selectedHexagon.transform;
             fieldScript.fieldSet();
         }
         
@@ -53,6 +55,7 @@ public class PopUpMenu : MonoBehaviour {
             GameObject researchBuilding = Instantiate(resBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
             researchBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
             selectedHexagon.renderer.material = Resources.Load("researchMaterial", typeof(Material)) as Material;
+            researchBuilding.transform.parent = selectedHexagon.transform;
             fieldScript.fieldSet();
         }
     }
@@ -66,6 +69,7 @@ public class PopUpMenu : MonoBehaviour {
             GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
             economyBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
             selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
+            economyBuilding.transform.parent = selectedHexagon.transform;
             fieldScript.fieldSet();
         }
 

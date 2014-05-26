@@ -11,6 +11,9 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     private int xDirection = 1; //default 1, -1 if opposite direction, 0 if no movement
     private int zDirection = 1; //default 1, -1 if opposite direction, 0 if no movement
 
+    private Vector3 minSize = new Vector3 (10.0f, 10.0f, 10.0f);
+    private Vector3 maxSize = new Vector3(12.0f, 12.0f, 12.0f);
+
 	// Use this for initialization
 	void Start () {
        
@@ -88,7 +91,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     public override void OnGazeEnter(RaycastHit hit)
     {
         entered = true;
-        highlightMaterial();
+        highlightArrow();
     }
 
     public override void OnGazeStay(RaycastHit hit)
@@ -99,17 +102,19 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     {
         entered = false;
         reEnableMovement();
-        resetMaterial();
+        resetArrow();
     }
 
-    private void highlightMaterial()
+    private void highlightArrow()
     {
+        gameObject.transform.localScale = maxSize;
         gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
     }
 
 
-    private void resetMaterial()
+    private void resetArrow()
     {
+        gameObject.transform.localScale = minSize;
         gameObject.transform.renderer.material.shader = Shader.Find("Diffuse");
     }
 

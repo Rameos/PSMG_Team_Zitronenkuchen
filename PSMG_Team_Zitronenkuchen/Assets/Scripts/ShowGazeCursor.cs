@@ -17,14 +17,13 @@ public class ShowGazeCursor : MonoBehaviour
 
     void Start()
     {
-        Screen.lockCursor = true;
+        //Screen.lockCursor = true;
     }
 
     void OnGUI()
     {
         if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Escape)
         {
-            Debug.Log("Escape");
             Screen.lockCursor = false;
 
         }
