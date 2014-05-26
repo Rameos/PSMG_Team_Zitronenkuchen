@@ -43,8 +43,12 @@ public class MainController : MonoBehaviour {
             }
             else if (node is MilitarySpecialisation)
             {
-                ((MilitarySpecialisation)node).recruit();
-                Debug.Log(((MilitarySpecialisation)node).Troops + " troops on " + node.Pos);
+                if (((MilitarySpecialisation)node).Troops < 100)
+                {
+                    ((MilitarySpecialisation)node).recruit();
+                    //Debug.Log(((MilitarySpecialisation)node).Troops + " troops on " + node.Pos);
+                }
+                
             }
         }
     }
@@ -63,17 +67,7 @@ public class MainController : MonoBehaviour {
                 //labelUI.Add(hex.guiText);
                 break;
             case "Military":
-                newBuilt = new MilitarySpecialisation(hex, pos);
-                GameObject unitText = new GameObject();
-                TextMesh text = unitText.AddComponent<TextMesh>();
-                text.characterSize = 0.1f;
-                Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-                text.font = font;
-                text.renderer.material = font.material;
-                text.anchor = TextAnchor.MiddleCenter;
-                unitText.transform.parent = hex.transform;
-                unitText.transform.position = hex.transform.position;
-                unitText.transform.Rotate(new Vector3(45, 0, 0));
+                newBuilt = new MilitarySpecialisation(hex, pos);                
                 break;
             case "Research":
                 newBuilt = new ResearchSpecialisation(hex, pos);
@@ -87,6 +81,19 @@ public class MainController : MonoBehaviour {
         {
             if (spend(newBuilt.Cost))
             {
+                if (newBuilt is MilitarySpecialisation)
+                {
+                    GameObject unitText = new GameObject();
+                    TextMesh text = unitText.AddComponent<TextMesh>();
+                    text.characterSize = 0.1f;
+                    Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+                    text.font = font;
+                    text.renderer.material = font.material;
+                    text.anchor = TextAnchor.MiddleCenter;
+                    unitText.transform.parent = hex.transform;
+                    unitText.transform.position = hex.transform.position;
+                    unitText.transform.Rotate(new Vector3(45, 0, 0));
+                }
                 spezialisedNodes.Add(newBuilt);
                 return true;
             }
