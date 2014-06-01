@@ -8,10 +8,12 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     private int framesSinceEntering = 0;
     private bool entered = false;
 
+    private bool noGUIMode = true;
+
     private int xDirection = 1; //default 1, -1 if opposite direction, 0 if no movement
     private int zDirection = 1; //default 1, -1 if opposite direction, 0 if no movement
 
-    private Vector3 minSize = new Vector3 (10.0f, 10.0f, 10.0f);
+    private Vector3 minSize = new Vector3(10.0f, 10.0f, 10.0f);
     private Vector3 maxSize = new Vector3(12.0f, 12.0f, 12.0f);
 
 	// Use this for initialization
@@ -35,8 +37,56 @@ public class ScrollController : MonoBehaviourWithGazeComponent
        
 	}
 
+    void OnGUI()
+    {
+
+        //switch between gui and nogui
+        if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.G)
+        {
+            if (!noGUIMode) {
+                entered = false;
+                noGUIMode = true;
+                disableRenderers();
+            }
+            else
+            {
+                entered = false;
+                noGUIMode = false;
+                enabledRenderers();
+            }
+
+        }
+    }
+
+    private void enabledRenderers()
+    {
+        GameObject rightArrow = GameObject.FindGameObjectWithTag("RightArrow");
+        GameObject upArrow = GameObject.FindGameObjectWithTag("UpArrow");
+        GameObject leftArrow = GameObject.FindGameObjectWithTag("LeftArrow");
+        GameObject downArrow = GameObject.FindGameObjectWithTag("DownArrow");
+
+        rightArrow.renderer.enabled = true;
+        upArrow.renderer.enabled = true;
+        leftArrow.renderer.enabled = true;
+        downArrow.renderer.enabled = true;
+    }
+
+    private void disableRenderers()
+    {
+        GameObject rightArrow = GameObject.FindGameObjectWithTag("RightArrow");
+        GameObject upArrow = GameObject.FindGameObjectWithTag("UpArrow");
+        GameObject leftArrow = GameObject.FindGameObjectWithTag("LeftArrow");
+        GameObject downArrow = GameObject.FindGameObjectWithTag("DownArrow");
+
+        rightArrow.renderer.enabled = false;
+        upArrow.renderer.enabled = false;
+        leftArrow.renderer.enabled = false;
+        downArrow.renderer.enabled = false;
+    }
+
     private void moveCamera()
     {
+
         determineDirection();
         GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
         camera.transform.Translate(0.2f * xDirection * Time.deltaTime * 2, 0, 0.2f * zDirection * Time.deltaTime * 2, Space.World);
@@ -107,15 +157,22 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 
     private void highlightArrow()
     {
-        gameObject.transform.localScale = maxSize;
-        gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+        if (!noGUIMode) {
+            gameObject.renderer.enabled = true;
+            gameObject.transform.localScale = maxSize;
+            gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+        }
+        
     }
 
 
     private void resetArrow()
     {
-        gameObject.transform.localScale = minSize;
-        gameObject.transform.renderer.material.shader = Shader.Find("Diffuse");
+        if (!noGUIMode)
+        {
+            gameObject.transform.localScale = minSize;
+            gameObject.transform.renderer.material.shader = Shader.Find("Diffuse"); 
+        }
     }
 
 
