@@ -129,7 +129,7 @@ public class PopUpMenu : MonoBehaviour {
         {
             foreach (GazeButton button in gazeUI)
             {
-                button.OnGUI();
+                button.OnGUI();               
             }
         }
 
@@ -149,7 +149,7 @@ public class PopUpMenu : MonoBehaviour {
             
             foreach (GazeButton button in gazeUI)
             {
-                button.Update();
+                button.Update();             
             }
         }
 

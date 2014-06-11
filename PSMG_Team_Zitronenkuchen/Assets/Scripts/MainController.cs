@@ -9,6 +9,9 @@ public class MainController : MonoBehaviour {
     private ArrayList spezialisedNodes = new ArrayList();
     private ArrayList labelUI = new ArrayList();
 
+    public AudioClip building;
+    public AudioClip denied;
+
 	// Use this for initialization
 	void Start () {
         tirkid = 500;
@@ -95,9 +98,11 @@ public class MainController : MonoBehaviour {
                     unitText.transform.Rotate(new Vector3(45, 0, 0));
                 }
                 spezialisedNodes.Add(newBuilt);
+                audio.PlayOneShot(building);
                 return true;
             }
         }
+        audio.PlayOneShot(denied);
         return false;
     }
 
