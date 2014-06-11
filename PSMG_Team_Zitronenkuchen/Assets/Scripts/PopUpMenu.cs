@@ -8,6 +8,8 @@ public class PopUpMenu : MonoBehaviour {
     // Note: you must define your own style.
     public GUIStyle myStyle;
 
+    public AudioClip select;
+
     // Save all GazeButtonElements in an arrayList / List
     private ArrayList gazeUI = new ArrayList();
     // Set an Status for the Drawing of the Elements
@@ -84,6 +86,7 @@ public class PopUpMenu : MonoBehaviour {
 
     public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
     {
+        
         //Debug.Log(pos);
         //Set the Actions of the Buttons
         this.pos = pos;
@@ -96,13 +99,11 @@ public class PopUpMenu : MonoBehaviour {
         buttonCallbackListener createResearchNodeButton = button2_Action;
         buttonCallbackListener createEconomyNodeButton = button3_Action;
 
-      
         //Create new Buttonelements and add them to the gazeUI
         gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Create Military Node", myStyle, createMilitaryNodeButton));
         gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Create Research Node", myStyle, createResearchNodeButton));
         gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Create Economy Node", myStyle, createEconomyNodeButton));
         Debug.Log(gazeUI);
-
     }
 
     void closeMenu()
@@ -145,14 +146,12 @@ public class PopUpMenu : MonoBehaviour {
         //Update only if the buttons are visible (Plea
         if (isDrawing)
         {
-
+            
             foreach (GazeButton button in gazeUI)
             {
                 button.Update();
             }
         }
-
-
 
         if (Input.GetButtonDown("SelectGUI"))
         {
@@ -170,9 +169,10 @@ public class PopUpMenu : MonoBehaviour {
         }
     }
 
-private void collapseMenu()
-{
- 	 gazeUI.Clear();
-        closeMenu();
+    private void collapseMenu()
+    {
+ 	     gazeUI.Clear();
+            closeMenu();
+    }
+
 }
-	}

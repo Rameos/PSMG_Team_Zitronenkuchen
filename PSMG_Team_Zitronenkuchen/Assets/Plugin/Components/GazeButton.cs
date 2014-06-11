@@ -89,7 +89,6 @@ namespace iViewX
             if (colliderPosition.Contains(positionGaze))
             {
                 setFocused();
-
                 if (Input.GetButtonUp("SelectGUI"))
                     actionToDo();
             }

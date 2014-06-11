@@ -17,6 +17,8 @@ public class MainMenu : MonoBehaviour {
 
     public GUISkin myGuiSkin;
 
+    public AudioClip sound;
+
     void OnGUI()
     {
 
@@ -27,11 +29,14 @@ public class MainMenu : MonoBehaviour {
         //draw buttons
         GUI.skin = myGuiSkin;
 
-        if (GUI.Button(new Rect(Screen.width * btnPosX1, Screen.height * btnPosY1, Screen.width * btnWidth1, Screen.height * btnHeight1), ""))
+        Rect playBtn = new Rect(Screen.width * btnPosX1, Screen.height * btnPosY1, Screen.width * btnWidth1, Screen.height * btnHeight1);
+        Rect calibBtn = new Rect(Screen.width * btnPosX2, Screen.height * btnPosY2, Screen.width * btnWidth2, Screen.height * btnHeight2);
+
+        if (GUI.Button(playBtn, ""))
         {
             Application.LoadLevel("Create_Gamefield");
         }
-        if (GUI.Button(new Rect(Screen.width * btnPosX2, Screen.height * btnPosY2, Screen.width * btnWidth2, Screen.height * btnHeight2), ""))
+        if (GUI.Button(calibBtn, ""))
         {
             GazeControlComponent.Instance.StartCalibration();
         }

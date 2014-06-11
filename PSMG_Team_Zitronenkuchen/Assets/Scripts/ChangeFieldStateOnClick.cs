@@ -8,7 +8,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     private Material defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
     private Material highlightedMaterial = Resources.Load("HighlightedMaterial", typeof(Material)) as Material;
     private bool set = false;
-
+ 
     PopUpMenu popUpMenu;
     
 
