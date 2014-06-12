@@ -16,6 +16,12 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     private Vector3 minSize = new Vector3(10.0f, 10.0f, 10.0f);
     private Vector3 maxSize = new Vector3(12.0f, 12.0f, 12.0f);
 
+    private float maxX = 21.1055f;
+    private float minX = 0.0f;
+
+    private float maxZ = 21.1055f;
+    private float minZ = 0.0f;
+
 	// Use this for initialization
 	void Start () {
        
@@ -90,6 +96,18 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         determineDirection();
         GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
         camera.transform.Translate(0.2f * xDirection * Time.deltaTime * 2, 0, 0.2f * zDirection * Time.deltaTime * 2, Space.World);
+
+        if (camera.transform.position.x < minX) {
+            xDirection = -1;
+            camera.transform.Translate(0.2f * xDirection * Time.deltaTime * 2, 0, 0.2f * zDirection * Time.deltaTime * 2, Space.World);
+        }
+
+        if (camera.transform.position.x > maxX)
+        {
+            xDirection = 1;
+            camera.transform.Translate(0.2f * xDirection * Time.deltaTime * 2, 0, 0.2f * zDirection * Time.deltaTime * 2, Space.World);
+        }
+
         moveArrows();
 
         reEnableMovement();
@@ -108,11 +126,20 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         GameObject upArrow = GameObject.FindGameObjectWithTag("UpArrowParent");
         GameObject leftArrow = GameObject.FindGameObjectWithTag("LeftArrowParent");
         GameObject downArrow = GameObject.FindGameObjectWithTag("DownArrowParent");
+        GameObject upRightArrow = GameObject.FindGameObjectWithTag("UpperRightArrowParent");
+        GameObject downRightArrow = GameObject.FindGameObjectWithTag("BottomRightArrowParent");
+        GameObject downLeftArrow = GameObject.FindGameObjectWithTag("BottomLeftArrowParent");
+        GameObject upLeftArrow = GameObject.FindGameObjectWithTag("UpperLeftArrowParent");
+
 
         rightArrow.transform.Translate(movement * Time.deltaTime * 2);
         leftArrow.transform.Translate(movement * Time.deltaTime * 2);
         upArrow.transform.Translate(movement * Time.deltaTime * 2);
         downArrow.transform.Translate(movement * Time.deltaTime * 2);
+        upRightArrow.transform.Translate(movement * Time.deltaTime * 2);
+        upLeftArrow.transform.Translate(movement * Time.deltaTime * 2);
+        downLeftArrow.transform.Translate(movement * Time.deltaTime * 2);
+        downRightArrow.transform.Translate(movement * Time.deltaTime * 2);
     }
 
     private void determineDirection()
@@ -134,6 +161,22 @@ public class ScrollController : MonoBehaviourWithGazeComponent
             case "DownArrow":
                 xDirection = 0;
                 zDirection = -1;
+                break;
+            case "UpperRightArrow":
+                xDirection = 1;
+                zDirection = 1;
+                break;
+            case "BottomRightArrow":
+                xDirection = 1;
+                zDirection = -1;
+                break;
+            case "BottomLeftArrow":
+                xDirection = -1;
+                zDirection = -1;
+                break;
+            case "UpperLeftArrow":
+                xDirection = -1;
+                zDirection = 1;
                 break;
         }
     }
