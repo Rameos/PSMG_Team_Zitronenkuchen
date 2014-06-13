@@ -33,7 +33,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         {
             framesSinceEntering++;
             //camera moves if gaze stays an arrow for 6 frames
-            if (framesSinceEntering == 6)
+            if (framesSinceEntering == 2)
             {
                 moveCamera();
                 
@@ -83,11 +83,20 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         GameObject upArrow = GameObject.FindGameObjectWithTag("UpArrow");
         GameObject leftArrow = GameObject.FindGameObjectWithTag("LeftArrow");
         GameObject downArrow = GameObject.FindGameObjectWithTag("DownArrow");
+        GameObject upRightArrow = GameObject.FindGameObjectWithTag("UpperRightArrow");
+        GameObject downRightArrow = GameObject.FindGameObjectWithTag("BottomRightArrow");
+        GameObject upLeftArrow = GameObject.FindGameObjectWithTag("UpperLeftArrow");
+        GameObject downLeftArrow = GameObject.FindGameObjectWithTag("BottomLeftArrow");
 
         rightArrow.renderer.enabled = false;
         upArrow.renderer.enabled = false;
         leftArrow.renderer.enabled = false;
         downArrow.renderer.enabled = false;
+
+        upRightArrow.renderer.enabled = false;
+        downRightArrow.renderer.enabled = false;
+        upLeftArrow.renderer.enabled = false;
+        downLeftArrow.renderer.enabled = false;
     }
 
     private void moveCamera()
