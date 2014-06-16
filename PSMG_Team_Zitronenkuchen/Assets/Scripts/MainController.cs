@@ -26,7 +26,7 @@ public class MainController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            Application.LoadLevel("Main_Menu");
+            Application.LoadLevel("Alternate_Main_Menu");
         }
 	}
 
