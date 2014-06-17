@@ -42,6 +42,7 @@ public class PopUpMenu : MonoBehaviour {
             selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
             militaryBuilding.transform.parent = selectedHexagon.transform;
             fieldScript.fieldSet();
+            militaryBuilding.AddComponent("NetworkView");
         }
         
 

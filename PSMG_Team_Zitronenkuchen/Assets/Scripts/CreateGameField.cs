@@ -69,6 +69,7 @@ public class CreateGameField : MonoBehaviour {
         hex.transform.parent = field.transform;
         hex.AddComponent("ChangeFieldStateOnClick");
         hex.AddComponent("MeshCollider");
+        hex.AddComponent("NetworkView");
         hex.GetComponent<MeshCollider>().sharedMesh = Resources.Load("hexagonbig", typeof(Mesh)) as Mesh;
     }
 
