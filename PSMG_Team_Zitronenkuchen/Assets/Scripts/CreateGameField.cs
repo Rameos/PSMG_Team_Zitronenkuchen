@@ -21,6 +21,7 @@ public class CreateGameField : MonoBehaviour {
     
     public Material defaultMaterial;
     public Material baseMaterial;
+    public Material ownedMaterial;
 
     private int BASE_X = 3;
     private int BASE_Y = 5;
@@ -41,7 +42,6 @@ public class CreateGameField : MonoBehaviour {
                     newHexPosition = positionHexagons(i, j);
                     GameObject hex = Instantiate(hexagon, newHexPosition, FIELD_ROTATION) as GameObject;       // Instantiates hexagon prefabs as gameobjects
                     hex.AddComponent<HexField>();
-                    //setOwner(hex);
                     hexArray[i, j] = hex;
                     assignMaterialToObject(hex);
                     addComponentsAndScale(hex);
@@ -51,12 +51,6 @@ public class CreateGameField : MonoBehaviour {
         //field.transform.renderer.bounds.center = new Vector3(100, 100, 100);                         //soll Mittelpunkt von terrain und field übereinanderlegen funktioniert aber nicht
         }
 
-    private void setOwner(GameObject obj)
-    {
-        obj.GetComponent<HexField>().owner = 0;
-        obj.GetComponent<HexField>().test();
-    }
-
     private void buildStartArea()
     {
         GameObject baseField = hexArray[BASE_X, BASE_Y];
@@ -65,6 +59,7 @@ public class CreateGameField : MonoBehaviour {
         foreach (GameObject obj in influenceArea)
         {
             obj.GetComponent<HexField>().owner = 1;
+            obj.renderer.material = ownedMaterial;
         }
     }
     private void assignMaterialToObject(GameObject obj)
@@ -82,6 +77,12 @@ public class CreateGameField : MonoBehaviour {
 
         baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
         if (baseMaterial == null)
+        {
+            Debug.Log("loading failed, check existence of Resources folder in Assets");
+        }
+
+        ownedMaterial = Resources.Load("OwnedMaterial", typeof(Material)) as Material;
+        if (ownedMaterial == null)
         {
             Debug.Log("loading failed, check existence of Resources folder in Assets");
         }
