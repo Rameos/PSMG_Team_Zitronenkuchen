@@ -86,24 +86,28 @@ public class PopUpMenu : MonoBehaviour {
 
     public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
     {
+        Debug.Log(hex.GetComponent<HexField>().owner);
+        if (hex.GetComponent<HexField>().owner == 1)
+        {
+            
+            //Set the Actions of the Buttons
+            this.pos = pos;
+
+            fieldScript = script;
+
+            selectedHexagon = hex;
+
+            buttonCallbackListener createMilitaryNodeButton = button1_Action;
+            buttonCallbackListener createResearchNodeButton = button2_Action;
+            buttonCallbackListener createEconomyNodeButton = button3_Action;
+
+            //Create new Buttonelements and add them to the gazeUI
+            gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Create Military Node", myStyle, createMilitaryNodeButton));
+            gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Create Research Node", myStyle, createResearchNodeButton));
+            gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Create Economy Node", myStyle, createEconomyNodeButton));
+            Debug.Log(gazeUI);
+        }
         
-        //Debug.Log(pos);
-        //Set the Actions of the Buttons
-        this.pos = pos;
-
-        fieldScript = script;
-
-        selectedHexagon = hex;
-       
-        buttonCallbackListener createMilitaryNodeButton = button1_Action;
-        buttonCallbackListener createResearchNodeButton = button2_Action;
-        buttonCallbackListener createEconomyNodeButton = button3_Action;
-
-        //Create new Buttonelements and add them to the gazeUI
-        gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Create Military Node", myStyle, createMilitaryNodeButton));
-        gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Create Research Node", myStyle, createResearchNodeButton));
-        gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Create Economy Node", myStyle, createEconomyNodeButton));
-        Debug.Log(gazeUI);
     }
 
     void closeMenu()

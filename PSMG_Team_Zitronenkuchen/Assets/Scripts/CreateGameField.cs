@@ -19,11 +19,13 @@ public class CreateGameField : MonoBehaviour {
     private Vector3 newHexPosition;
     private Vector3 trueHexSize;
     
-    
-    
     public Material defaultMaterial;
+    public Material baseMaterial;
 
+    private int BASE_X = 3;
+    private int BASE_Y = 5;
 
+    private GameObject[,] hexArray;
 
 	// Use this for initialization
 	void Start () {
@@ -31,19 +33,40 @@ public class CreateGameField : MonoBehaviour {
         FIELD_ROTATION.eulerAngles = ROTATION;
         hexagon.transform.localScale = HEX_SIZE;
         trueHexSize = hexagon.renderer.bounds.size;
+        hexArray = new GameObject[(int)FIELD_SIZE, (int) FIELD_SIZE];
         for (int i = 0; i < FIELD_SIZE; i++)
             {       
                 for (int j = 0; j < FIELD_SIZE; j++)
                 {
                     newHexPosition = positionHexagons(i, j);
                     GameObject hex = Instantiate(hexagon, newHexPosition, FIELD_ROTATION) as GameObject;       // Instantiates hexagon prefabs as gameobjects
+                    hex.AddComponent<HexField>();
+                    //setOwner(hex);
+                    hexArray[i, j] = hex;
                     assignMaterialToObject(hex);
                     addComponentsAndScale(hex);
                 }
             }
+        buildStartArea();
         //field.transform.renderer.bounds.center = new Vector3(100, 100, 100);                         //soll Mittelpunkt von terrain und field übereinanderlegen funktioniert aber nicht
         }
 
+    private void setOwner(GameObject obj)
+    {
+        obj.GetComponent<HexField>().owner = 0;
+        obj.GetComponent<HexField>().test();
+    }
+
+    private void buildStartArea()
+    {
+        GameObject baseField = hexArray[BASE_X, BASE_Y];
+        baseField.renderer.material = baseMaterial;
+        GameObject[] influenceArea = baseField.GetComponent<HexField>().getSurroundingFields(BASE_X, BASE_Y, hexArray);
+        foreach (GameObject obj in influenceArea)
+        {
+            obj.GetComponent<HexField>().owner = 1;
+        }
+    }
     private void assignMaterialToObject(GameObject obj)
     {
         obj.renderer.material = defaultMaterial;
@@ -53,6 +76,12 @@ public class CreateGameField : MonoBehaviour {
     {
         defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
         if (defaultMaterial == null)
+        {
+            Debug.Log("loading failed, check existence of Resources folder in Assets");
+        }
+
+        baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
+        if (baseMaterial == null)
         {
             Debug.Log("loading failed, check existence of Resources folder in Assets");
         }
