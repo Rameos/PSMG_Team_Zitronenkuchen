@@ -26,36 +26,22 @@ public class CreateGameField : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start () {
-        initiateMaterial();
-        FIELD_ROTATION.eulerAngles = ROTATION;
-        hexagon.transform.localScale = HEX_SIZE;
-        trueHexSize = hexagon.renderer.bounds.size;
-        for (int i = 0; i < FIELD_SIZE; i++)
-            {       
-                for (int j = 0; j < FIELD_SIZE; j++)
-                {
-                    newHexPosition = positionHexagons(i, j);
-                    GameObject hex = Instantiate(hexagon, newHexPosition, FIELD_ROTATION) as GameObject;       // Instantiates hexagon prefabs as gameobjects
-                    assignMaterialToObject(hex);
-                    addComponentsAndScale(hex);
-                }
-            }
-        //field.transform.renderer.bounds.center = new Vector3(100, 100, 100);                         //soll Mittelpunkt von terrain und field übereinanderlegen funktioniert aber nicht
-        }
-
-    private void assignMaterialToObject(GameObject obj)
+	void Start ()
     {
-        obj.renderer.material = defaultMaterial;
-    }
-
-    private void initiateMaterial()
-    {
-        defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
-        if (defaultMaterial == null)
+        if (Network.isServer)
         {
-            Debug.Log("loading failed, check existence of Resources folder in Assets");
-        }
+            FIELD_ROTATION.eulerAngles = ROTATION;
+            hexagon.transform.localScale = HEX_SIZE;
+            trueHexSize = hexagon.renderer.bounds.size;
+            for (int i = 0; i < FIELD_SIZE; i++)
+                {       
+                    for (int j = 0; j < FIELD_SIZE; j++)
+                    {
+                        newHexPosition = positionHexagons(i, j);
+                        GameObject hex = Network.Instantiate(hexagon, newHexPosition, FIELD_ROTATION, 0) as GameObject;       // Instantiates hexagon prefabs as gameobjects
+                    }
+                }
+        }                     //soll Mittelpunkt von terrain und field übereinanderlegen funktioniert aber nicht
     }
 	
 	// Update is called once per frame
@@ -63,15 +49,6 @@ public class CreateGameField : MonoBehaviour {
 
 	}
 
-    // Adds all Components needed to interact with the individual Hexagons and scales them
-    private void addComponentsAndScale(GameObject hex)
-    {
-        hex.transform.parent = field.transform;
-        hex.AddComponent("ChangeFieldStateOnClick");
-        hex.AddComponent("MeshCollider");
-        hex.AddComponent("NetworkView");
-        hex.GetComponent<MeshCollider>().sharedMesh = Resources.Load("hexagonbig", typeof(Mesh)) as Mesh;
-    }
 
     // Calculates the individual Position of every Hexagon to create a mesh
     private Vector3 positionHexagons(int i, int j)

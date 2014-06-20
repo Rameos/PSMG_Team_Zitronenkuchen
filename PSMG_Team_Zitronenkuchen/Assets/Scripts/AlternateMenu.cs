@@ -29,7 +29,10 @@ public class AlternateMenu : MonoBehaviour {
         }
         else if (isStart == true)
         {
-            Application.LoadLevel("Create_Gamefield");
+            if (Network.isServer)
+            {
+                networkView.RPC("LoadLevel", RPCMode.AllBuffered, "Create_Gamefield");
+            }
         }
         else if (isCalibrate == true)
         {
@@ -44,36 +47,28 @@ public class AlternateMenu : MonoBehaviour {
             Application.Quit();
         }
 	}
-}
 
-/*
- * var isQuit=false;
+    [RPC]
+    public void LoadLevel(string level)
+    {
+        StartCoroutine(loadLevel(level));
+    }
 
-function OnMouseEnter(){
-//change text color
-renderer.material.color=Color.red;
-}
+    private IEnumerator loadLevel(string level)
+    {
+        // omitted code
 
-function OnMouseExit(){
-//change text color
-renderer.material.color=Color.white;
-}
+        Application.LoadLevel(level);
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
 
-function OnMouseUp(){
-//is this quit
-if (isQuit==true) {
-//quit the game
-Application.Quit();
-}
-else {
-//load level
-Application.LoadLevel(1);
-}
-}
+        // Allow receiving data again
+        Network.isMessageQueueRunning = true;
+        // Now the level has been loaded and we can start sending out data
+        Network.SetSendingEnabled(0, true);
 
-function Update(){
-//quit game if escape key is pressed
-if (Input.GetKey(KeyCode.Escape)) { Application.Quit();
+        // Notify our objects that the level and the network is ready
+        foreach (GameObject go in FindObjectsOfType(typeof(GameObject)))
+            go.SendMessage("OnNetworkLoadedLevel", SendMessageOptions.DontRequireReceiver);
+    }
 }
-}*/
-

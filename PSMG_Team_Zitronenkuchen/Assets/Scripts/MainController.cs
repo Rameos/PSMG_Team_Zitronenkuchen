@@ -86,16 +86,7 @@ public class MainController : MonoBehaviour {
             {
                 if (newBuilt is MilitarySpecialisation)
                 {
-                    GameObject unitText = new GameObject();
-                    TextMesh text = unitText.AddComponent<TextMesh>();
-                    text.characterSize = 0.1f;
-                    Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-                    text.font = font;
-                    text.renderer.material = font.material;
-                    text.anchor = TextAnchor.MiddleCenter;
-                    unitText.transform.parent = hex.transform;
-                    unitText.transform.position = hex.transform.position;
-                    unitText.transform.Rotate(new Vector3(45, 0, 0));
+                    
                 }
                 spezialisedNodes.Add(newBuilt);
                 audio.PlayOneShot(building);
@@ -149,6 +140,9 @@ public class MainController : MonoBehaviour {
             if (node is MilitarySpecialisation)
             {
                 node.Hex.transform.GetComponentInChildren<TextMesh>().text = ""+((MilitarySpecialisation)node).Troops;
+                NetworkView nview = node.Hex.networkView;
+                NetworkViewID nviewId = nview.viewID;
+                nview.RPC("updateTroops", RPCMode.AllBuffered, nviewId, ((MilitarySpecialisation)node).Troops);
             }
            
         }
