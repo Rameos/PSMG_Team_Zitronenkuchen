@@ -57,7 +57,7 @@ public class MainController : MonoBehaviour {
     }
 
     public bool build(string type, GameObject hex, Vector3 pos)
-    {
+    {   
         Specialisation newBuilt;
         switch (type)
         {
@@ -84,6 +84,7 @@ public class MainController : MonoBehaviour {
         {
             if (spend(newBuilt.Cost))
             {
+                extendInfluenceArea(hex);
                 if (newBuilt is MilitarySpecialisation)
                 {
                     GameObject unitText = new GameObject();
@@ -104,6 +105,17 @@ public class MainController : MonoBehaviour {
         }
         audio.PlayOneShot(denied);
         return false;
+    }
+
+    private void extendInfluenceArea(GameObject hex)
+    {
+        hex.GetComponent<HexField>().isFilled = true;
+        GameObject[] neighbours = hex.GetComponent<HexField>().getSurroundingFields();
+        foreach (GameObject obj in neighbours)
+        {
+            obj.GetComponent<HexField>().owner = 1;
+            obj.GetComponent<HexField>().colorOwnedArea(obj);
+        }
     }
 
     public bool spend(int value)

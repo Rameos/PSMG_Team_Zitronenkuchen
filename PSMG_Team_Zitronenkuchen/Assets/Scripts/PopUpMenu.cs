@@ -68,7 +68,7 @@ public class PopUpMenu : MonoBehaviour {
         if (mainController.build("Economy", selectedHexagon, pos))
         {
             GameObject ecoBuilding = Resources.Load("economy-building 1", typeof(GameObject)) as GameObject;
-            GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
+            GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
             economyBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
             selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
             economyBuilding.transform.parent = selectedHexagon.transform;

@@ -21,12 +21,12 @@ public class CreateGameField : MonoBehaviour {
     
     public Material defaultMaterial;
     public Material baseMaterial;
-    public Material ownedMaterial;
+    
 
     private int BASE_X = 3;
     private int BASE_Y = 5;
 
-    private GameObject[,] hexArray;
+    public GameObject[,] hexArray {get; set;}
 
 	// Use this for initialization
 	void Start () {
@@ -42,11 +42,17 @@ public class CreateGameField : MonoBehaviour {
                     newHexPosition = positionHexagons(i, j);
                     GameObject hex = Instantiate(hexagon, newHexPosition, FIELD_ROTATION) as GameObject;       // Instantiates hexagon prefabs as gameobjects
                     hex.AddComponent<HexField>();
+                    hex.GetComponent<HexField>().xPos = i;
+                    hex.GetComponent<HexField>().yPos = j;
                     hexArray[i, j] = hex;
                     assignMaterialToObject(hex);
                     addComponentsAndScale(hex);
                 }
             }
+        foreach (GameObject obj in hexArray)
+        {
+            obj.GetComponent<HexField>().hexArray = hexArray;
+        }
         buildStartArea();
         //field.transform.renderer.bounds.center = new Vector3(100, 100, 100);                         //soll Mittelpunkt von terrain und field übereinanderlegen funktioniert aber nicht
         }
@@ -54,12 +60,13 @@ public class CreateGameField : MonoBehaviour {
     private void buildStartArea()
     {
         GameObject baseField = hexArray[BASE_X, BASE_Y];
+        baseField.GetComponent<HexField>().isFilled = true;
         baseField.renderer.material = baseMaterial;
-        GameObject[] influenceArea = baseField.GetComponent<HexField>().getSurroundingFields(BASE_X, BASE_Y, hexArray);
+        GameObject[] influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
         foreach (GameObject obj in influenceArea)
         {
             obj.GetComponent<HexField>().owner = 1;
-            obj.renderer.material = ownedMaterial;
+            obj.GetComponent<HexField>().colorOwnedArea(obj);
         }
     }
     private void assignMaterialToObject(GameObject obj)
@@ -70,19 +77,9 @@ public class CreateGameField : MonoBehaviour {
     private void initiateMaterial()
     {
         defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
-        if (defaultMaterial == null)
-        {
-            Debug.Log("loading failed, check existence of Resources folder in Assets");
-        }
-
         baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
-        if (baseMaterial == null)
-        {
-            Debug.Log("loading failed, check existence of Resources folder in Assets");
-        }
 
-        ownedMaterial = Resources.Load("OwnedMaterial", typeof(Material)) as Material;
-        if (ownedMaterial == null)
+        if (defaultMaterial == null || baseMaterial == null)
         {
             Debug.Log("loading failed, check existence of Resources folder in Assets");
         }
