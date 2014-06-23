@@ -23,8 +23,8 @@ public class CreateGameField : MonoBehaviour {
     public Material baseMaterial;
     
 
-    private int BASE_X = 3;
-    private int BASE_Y = 5;
+    private int BASE_X = 4;
+    private int BASE_Y = 6;
 
     public GameObject[,] hexArray {get; set;}
 
