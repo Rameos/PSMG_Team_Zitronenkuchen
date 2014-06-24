@@ -18,7 +18,7 @@ public class HexField : MonoBehaviour {
 
         if (xPos != 0 && yPos != 0)
         {
-            if (xPos % 2 == 0 && yPos % 2 == 0)
+            if (xPos % 2 == 0)
             {
                 Debug.Log("even");
                 fields[0] = hexArray[xPos, yPos - 1]; //links oben
