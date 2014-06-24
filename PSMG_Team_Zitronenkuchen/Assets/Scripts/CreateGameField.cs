@@ -30,6 +30,10 @@ public class CreateGameField : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        if (!CustomGameProperties.usesMouse)
+        {
+            Screen.lockCursor = true;
+        }
         initiateMaterial();
         FIELD_ROTATION.eulerAngles = ROTATION;
         hexagon.transform.localScale = HEX_SIZE;
