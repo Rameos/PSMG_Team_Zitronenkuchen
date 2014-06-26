@@ -83,10 +83,10 @@ public class MainController : MonoBehaviour {
         if (newBuilt != null)
         {
             if (spend(newBuilt.Cost))
-            {
-                extendInfluenceArea(hex);
+            {                
                 if (newBuilt is MilitarySpecialisation)
                 {
+                    extendInfluenceArea(hex);
                     GameObject unitText = new GameObject();
                     TextMesh text = unitText.AddComponent<TextMesh>();
                     text.characterSize = 0.1f;

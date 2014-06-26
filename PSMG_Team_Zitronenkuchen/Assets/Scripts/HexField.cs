@@ -14,7 +14,7 @@ public class HexField : MonoBehaviour {
 
     public GameObject[] getSurroundingFields()
     {
-        GameObject[] fields = new GameObject[6];
+        GameObject[] fields = new GameObject[18];
 
         if (xPos != 0 && yPos != 0)
         {
@@ -27,6 +27,18 @@ public class HexField : MonoBehaviour {
                 fields[3] = hexArray[xPos, yPos + 1]; //rechts unten
                 fields[4] = hexArray[xPos + 1, yPos]; //unten
                 fields[5] = hexArray[xPos + 1, yPos - 1]; //links unten
+                fields[6] = hexArray[xPos - 2, yPos - 1]; //links oben
+                fields[7] = hexArray[xPos - 1, yPos + 1]; //oben
+                fields[8] = hexArray[xPos - 2, yPos]; //LINKS UNTEN
+                fields[9] = hexArray[xPos + 1, yPos + 1]; //rechts unten
+                fields[10] = hexArray[xPos + 2, yPos - 1]; //unten
+                fields[11] = hexArray[xPos + 2, yPos]; //links unten
+                fields[12] = hexArray[xPos + 2, yPos + 1]; //links oben
+                fields[13] = hexArray[xPos + 1, yPos - 2]; //oben
+                fields[14] = hexArray[xPos, yPos + 2]; //LINKS UNTEN
+                fields[15] = hexArray[xPos - 1, yPos - 2]; //rechts unten
+                fields[16] = hexArray[xPos - 2, yPos + 1]; //unten
+                fields[17] = hexArray[xPos, yPos - 2]; //links unten
             }
             else
             {
@@ -37,6 +49,18 @@ public class HexField : MonoBehaviour {
                 fields[3] = hexArray[xPos, yPos + 1]; //rechts unten
                 fields[4] = hexArray[xPos + 1, yPos]; //unten
                 fields[5] = hexArray[xPos + 1, yPos + 1]; //links unten
+                fields[6] = hexArray[xPos-2, yPos - 1]; //links oben
+                fields[7] = hexArray[xPos - 1, yPos-1]; //oben
+                fields[8] = hexArray[xPos - 2, yPos]; //LINKS UNTEN
+                fields[9] = hexArray[xPos+1, yPos - 1]; //rechts unten
+                fields[10] = hexArray[xPos + 2, yPos-1]; //unten
+                fields[11] = hexArray[xPos + 2, yPos]; //links unten
+                fields[12] = hexArray[xPos+2, yPos + 1]; //links oben
+                fields[13] = hexArray[xPos + 1, yPos+2]; //oben
+                fields[14] = hexArray[xPos, yPos + 2]; //LINKS UNTEN
+                fields[15] = hexArray[xPos-1, yPos + 2]; //rechts unten
+                fields[16] = hexArray[xPos - 2, yPos+1]; //unten
+                fields[17] = hexArray[xPos, yPos-2]; //links unten
                 
             }
             
