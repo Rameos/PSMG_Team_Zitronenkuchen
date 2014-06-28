@@ -83,7 +83,8 @@ public class MainController : MonoBehaviour {
         if (newBuilt != null)
         {
             if (spend(newBuilt.Cost))
-            {                
+            {
+                hex.GetComponent<HexField>().isFilled = true;
                 if (newBuilt is MilitarySpecialisation)
                 {
                     extendInfluenceArea(hex);
@@ -109,7 +110,6 @@ public class MainController : MonoBehaviour {
 
     private void extendInfluenceArea(GameObject hex)
     {
-        hex.GetComponent<HexField>().isFilled = true;
         GameObject[] neighbours = hex.GetComponent<HexField>().getSurroundingFields();
         foreach (GameObject obj in neighbours)
         {
