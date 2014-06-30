@@ -69,7 +69,7 @@ public class PopUpMenu : MonoBehaviour {
         if (mainController.build("Economy", selectedHexagon, pos))
         {
             GameObject ecoBuilding = Resources.Load("economy-building 1", typeof(GameObject)) as GameObject;
-            GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
+            GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
             economyBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
             selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
             economyBuilding.transform.parent = selectedHexagon.transform;
@@ -87,24 +87,28 @@ public class PopUpMenu : MonoBehaviour {
 
     public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
     {
+        Debug.Log(hex.GetComponent<HexField>().owner);
+        if (hex.GetComponent<HexField>().owner == 1)
+        {
+            
+            //Set the Actions of the Buttons
+            this.pos = pos;
+
+            fieldScript = script;
+
+            selectedHexagon = hex;
+
+            buttonCallbackListener createMilitaryNodeButton = button1_Action;
+            buttonCallbackListener createResearchNodeButton = button2_Action;
+            buttonCallbackListener createEconomyNodeButton = button3_Action;
+
+            //Create new Buttonelements and add them to the gazeUI
+            gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Create Military Node", myStyle, createMilitaryNodeButton));
+            gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Create Research Node", myStyle, createResearchNodeButton));
+            gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Create Economy Node", myStyle, createEconomyNodeButton));
+            Debug.Log(gazeUI);
+        }
         
-        //Debug.Log(pos);
-        //Set the Actions of the Buttons
-        this.pos = pos;
-
-        fieldScript = script;
-
-        selectedHexagon = hex;
-       
-        buttonCallbackListener createMilitaryNodeButton = button1_Action;
-        buttonCallbackListener createResearchNodeButton = button2_Action;
-        buttonCallbackListener createEconomyNodeButton = button3_Action;
-
-        //Create new Buttonelements and add them to the gazeUI
-        gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Create Military Node", myStyle, createMilitaryNodeButton));
-        gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Create Research Node", myStyle, createResearchNodeButton));
-        gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Create Economy Node", myStyle, createEconomyNodeButton));
-        Debug.Log(gazeUI);
     }
 
     void closeMenu()

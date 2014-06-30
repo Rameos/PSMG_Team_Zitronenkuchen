@@ -19,31 +19,60 @@ public class CreateGameField : MonoBehaviour {
     private Vector3 newHexPosition;
     private Vector3 trueHexSize;
     
-    
-    
     public Material defaultMaterial;
+    public Material baseMaterial;
+    
 
+    private int BASE_X = 4;
+    private int BASE_Y = 6;
 
+    public GameObject[,] hexArray {get; set;}
 
 	// Use this for initialization
 	void Start () {
+        if (!CustomGameProperties.usesMouse)
+        {
+            Screen.lockCursor = true;
+        }
         initiateMaterial();
         FIELD_ROTATION.eulerAngles = ROTATION;
         hexagon.transform.localScale = HEX_SIZE;
         trueHexSize = hexagon.renderer.bounds.size;
+        hexArray = new GameObject[(int)FIELD_SIZE, (int) FIELD_SIZE];
         for (int i = 0; i < FIELD_SIZE; i++)
             {       
                 for (int j = 0; j < FIELD_SIZE; j++)
                 {
                     newHexPosition = positionHexagons(i, j);
                     GameObject hex = Instantiate(hexagon, newHexPosition, FIELD_ROTATION) as GameObject;       // Instantiates hexagon prefabs as gameobjects
+                    hex.AddComponent<HexField>();
+                    hex.GetComponent<HexField>().xPos = i;
+                    hex.GetComponent<HexField>().yPos = j;
+                    hexArray[i, j] = hex;
                     assignMaterialToObject(hex);
                     addComponentsAndScale(hex);
                 }
             }
+        foreach (GameObject obj in hexArray)
+        {
+            obj.GetComponent<HexField>().hexArray = hexArray;
+        }
+        buildStartArea();
         //field.transform.renderer.bounds.center = new Vector3(100, 100, 100);                         //soll Mittelpunkt von terrain und field übereinanderlegen funktioniert aber nicht
         }
 
+    private void buildStartArea()
+    {
+        GameObject baseField = hexArray[BASE_X, BASE_Y];
+        baseField.GetComponent<HexField>().isFilled = true;
+        baseField.renderer.material = baseMaterial;
+        GameObject[] influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
+        foreach (GameObject obj in influenceArea)
+        {
+            obj.GetComponent<HexField>().owner = 1;
+            obj.GetComponent<HexField>().colorOwnedArea(obj);
+        }
+    }
     private void assignMaterialToObject(GameObject obj)
     {
         obj.renderer.material = defaultMaterial;
@@ -52,7 +81,9 @@ public class CreateGameField : MonoBehaviour {
     private void initiateMaterial()
     {
         defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
-        if (defaultMaterial == null)
+        baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
+
+        if (defaultMaterial == null || baseMaterial == null)
         {
             Debug.Log("loading failed, check existence of Resources folder in Assets");
         }

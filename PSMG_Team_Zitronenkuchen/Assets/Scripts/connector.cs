@@ -4,7 +4,7 @@ using System.Collections;
 public class connector : MonoBehaviour
 {
 
-    public string connectionIP = "127.0.0.1";
+    public string connectionIP = "132.199.188.145";
     public int connectionPort = 25001;
 
     void OnGUI()
