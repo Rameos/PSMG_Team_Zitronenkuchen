@@ -4,16 +4,14 @@ using System.Collections;
 public class SelectionMenu : MonoBehaviour {
 
     public AudioClip selectSound;
-    public AudioClip militaryGrowl;
-    public AudioClip researchGrowl;
-    public AudioClip economyGrowl;
+    public AudioClip growl;
 
     public bool selected; 
 
     private static int selectedRaceIdx = -1; // 0 for research, 1 for military, 2 for economy
 
     private Vector3 noScale = new Vector3(0.0f, 0.0f, 0.0f);
-    private Vector3 highlightScale = new Vector3 (0..1f, 0.1f, 0.1f);
+    private Vector3 highlightScale = new Vector3 (0.1f, 0.1f, 0.1f);
 
     private bool alienSelected = false;
 
@@ -24,7 +22,7 @@ public class SelectionMenu : MonoBehaviour {
 
     void OnMouseEnter()
     {
-        gameObject.transform.localScale = new Vector3(0.0f, 0.1f, 0.1f);
+        gameObject.transform.localScale = highlightScale;
         highlightText();
         audio.PlayOneShot(selectSound);
     }
@@ -39,9 +37,10 @@ public class SelectionMenu : MonoBehaviour {
                     selected = true;
                     selectedRaceIdx = 0;
                     highlightText();
+                    scaleAlienBigger("ResearchRace");
                     rescaleAlien("MilitaryRace");
                     rescaleAlien("EconomyRace");
-                    //audio.PlayOneShot(researchGrowl);
+                    //audio.PlayOneShot(growl);
                 }
                 else
                 {
@@ -55,10 +54,11 @@ public class SelectionMenu : MonoBehaviour {
                 {
                     selected = true;
                     highlightText();
+                    scaleAlienBigger("MilitaryRace");
                     selectedRaceIdx = 1;
                     rescaleAlien("ResearchRace");
                     rescaleAlien("EconomyRace");
-                    //audio.PlayOneShot(militaryGrowl); 
+                    //audio.PlayOneShot(growl); 
                 } else {
                     rescaleAlien("MilitaryRace");
                     selectedRaceIdx = -1;
@@ -72,10 +72,11 @@ public class SelectionMenu : MonoBehaviour {
                 {
                     selected = true;
                     highlightText();
+                    scaleAlienBigger("EconomyRace");
                     selectedRaceIdx = 2;
                     rescaleAlien("MilitaryRace");
                     rescaleAlien("ResearchRace");
-                    //audio.PlayOneShot(economyGrowl);
+                    //audio.PlayOneShot(growl);
                 }
                 else
                 {
@@ -90,14 +91,13 @@ public class SelectionMenu : MonoBehaviour {
     private void highlightText()
     {
         gameObject.guiText.color = Color.cyan;
-        gameObject.guiText.text = "" + selectedRaceIdx;
 
     }
 
-    private void scaleAlienBigger(tag)
+    private void scaleAlienBigger(string tag)
     {
         GameObject alien = GameObject.FindGameObjectWithTag(tag);
-        alien.transform.localScale = noScale;
+        alien.transform.localScale = highlightScale;
     }
 
     private void rescaleAlien(string tag)
