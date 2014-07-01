@@ -40,7 +40,7 @@ public class SelectionMenu : MonoBehaviour {
                     scaleAlienBigger("ResearchRace");
                     rescaleAlien("MilitaryRace");
                     rescaleAlien("EconomyRace");
-                    //audio.PlayOneShot(growl);
+                    audio.PlayOneShot(growl);
                 }
                 else
                 {
@@ -58,7 +58,7 @@ public class SelectionMenu : MonoBehaviour {
                     selectedRaceIdx = 1;
                     rescaleAlien("ResearchRace");
                     rescaleAlien("EconomyRace");
-                    //audio.PlayOneShot(growl); 
+                    audio.PlayOneShot(growl); 
                 } else {
                     rescaleAlien("MilitaryRace");
                     selectedRaceIdx = -1;
@@ -76,7 +76,7 @@ public class SelectionMenu : MonoBehaviour {
                     selectedRaceIdx = 2;
                     rescaleAlien("MilitaryRace");
                     rescaleAlien("ResearchRace");
-                    //audio.PlayOneShot(growl);
+                    audio.PlayOneShot(growl);
                 }
                 else
                 {
