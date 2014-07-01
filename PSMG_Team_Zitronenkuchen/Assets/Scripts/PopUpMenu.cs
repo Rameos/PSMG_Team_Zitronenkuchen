@@ -22,7 +22,6 @@ public class PopUpMenu : MonoBehaviour {
 
     private GameObject selectedHexagon;
 
-    private ChangeFieldStateOnClick fieldScript;
     private MainController mainController;
 
     private Vector3 pos;
@@ -34,19 +33,15 @@ public class PopUpMenu : MonoBehaviour {
         Debug.Log("Button1_Pressed");
         if (mainController.build("Military", selectedHexagon, pos))
         {
-            GameObject milBuilding = Resources.Load("military-building", typeof(GameObject)) as GameObject;
-            GameObject militaryBuilding = Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
-            militaryBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
-            Debug.Log(militaryBuilding.transform.position.ToString());
-            Mesh militaryBuild = Resources.Load("military-building", typeof(Mesh)) as Mesh;
-            selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
-            militaryBuilding.transform.parent = selectedHexagon.transform;
-            fieldScript.fieldSet();
-            militaryBuilding.AddComponent("NetworkView");
+            NetworkView nview = selectedHexagon.networkView;
+            NetworkViewID nviewId = nview.viewID;
+            nview.RPC("buildMilitary", RPCMode.AllBuffered, nviewId);
+            nview.RPC("fieldSet", RPCMode.AllBuffered);
         }
-        
+
 
     }
+
 
     // Action for Button_2: 
     public void button2_Action()
@@ -54,12 +49,10 @@ public class PopUpMenu : MonoBehaviour {
         Debug.Log("Button2_Pressed");
         if (mainController.build("Research", selectedHexagon, pos))
         {
-            GameObject resBuilding = Resources.Load("research-building", typeof(GameObject)) as GameObject;
-            GameObject researchBuilding = Instantiate(resBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
-            researchBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
-            selectedHexagon.renderer.material = Resources.Load("researchMaterial", typeof(Material)) as Material;
-            researchBuilding.transform.parent = selectedHexagon.transform;
-            fieldScript.fieldSet();
+            NetworkView nview = selectedHexagon.networkView;
+            NetworkViewID nviewId = nview.viewID;
+            nview.RPC("buildResearch", RPCMode.AllBuffered, nviewId);
+            nview.RPC("fieldSet", RPCMode.AllBuffered);
         }
     }
     // Action for Button_3: 
@@ -68,16 +61,15 @@ public class PopUpMenu : MonoBehaviour {
         Debug.Log("Button3_Pressed");
         if (mainController.build("Economy", selectedHexagon, pos))
         {
-            GameObject ecoBuilding = Resources.Load("economy-building 1", typeof(GameObject)) as GameObject;
-            GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
-            economyBuilding.transform.localScale = new Vector3(10.0f, 10.0f, 10.0f);
-            selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
-            economyBuilding.transform.parent = selectedHexagon.transform;
-            fieldScript.fieldSet();
+            NetworkView nview = selectedHexagon.networkView;
+            NetworkViewID nviewId = nview.viewID;
+            nview.RPC("buildEconomy", RPCMode.AllBuffered, nviewId);
+            nview.RPC("fieldSet", RPCMode.AllBuffered);
         }
 
     }
     #endregion
+
 
 	// Use this for initialization
 	void Start (){
@@ -88,13 +80,11 @@ public class PopUpMenu : MonoBehaviour {
     public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
     {
         Debug.Log(hex.GetComponent<HexField>().owner);
-        if (hex.GetComponent<HexField>().owner == 1)
+        if ((hex.GetComponent<HexField>().owner == 1 && Network.isServer) || (hex.GetComponent<HexField>().owner == 2 && Network.isClient))
         {
             
             //Set the Actions of the Buttons
             this.pos = pos;
-
-            fieldScript = script;
 
             selectedHexagon = hex;
 
