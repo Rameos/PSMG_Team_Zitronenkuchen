@@ -4,6 +4,7 @@ using System.Collections;
 public class MilitarySpecialisation : Specialisation {
 
     private int troops = 0;
+    private int buildCounter = 0;
 
     public MilitarySpecialisation(GameObject hex, Vector3 pos) : base(hex, pos) { }
 
@@ -15,6 +16,22 @@ public class MilitarySpecialisation : Specialisation {
         }
     }
 
+    public override string type
+    {
+        get { return "mil"; }
+    }
+
+    public override int BuildCounter
+    {
+        get
+        {
+            return buildCounter;
+        }
+        set
+        {
+            buildCounter = value;
+        }
+    }
     public int Troops
     {
         get
@@ -25,6 +42,6 @@ public class MilitarySpecialisation : Specialisation {
 
     public void recruit()
     {
-        troops += Level;
+        troops += 5;
     }
 }

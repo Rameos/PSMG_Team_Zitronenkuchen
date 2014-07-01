@@ -12,5 +12,22 @@ public class EconomySpecialisation : Specialisation {
             return 100;
         }
     }
+
+    public override string type
+    {
+        get { return "eco"; }
+    }
+
+    public override int BuildCounter
+    {
+        get
+        {
+            return 0;
+        }
+        set
+        {
+            
+        }
+    }
 	
 }

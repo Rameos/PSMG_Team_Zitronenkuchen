@@ -11,6 +11,7 @@ public class HexField : MonoBehaviour {
     public int yPos;
     public GameObject[,] hexArray;
     public bool isFilled;
+    public Specialisation spec;
 
     public GameObject[] getSurroundingFields()
     {

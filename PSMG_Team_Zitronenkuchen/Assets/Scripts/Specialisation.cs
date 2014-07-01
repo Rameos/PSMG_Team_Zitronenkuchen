@@ -20,6 +20,17 @@ public abstract class Specialisation {
         get;
     }
 
+    abstract public string type
+    {
+        get;
+    }
+
+    abstract public int BuildCounter
+    {
+        get;
+        set;
+    }
+
     public int Level
     {
         get

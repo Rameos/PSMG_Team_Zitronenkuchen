@@ -12,5 +12,21 @@ public class ResearchSpecialisation : Specialisation {
             return 300;
         }
     }
+    public override string type
+    {
+        get { return "res"; }
+    }
+
+    public override int BuildCounter
+    {
+        get
+        {
+            return 0;
+        }
+        set
+        {
+
+        }
+    }
 
 }

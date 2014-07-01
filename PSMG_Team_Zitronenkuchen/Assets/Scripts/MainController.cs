@@ -48,7 +48,12 @@ public class MainController : MonoBehaviour {
             {
                 if (((MilitarySpecialisation)node).Troops < 100)
                 {
-                    ((MilitarySpecialisation)node).recruit();
+                    if (((MilitarySpecialisation)node).BuildCounter > 0)
+                    {
+                        Debug.Log(((MilitarySpecialisation)node).BuildCounter);
+                        ((MilitarySpecialisation)node).recruit();
+                        ((MilitarySpecialisation)node).BuildCounter -= 1;
+                    }
                     //Debug.Log(((MilitarySpecialisation)node).Troops + " troops on " + node.Pos);
                 }
                 
@@ -85,6 +90,7 @@ public class MainController : MonoBehaviour {
             if (spend(newBuilt.Cost))
             {
                 hex.GetComponent<HexField>().isFilled = true;
+                hex.GetComponent<HexField>().spec = newBuilt;
                 if (newBuilt is MilitarySpecialisation)
                 {
                     extendInfluenceArea(hex);
@@ -116,6 +122,16 @@ public class MainController : MonoBehaviour {
             obj.GetComponent<HexField>().owner = 1;
             obj.GetComponent<HexField>().colorOwnedArea(obj);
         }
+    }
+
+    public bool buildTroops()
+    {
+        if (tirkid - 150 >= 0)
+        {
+            tirkid -= 150;
+            return true;
+        }
+        return false;
     }
 
     public bool spend(int value)
