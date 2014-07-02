@@ -130,7 +130,7 @@ public class SelectionMenu : MonoBehaviour {
 
     void OnMouseExit()
     {
-        if (!selected)
+        if (raceIndex != selectedRaceIdx)
         {
             rescaleAlien(gameObject.tag);
         }
