@@ -14,7 +14,7 @@ public class SelectionMenuNavigation : MonoBehaviour {
 
     void OnMouseEnter()
     {
-        gameObject.guiText.color = Color.magenta; //orange
+        gameObject.guiText.color = new Color32 (218, 164, 59, 255);
         audio.PlayOneShot(selectSound);
     }
 
@@ -34,7 +34,7 @@ public class SelectionMenuNavigation : MonoBehaviour {
 
     void OnMouseExit()
     {
-        gameObject.guiText.color = Color.cyan; //initialcolor
+        gameObject.guiText.color = new Color32(87, 192, 195, 255); //initialcolor
     }
 	
 	// Update is called once per frame

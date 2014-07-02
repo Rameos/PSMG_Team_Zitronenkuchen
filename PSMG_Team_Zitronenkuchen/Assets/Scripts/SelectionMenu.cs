@@ -6,25 +6,40 @@ public class SelectionMenu : MonoBehaviour {
     public AudioClip selectSound;
     public AudioClip growl;
 
-    public bool selected; 
+    public bool selected;
+
+    public int raceIndex;
 
     private static int selectedRaceIdx = -1; // 0 for research, 1 for military, 2 for economy
 
     private Vector3 noScale = new Vector3(0.0f, 0.0f, 0.0f);
-    private Vector3 highlightScale = new Vector3 (0.1f, 0.1f, 0.1f);
+    private Vector3 highlightScale = new Vector3 (0.05f, 0.05f, 0.0f);
+
+    private Rect scaleInset = new Rect(-10, 0, 240, 300);
+
+    private Rect noScaleInset  = new Rect(0, 0, 220, 280);
 
     private bool alienSelected = false;
 
+    private float horizRatio = Screen.width / 800;
+    private float vertRatio = Screen.height / 600;
+ 
+
+
 	// Use this for initialization
 	void Start () {
-	
+       // GUI.matrix = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(horizRatio, vertRatio, 1));
 	}
 
     void OnMouseEnter()
     {
-        gameObject.transform.localScale = highlightScale;
-        highlightText();
-        audio.PlayOneShot(selectSound);
+        if (raceIndex != selectedRaceIdx)
+        {
+            gameObject.guiTexture.pixelInset = scaleInset;
+            highlightText();
+            audio.PlayOneShot(selectSound);
+        }
+        
     }
 
     void OnMouseUp()
@@ -32,11 +47,11 @@ public class SelectionMenu : MonoBehaviour {
         switch (gameObject.tag)
         {
             case "ResearchRace":
-                if (selectedRaceIdx != 0) 
+                if (selectedRaceIdx != raceIndex) 
                 {
                     selected = true;
-                    selectedRaceIdx = 0;
-                    highlightText();
+                    selectedRaceIdx = raceIndex;
+                    gameObject.guiText.color = new Color32(218, 164, 59, 255);
                     scaleAlienBigger("ResearchRace");
                     rescaleAlien("MilitaryRace");
                     rescaleAlien("EconomyRace");
@@ -50,12 +65,12 @@ public class SelectionMenu : MonoBehaviour {
                 }
                 break;
             case "MilitaryRace":
-                if (selectedRaceIdx != 1)
+                if (selectedRaceIdx != raceIndex)
                 {
                     selected = true;
-                    highlightText();
+                    gameObject.guiText.color = new Color32(218, 164, 59, 255);
                     scaleAlienBigger("MilitaryRace");
-                    selectedRaceIdx = 1;
+                    selectedRaceIdx = raceIndex;
                     rescaleAlien("ResearchRace");
                     rescaleAlien("EconomyRace");
                     audio.PlayOneShot(growl); 
@@ -68,12 +83,12 @@ public class SelectionMenu : MonoBehaviour {
                 
                 break;
             case "EconomyRace":
-                if (selectedRaceIdx != 2)
+                if (selectedRaceIdx != raceIndex)
                 {
                     selected = true;
-                    highlightText();
+                    gameObject.guiText.color = new Color32(218, 164, 59, 255);
                     scaleAlienBigger("EconomyRace");
-                    selectedRaceIdx = 2;
+                    selectedRaceIdx = raceIndex;
                     rescaleAlien("MilitaryRace");
                     rescaleAlien("ResearchRace");
                     audio.PlayOneShot(growl);
@@ -90,29 +105,29 @@ public class SelectionMenu : MonoBehaviour {
 
     private void highlightText()
     {
-        gameObject.guiText.color = Color.cyan;
+        gameObject.guiText.color = new Color32(87, 192, 195, 255);
 
     }
 
     private void scaleAlienBigger(string tag)
     {
         GameObject alien = GameObject.FindGameObjectWithTag(tag);
-        alien.transform.localScale = highlightScale;
-    }
+        alien.guiTexture.pixelInset = scaleInset;
 
+    }
     private void rescaleAlien(string tag)
     {
         GameObject alien = GameObject.FindGameObjectWithTag(tag);
-        alien.transform.localScale = noScale;
+        alien.guiTexture.pixelInset = noScaleInset;
         alien.guiText.color = Color.white;
-       
     }
 
-
+    //returns index of selected race:  0 for research, 1 for military, 2 for economy
     public static int getRaceType()
     {
         return selectedRaceIdx;
     }
+
     void OnMouseExit()
     {
         if (!selected)
