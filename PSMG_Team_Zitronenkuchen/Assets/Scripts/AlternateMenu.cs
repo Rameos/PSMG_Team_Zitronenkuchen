@@ -44,12 +44,18 @@ public class AlternateMenu : MonoBehaviour {
         else if (isMouse)
         {
             CustomGameProperties.usesMouse = true;
-            Application.LoadLevel("Create_Gamefield");
+            if (Network.isServer)
+            {
+                networkView.RPC("LoadLevel", RPCMode.AllBuffered, "Create_Gamefield");
+            }
             //TODO trigger that mouse is used in game
         }
         else if (isEyetracker)
         {
-            Application.LoadLevel("Create_Gamefield");
+            if (Network.isServer)
+            {
+                networkView.RPC("LoadLevel", RPCMode.AllBuffered, "Create_Gamefield");
+            }
             //TODO trigger that eyetracker is used in game
         }
         else if (isCalibrate == true)
@@ -65,6 +71,30 @@ public class AlternateMenu : MonoBehaviour {
             Application.Quit();
         }
 	}
+
+    [RPC]
+    public void LoadLevel(string level)
+    {
+        StartCoroutine(loadLevel(level));
+    }
+
+    private IEnumerator loadLevel(string level)
+    {
+        // omitted code
+
+        Application.LoadLevel(level);
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+
+        // Allow receiving data again
+        Network.isMessageQueueRunning = true;
+        // Now the level has been loaded and we can start sending out data
+        Network.SetSendingEnabled(0, true);
+
+        // Notify our objects that the level and the network is ready
+        foreach (GameObject go in FindObjectsOfType(typeof(GameObject)))
+            go.SendMessage("OnNetworkLoadedLevel", SendMessageOptions.DontRequireReceiver);
+    }
 }
 
 /*

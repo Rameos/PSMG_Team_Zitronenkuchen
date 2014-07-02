@@ -85,9 +85,12 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
             moveToLayer(child, layer);
     }
 
+
+    [RPC]
     public void fieldSet()
     {
         set = true;
     }
+    
 
 }
