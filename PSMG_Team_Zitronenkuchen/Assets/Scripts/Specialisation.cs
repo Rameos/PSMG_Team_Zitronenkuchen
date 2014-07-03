@@ -32,6 +32,17 @@ public abstract class Specialisation {
         }
     }
 
+    abstract public string type
+    {
+        get;
+    }
+
+    abstract public int BuildCounter
+    {
+        get;
+        set;
+    }
+
     public Vector3 Pos
     {
         get
