@@ -23,7 +23,7 @@ public class SelectionMenuNavigation : MonoBehaviour {
         if (gameObject.tag == "StartGame")
         {
             audio.PlayOneShot(UFO);
-            Application.LoadLevel("Create_Gamefield");
+            if (Network.isServer) networkView.RPC("LoadLevel", RPCMode.AllBuffered, "Create_Gamefield");
         }
 
         if (gameObject.tag == "BackToMenu") 
@@ -39,6 +39,30 @@ public class SelectionMenuNavigation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
+
+    }
+
+    [RPC]
+    public void LoadLevel(string level)
+    {
+        StartCoroutine(loadLevel(level));
+    }
+
+    private IEnumerator loadLevel(string level)
+    {
+        // omitted code
+
+        Application.LoadLevel(level);
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+
+        // Allow receiving data again
+        Network.isMessageQueueRunning = true;
+        // Now the level has been loaded and we can start sending out data
+        Network.SetSendingEnabled(0, true);
+
+        // Notify our objects that the level and the network is ready
+        foreach (GameObject go in FindObjectsOfType(typeof(GameObject)))
+            go.SendMessage("OnNetworkLoadedLevel", SendMessageOptions.DontRequireReceiver);
+    }
 }
