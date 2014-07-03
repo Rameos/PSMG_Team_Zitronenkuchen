@@ -10,6 +10,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     private bool set = false;
  
     PopUpMenu popUpMenu;
+    MilitaryMenu milMenu;
     
 
 
@@ -38,6 +39,10 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
             if (!set)
             {
                 showPopupMenu(posGaze);
+            }
+            else if (hit.transform.gameObject.GetComponent<HexField>().spec.type == "mil")
+            {
+                showMilitaryMenu(posGaze);
             }
             
                 
@@ -76,6 +81,21 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
         popUpMenu = GameObject.FindWithTag("PointLight").GetComponent<PopUpMenu>();
         Debug.Log(popUpMenu);
         popUpMenu.openMenu(pos, gameObject, this);
+    }
+
+    private void showMilitaryMenu(Vector3 pos)
+    {
+        Debug.Log("showMilitaryMenu");
+
+        Debug.Log(pos);
+
+        GameObject field = GameObject.FindGameObjectWithTag("Field");
+        int layer = LayerMask.NameToLayer("Ignore Raycast");
+        moveToLayer(field.transform, layer);
+
+        milMenu = GameObject.FindWithTag("PointLight").GetComponent<MilitaryMenu>();
+        Debug.Log(milMenu);
+        milMenu.openMenu(pos, gameObject, this);
     }
 
     void moveToLayer(Transform root, int layer)
