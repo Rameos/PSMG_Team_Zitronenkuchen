@@ -116,7 +116,7 @@ public class MainController : MonoBehaviour {
 
     private void extendInfluenceArea(GameObject hex)
     {
-        GameObject[] neighbours = hex.GetComponent<HexField>().getSurroundingFields();
+        ArrayList neighbours = hex.GetComponent<HexField>().getSurroundingFields();
         foreach (GameObject obj in neighbours)
         {
             obj.GetComponent<HexField>().owner = 1;
