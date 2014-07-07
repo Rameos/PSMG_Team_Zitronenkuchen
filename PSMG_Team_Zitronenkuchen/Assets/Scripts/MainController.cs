@@ -150,6 +150,14 @@ public class MainController : MonoBehaviour {
         return false;
     }
 
+    public bool moveTroops()
+    {
+
+
+
+        return true;
+    }
+
     private void research(int value)
     {
         researchPoints += value;

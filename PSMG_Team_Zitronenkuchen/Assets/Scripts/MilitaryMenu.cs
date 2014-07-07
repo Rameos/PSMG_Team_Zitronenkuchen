@@ -48,6 +48,16 @@ public class MilitaryMenu : MonoBehaviour {
         }
         Debug.Log("Button3_Pressed");
     }
+    public void button4_Action()
+    {
+
+    }
+
+    public void button5_Action()
+    {
+
+    }
+
     #endregion
 
     // Use this for initialization
@@ -64,7 +74,8 @@ public class MilitaryMenu : MonoBehaviour {
         {
 
             //Set the Actions of the Buttons
-            this.pos = pos;
+            this.pos.x = Screen.width/2;
+            this.pos.y = Screen.height / 2;
 
             fieldScript = script;
 
@@ -73,11 +84,24 @@ public class MilitaryMenu : MonoBehaviour {
             buttonCallbackListener attackButton = button1_Action;
             buttonCallbackListener moveButton = button2_Action;
             buttonCallbackListener buildButton = button3_Action;
+            buttonCallbackListener moving = button4_Action;
+            buttonCallbackListener attacking = button5_Action;
 
             //Create new Buttonelements and add them to the gazeUI
-            gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Attack", myStyle, attackButton));
-            gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Move Troops", myStyle, moveButton));
-            gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Build Troops" + "\n" + "150", myStyle, buildButton));
+            if (true)
+            {
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Attack", myStyle, attackButton));
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Move Troops", myStyle, moveButton));
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Build Troops" + "\n" + "150", myStyle, buildButton));
+            }
+            else if (true)
+            {
+
+            }
+            else if (true)
+            {
+
+            }
             Debug.Log(gazeUI);
         }
 
