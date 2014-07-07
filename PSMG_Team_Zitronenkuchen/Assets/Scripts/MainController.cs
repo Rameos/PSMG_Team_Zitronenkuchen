@@ -8,6 +8,8 @@ public class MainController : MonoBehaviour {
     private ArrayList ui = new ArrayList();
     private ArrayList spezialisedNodes = new ArrayList();
     private ArrayList labelUI = new ArrayList();
+    private int sendingTroops = 0;
+    private GameObject sendOrigin;
 
     public AudioClip building;
     public AudioClip denied;
@@ -150,14 +152,6 @@ public class MainController : MonoBehaviour {
         return false;
     }
 
-    public bool moveTroops()
-    {
-
-
-
-        return true;
-    }
-
     private void research(int value)
     {
         researchPoints += value;
@@ -189,5 +183,48 @@ public class MainController : MonoBehaviour {
            
         }
         
+    }
+
+    public int moveTroops(GameObject selectedHexagon)
+    {
+        foreach (Specialisation node in spezialisedNodes)
+        {
+            if (selectedHexagon.Equals(node.Hex))
+            {
+                //Debug.Log("GOT ONE");
+                sendOrigin = selectedHexagon;
+                return ((MilitarySpecialisation)node).Troops;
+            }
+        }
+        return 0;
+    }
+
+    public int isSending()
+    {
+        return sendingTroops;
+    }
+
+    public void startTroopSend(int count){
+        sendingTroops = count;
+    }
+
+    public void sendTroops(GameObject destination)
+    {
+        foreach (Specialisation node in spezialisedNodes)
+        {
+            if (destination.Equals(node.Hex))
+            {
+                if ((((MilitarySpecialisation)node).Troops + sendingTroops) <= 100)
+                {
+                    ((MilitarySpecialisation)node).Troops += sendingTroops;
+                }
+                
+            }
+            if (sendOrigin.Equals(node.Hex))
+            {
+                ((MilitarySpecialisation)node).Troops = 0;
+            }
+        }
+        sendingTroops = 0;
     }
 }
