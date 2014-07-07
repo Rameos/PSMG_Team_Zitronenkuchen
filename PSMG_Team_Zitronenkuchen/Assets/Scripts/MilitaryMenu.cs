@@ -37,6 +37,11 @@ public class MilitaryMenu : MonoBehaviour {
     // Action for Button_2: 
     public void button2_Action()
     {
+        int troops = mainController.moveTroops(selectedHexagon);
+        if (troops > 0)
+        {
+            mainController.startTroopSend(troops);
+        }
         Debug.Log("Button2_Pressed");
     }
     // Action for Button_3: 
@@ -50,10 +55,15 @@ public class MilitaryMenu : MonoBehaviour {
     }
     public void button4_Action()
     {
-
+        mainController.sendTroops(selectedHexagon);
     }
 
     public void button5_Action()
+    {
+
+    }
+
+    public void button6_Action()
     {
 
     }
@@ -86,17 +96,20 @@ public class MilitaryMenu : MonoBehaviour {
             buttonCallbackListener buildButton = button3_Action;
             buttonCallbackListener moving = button4_Action;
             buttonCallbackListener attacking = button5_Action;
-
+            buttonCallbackListener canceling = button6_Action;
+            bool isSending = mainController.isSending()>0;
+            Debug.Log(isSending);
             //Create new Buttonelements and add them to the gazeUI
-            if (true)
+            if (!isSending)
             {
                 gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Attack", myStyle, attackButton));
                 gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Move Troops", myStyle, moveButton));
                 gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Build Troops" + "\n" + "150", myStyle, buildButton));
             }
-            else if (true)
+            else if (isSending)
             {
-
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Move here", myStyle, moving));
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Cancel", myStyle, canceling));
             }
             else if (true)
             {
@@ -136,7 +149,7 @@ public class MilitaryMenu : MonoBehaviour {
 
         if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Space)
         {
-            Debug.Log("You pressed Space");
+            //Debug.Log("You pressed Space");
 
         }
     }

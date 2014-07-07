@@ -22,6 +22,10 @@ public class MilitarySpecialisation : Specialisation {
         {
             return troops;
         }
+        set
+        {
+            troops = value;
+        }
     }
 
     public override string type

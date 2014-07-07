@@ -131,7 +131,7 @@ public class PopUpMenu : MonoBehaviour {
 
         if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Space)
         {
-            Debug.Log("You pressed Space");
+            //Debug.Log("You pressed Space");
             
         }
     }
