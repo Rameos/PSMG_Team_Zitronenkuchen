@@ -121,7 +121,8 @@ public class MainController : MonoBehaviour {
         ArrayList neighbours = hex.GetComponent<HexField>().getSurroundingFields();
         foreach (GameObject obj in neighbours)
         {
-            obj.GetComponent<HexField>().owner = 1;
+            if(Network.isServer) obj.GetComponent<HexField>().owner = 1;
+            if (Network.isClient) obj.GetComponent<HexField>().owner = 2;
             obj.GetComponent<HexField>().colorOwnedArea(obj);
         }
     }
@@ -200,12 +201,40 @@ public class MainController : MonoBehaviour {
         return 0;
     }
 
+    public void cancelTroopMovement()
+    {
+        sendOrigin = null;
+        sendingTroops = 0;
+    }
+
     public int isSending()
     {
         return sendingTroops;
     }
 
-    public void startTroopSend(int count){
+    public void startTroopSend(int count, bool attack){
+        foreach (GameObject obj in sendOrigin.GetComponent<HexField>().getSurroundingFields())
+        {
+            HexField hex = obj.GetComponent<HexField>();
+            if (hex.spec is MilitarySpecialisation)
+            {
+                if (attack)
+                {
+                    if ((hex.owner == 2 && Network.isServer) || (hex.owner == 1 && Network.isClient))
+                    {
+                        // highlight enemy military node
+                    }
+                }
+                else
+                {
+                    if ((hex.owner == 1 && Network.isServer) || (hex.owner == 2 && Network.isClient))
+                    {
+                        // highlight own military node
+                    }
+                }
+            }
+            
+        }
         sendingTroops = count;
     }
 
@@ -220,6 +249,35 @@ public class MainController : MonoBehaviour {
                     ((MilitarySpecialisation)node).Troops += sendingTroops;
                 }
                 
+            }
+            if (sendOrigin.Equals(node.Hex))
+            {
+                ((MilitarySpecialisation)node).Troops = 0;
+            }
+        }
+        sendingTroops = 0;
+    }
+
+    public void sendAttack(GameObject destination)
+    {
+        foreach (Specialisation node in spezialisedNodes)
+        {
+            if (destination.Equals(node.Hex))
+            {
+                if ((((MilitarySpecialisation)node).Troops) < sendingTroops)
+                {
+                    // successful attack
+                    ((MilitarySpecialisation)node).Troops = sendingTroops - ((MilitarySpecialisation)node).Troops;
+                    extendInfluenceArea(destination);
+                    if (Network.isServer) destination.GetComponent<HexField>().owner = 1;
+                    if (Network.isClient) destination.GetComponent<HexField>().owner = 2;
+                }
+                else
+                {
+                    // attack failed
+                    ((MilitarySpecialisation)node).Troops -= sendingTroops;
+                }
+
             }
             if (sendOrigin.Equals(node.Hex))
             {
