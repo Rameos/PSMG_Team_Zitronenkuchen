@@ -159,5 +159,11 @@ public class HexField : MonoBehaviour {
         hex.GetComponent<HexField>().yPos = y;
     }
 
+    [RPC]
+    void showTroops(int troops)
+    {
+        gameObject.transform.GetComponentInChildren<TextMesh>().text = "" + troops;
+    }
+
     
 }

@@ -184,7 +184,8 @@ public class MainController : MonoBehaviour {
         {
             if (node is MilitarySpecialisation)
             {
-                node.Hex.transform.GetComponentInChildren<TextMesh>().text = ""+((MilitarySpecialisation)node).Troops;
+                NetworkView nview = node.Hex.networkView;
+                nview.RPC("showTroops", RPCMode.AllBuffered, ((MilitarySpecialisation)node).Troops);
             }
            
         }
