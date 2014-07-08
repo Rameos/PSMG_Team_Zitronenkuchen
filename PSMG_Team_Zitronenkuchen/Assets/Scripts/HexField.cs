@@ -165,5 +165,28 @@ public class HexField : MonoBehaviour {
         gameObject.transform.GetComponentInChildren<TextMesh>().text = "" + troops;
     }
 
+    [RPC]
+    void setSpecialisation(string type)
+    {
+        specialisation = type;
+    }
+
+    [RPC]
+    void processAttack(NetworkViewID id, int sendingTroops)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().receiveAttack(hex, sendingTroops);
+    }
+
+    [RPC]
+    void successfulAttack(NetworkViewID id, int survivingTroops, Vector3 pos)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().attackSuccess(hex, survivingTroops, pos);
+    }
+
+
     
 }

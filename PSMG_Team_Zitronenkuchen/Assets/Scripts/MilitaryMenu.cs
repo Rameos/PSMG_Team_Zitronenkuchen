@@ -68,6 +68,7 @@ public class MilitaryMenu : MonoBehaviour {
 
     public void button5_Action()
     {
+        mainController.sendAttack(selectedHexagon);
         Debug.Log("Button5_Pressed");
     }
 
@@ -109,7 +110,7 @@ public class MilitaryMenu : MonoBehaviour {
             bool isSending = mainController.isSending()>0;
             Debug.Log(isSending);
             //Create new Buttonelements and add them to the gazeUI
-            if (!isSending)
+            if (!isSending && ((hex.GetComponent<HexField>().owner == 1 && Network.isServer) || (hex.GetComponent<HexField>().owner == 2 && Network.isClient)))
             {
                 gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Attack", myStyle, attackButton));
                 gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Move Troops", myStyle, moveButton));

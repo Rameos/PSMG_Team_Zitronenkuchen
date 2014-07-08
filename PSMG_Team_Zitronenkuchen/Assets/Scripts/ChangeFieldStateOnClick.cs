@@ -35,15 +35,17 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
                 posGaze = new Vector3(Input.mousePosition.x, ((Input.mousePosition.y)-Screen.height)*(-1), 0);
                 Debug.Log(posGaze);
             }
-           
             if (!set)
             {
                 showPopupMenu(posGaze);
             }
-            else if (hit.transform.gameObject.GetComponent<HexField>().spec is MilitarySpecialisation)
-            {
-                
+            else if (hit.transform.gameObject.GetComponent<HexField>().specialisation=="Military")
+            {                
                 showMilitaryMenu(posGaze);
+            }
+            else
+            {
+                Debug.Log("FAIL");
             }
             
                 
