@@ -52,7 +52,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 
     private void highlightMaterial()
     {
-        gameObject.transform.renderer.material.shader = Shader.Find("Rim");
+        gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
     }
 
     //Reset the Element.Transform when the gaze leaves the Collider
