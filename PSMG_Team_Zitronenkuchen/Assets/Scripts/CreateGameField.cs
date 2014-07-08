@@ -104,7 +104,7 @@ public class CreateGameField : MonoBehaviour
                 Material baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
                 baseField.GetComponent<HexField>().isFilled = true;
                 baseField.renderer.material = baseMaterial;
-                GameObject[] influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
+                ArrayList influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
                 foreach (GameObject obj in influenceArea)
                 {
                     obj.GetComponent<HexField>().owner = 1;
@@ -118,7 +118,7 @@ public class CreateGameField : MonoBehaviour
                 Material baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
                 baseField.GetComponent<HexField>().isFilled = true;
                 baseField.renderer.material = baseMaterial;
-                GameObject[] influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
+                ArrayList influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
                 foreach (GameObject obj in influenceArea)
                 {
                     obj.GetComponent<HexField>().owner = 2;

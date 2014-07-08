@@ -44,18 +44,12 @@ public class AlternateMenu : MonoBehaviour {
         else if (isMouse)
         {
             CustomGameProperties.usesMouse = true;
-            if (Network.isServer)
-            {
-                networkView.RPC("LoadLevel", RPCMode.AllBuffered, "Create_Gamefield");
-            }
+            Application.LoadLevel("Selection_Menu");
             //TODO trigger that mouse is used in game
         }
         else if (isEyetracker)
         {
-            if (Network.isServer)
-            {
-                networkView.RPC("LoadLevel", RPCMode.AllBuffered, "Create_Gamefield");
-            }
+            Application.LoadLevel("Selection_Menu");
             //TODO trigger that eyetracker is used in game
         }
         else if (isCalibrate == true)

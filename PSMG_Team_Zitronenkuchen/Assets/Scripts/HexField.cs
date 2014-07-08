@@ -12,62 +12,68 @@ public class HexField : MonoBehaviour {
     public GameObject[,] hexArray = new GameObject[50,50];
     public bool isFilled;
     private bool set = false;
+    public Specialisation spec;
 
-    public GameObject[] getSurroundingFields()
+    public ArrayList getSurroundingFields()
     {
-        GameObject[] fields = new GameObject[18];
+        ArrayList list = new ArrayList();
+        
         fillHexArray();
-        if (xPos != 0 && yPos != 0)
+        int startI = -2;
+        int startJ = -2;
+        int endI = 2;
+        int endJ = 2;
+        bool bottomLimit = false;
+        if (xPos <= 1)
         {
-            if (xPos % 2 == 0)
-            {
-                Debug.Log("even");
-                fields[0] = hexArray[xPos, yPos - 1]; //links oben
-                fields[1] = hexArray[xPos - 1, yPos]; //oben
-                fields[2] = hexArray[xPos - 1, yPos - 1]; //LINKS UNTEN
-                fields[3] = hexArray[xPos, yPos + 1]; //rechts unten
-                fields[4] = hexArray[xPos + 1, yPos]; //unten
-                fields[5] = hexArray[xPos + 1, yPos - 1]; //links unten
-                fields[6] = hexArray[xPos - 2, yPos - 1]; //links oben
-                fields[7] = hexArray[xPos - 1, yPos + 1]; //oben
-                fields[8] = hexArray[xPos - 2, yPos]; //LINKS UNTEN
-                fields[9] = hexArray[xPos + 1, yPos + 1]; //rechts unten
-                fields[10] = hexArray[xPos + 2, yPos - 1]; //unten
-                fields[11] = hexArray[xPos + 2, yPos]; //links unten
-                fields[12] = hexArray[xPos + 2, yPos + 1]; //links oben
-                fields[13] = hexArray[xPos + 1, yPos - 2]; //oben
-                fields[14] = hexArray[xPos, yPos + 2]; //LINKS UNTEN
-                fields[15] = hexArray[xPos - 1, yPos - 2]; //rechts unten
-                fields[16] = hexArray[xPos - 2, yPos + 1]; //unten
-                fields[17] = hexArray[xPos, yPos - 2]; //links unten
-            }
-            else
-            {
-                Debug.Log("odd"); 
-                fields[0] = hexArray[xPos, yPos - 1]; //links oben
-                fields[1] = hexArray[xPos - 1, yPos]; //oben
-                fields[2] = hexArray[xPos - 1, yPos + 1]; //rechts oben
-                fields[3] = hexArray[xPos, yPos + 1]; //rechts unten
-                fields[4] = hexArray[xPos + 1, yPos]; //unten
-                fields[5] = hexArray[xPos + 1, yPos + 1]; //links unten
-                fields[6] = hexArray[xPos-2, yPos - 1]; //links oben
-                fields[7] = hexArray[xPos - 1, yPos-1]; //oben
-                fields[8] = hexArray[xPos - 2, yPos]; //LINKS UNTEN
-                fields[9] = hexArray[xPos+1, yPos - 1]; //rechts unten
-                fields[10] = hexArray[xPos + 2, yPos-1]; //unten
-                fields[11] = hexArray[xPos + 2, yPos]; //links unten
-                fields[12] = hexArray[xPos+2, yPos + 1]; //links oben
-                fields[13] = hexArray[xPos + 1, yPos+2]; //oben
-                fields[14] = hexArray[xPos, yPos + 2]; //LINKS UNTEN
-                fields[15] = hexArray[xPos-1, yPos + 2]; //rechts unten
-                fields[16] = hexArray[xPos - 2, yPos+1]; //unten
-                fields[17] = hexArray[xPos, yPos-2]; //links unten
-                
-            }
-            
+            bottomLimit = true;
+            startI = (-1) * xPos;
         }
-        Debug.Log("fields:" + fields);
-        return fields;
+        if (yPos <= 1)
+        {
+            bottomLimit = true;
+            startJ = (-1) * yPos;
+        }
+        if (xPos >= 48)
+        {
+            endI = 49 - xPos;
+        }
+        if (yPos >= 48)
+        {
+            endJ = 49 - yPos;
+        }
+        for (int i = startI; i <= endI; i++)
+        {
+            for (int j = startJ; j <= endJ; j++)
+            {
+                if (Mathf.Abs(i) + Mathf.Abs(j) != 4)
+                {
+                    Debug.Log("adding: i " + i + " j " + j);
+                    list.Add(hexArray[xPos + i, yPos + j]);
+                }
+            }
+        }
+        if (xPos % 2 == 0 && yPos <= 47)
+        {
+            Debug.Log("even");
+            if (xPos != 0){
+                list.Remove(hexArray[xPos - 1, yPos + 2]);
+            }
+            list.Remove(hexArray[xPos + 1, yPos + 2]);
+        }
+        else if (!bottomLimit)
+        {
+            Debug.Log("odd");
+            if (xPos != 0)
+            {
+                list.Remove(hexArray[xPos - 1, yPos - 2]);
+            }
+            if (xPos != 49)
+            {
+                list.Remove(hexArray[xPos + 1, yPos - 2]);
+            }
+        }
+        return list;
     }
 
     
@@ -151,6 +157,12 @@ public class HexField : MonoBehaviour {
         GameObject hex = view.gameObject;
         hex.GetComponent<HexField>().xPos = x;
         hex.GetComponent<HexField>().yPos = y;
+    }
+
+    [RPC]
+    void showTroops(int troops)
+    {
+        gameObject.transform.GetComponentInChildren<TextMesh>().text = "" + troops;
     }
 
     
