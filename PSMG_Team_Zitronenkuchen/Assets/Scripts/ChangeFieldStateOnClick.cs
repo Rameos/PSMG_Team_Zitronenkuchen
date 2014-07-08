@@ -40,7 +40,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
             {
                 showPopupMenu(posGaze);
             }
-            else if (hit.transform.gameObject.GetComponent<HexField>().spec is MilitarySpecialisation)
+            else if (hit.transform.gameObject.GetComponent<HexField>().spec is MilitarySpecialisation || hit.transform.gameObject.GetComponent<HexField>().spec is BaseSpecialisation)
             {
                 
                 showMilitaryMenu(posGaze);

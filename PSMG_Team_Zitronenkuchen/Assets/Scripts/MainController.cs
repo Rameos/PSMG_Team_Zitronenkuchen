@@ -6,7 +6,7 @@ public class MainController : MonoBehaviour {
     private int tirkid;
     private int researchPoints;
     private ArrayList ui = new ArrayList();
-    private ArrayList spezialisedNodes = new ArrayList();
+    private ArrayList specialisedNodes = new ArrayList();
     private ArrayList labelUI = new ArrayList();
     private int sendingTroops = 0;
     private GameObject sendOrigin;
@@ -36,7 +36,7 @@ public class MainController : MonoBehaviour {
     {
         earn(5);
         research(5);
-        foreach (Specialisation node in spezialisedNodes)
+        foreach (Specialisation node in specialisedNodes)
         {
             if (node is EconomySpecialisation)
             {
@@ -96,7 +96,7 @@ public class MainController : MonoBehaviour {
                 if (newBuilt is MilitarySpecialisation)
                 {
                     extendInfluenceArea(hex);
-                    GameObject unitText = new GameObject();
+                    /*GameObject unitText = new GameObject();
                     TextMesh text = unitText.AddComponent<TextMesh>();
                     text.characterSize = 0.1f;
                     Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
@@ -105,9 +105,9 @@ public class MainController : MonoBehaviour {
                     text.anchor = TextAnchor.MiddleCenter;
                     unitText.transform.parent = hex.transform;
                     unitText.transform.position = hex.transform.position;
-                    unitText.transform.Rotate(new Vector3(45, 0, 0));
+                    unitText.transform.Rotate(new Vector3(45, 0, 0));*/
                 }
-                spezialisedNodes.Add(newBuilt);
+                specialisedNodes.Add(newBuilt);
                 audio.PlayOneShot(building);
                 return true;
             }
@@ -115,6 +115,8 @@ public class MainController : MonoBehaviour {
         audio.PlayOneShot(denied);
         return false;
     }
+
+    
 
     private void extendInfluenceArea(GameObject hex)
     {
@@ -175,7 +177,7 @@ public class MainController : MonoBehaviour {
         GameObject ressourcelabel = GameObject.FindGameObjectWithTag("GUIRessources");
         ressourcelabel.guiText.text = "Tirkid: " + tirkid + "   Research: " + researchPoints;
         
-        foreach (Specialisation node in spezialisedNodes)
+        foreach (Specialisation node in specialisedNodes)
         {
             if (node is MilitarySpecialisation)
             {
@@ -189,7 +191,7 @@ public class MainController : MonoBehaviour {
 
     public int moveTroops(GameObject selectedHexagon)
     {
-        foreach (Specialisation node in spezialisedNodes)
+        foreach (Specialisation node in specialisedNodes)
         {
             if (selectedHexagon.Equals(node.Hex))
             {
@@ -240,7 +242,7 @@ public class MainController : MonoBehaviour {
 
     public void sendTroops(GameObject destination)
     {
-        foreach (Specialisation node in spezialisedNodes)
+        foreach (Specialisation node in specialisedNodes)
         {
             if (destination.Equals(node.Hex))
             {
@@ -260,7 +262,7 @@ public class MainController : MonoBehaviour {
 
     public void sendAttack(GameObject destination)
     {
-        foreach (Specialisation node in spezialisedNodes)
+        foreach (Specialisation node in specialisedNodes)
         {
             if (destination.Equals(node.Hex))
             {

@@ -104,6 +104,7 @@ public class CreateGameField : MonoBehaviour
                 Material baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
                 baseField.GetComponent<HexField>().isFilled = true;
                 baseField.renderer.material = baseMaterial;
+                specialiseBase(baseField);
                 ArrayList influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
                 foreach (GameObject obj in influenceArea)
                 {
@@ -118,6 +119,7 @@ public class CreateGameField : MonoBehaviour
                 Material baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
                 baseField.GetComponent<HexField>().isFilled = true;
                 baseField.renderer.material = baseMaterial;
+                specialiseBase(baseField);
                 ArrayList influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
                 foreach (GameObject obj in influenceArea)
                 {
@@ -133,5 +135,16 @@ public class CreateGameField : MonoBehaviour
 
         }
 
+    }
+
+    private void specialiseBase(GameObject baseNode)
+    {
+        Specialisation spec = new BaseSpecialisation(baseNode, baseNode.GetComponent<HexField>().getPos());
+        baseNode.GetComponent<HexField>().spec = spec;
+
+        NetworkView nview = baseNode.networkView;
+        NetworkViewID nviewId = nview.viewID;
+        nview.RPC("buildBase", RPCMode.AllBuffered, nviewId);
+        nview.RPC("fieldSet", RPCMode.AllBuffered);
     }
 }

@@ -76,7 +76,10 @@ public class HexField : MonoBehaviour {
         return list;
     }
 
-    
+    public Vector3 getPos(){
+        return new Vector3(xPos, yPos);
+    }
+
     private void fillHexArray()
     {
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("hex");
@@ -97,6 +100,27 @@ public class HexField : MonoBehaviour {
         {
             obj.renderer.material = ownedMaterial;
         }       
+    }
+
+    [RPC]
+    void buildBase(NetworkViewID id)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject selectedHexagon = view.gameObject;
+        GameObject milBuilding = Resources.Load("military-building2", typeof(GameObject)) as GameObject;
+        GameObject militaryBuilding = Network.Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
+        selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
+        militaryBuilding.transform.parent = selectedHexagon.transform;
+        GameObject unitText = new GameObject();
+        TextMesh text = unitText.AddComponent<TextMesh>();
+        text.characterSize = 0.1f;
+        Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        text.font = font;
+        text.renderer.material = font.material;
+        text.anchor = TextAnchor.MiddleCenter;
+        unitText.transform.parent = selectedHexagon.transform;
+        unitText.transform.position = selectedHexagon.transform.position;
+        unitText.transform.Rotate(new Vector3(45, 0, 0));
     }
 
     [RPC]
