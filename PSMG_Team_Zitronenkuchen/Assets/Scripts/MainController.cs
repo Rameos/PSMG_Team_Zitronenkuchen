@@ -238,6 +238,18 @@ public class MainController : MonoBehaviour {
         sendingTroops = count;
     }
 
+    private void highlightMilitaryNode(HexField hex, bool ownNode)
+    {
+        if (ownNode)
+        {
+
+        }
+        else
+        {
+
+        }
+    }
+
     public void sendTroops(GameObject destination)
     {
         foreach (Specialisation node in spezialisedNodes)
