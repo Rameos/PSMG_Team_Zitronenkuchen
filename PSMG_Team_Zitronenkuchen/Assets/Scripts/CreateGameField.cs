@@ -146,5 +146,6 @@ public class CreateGameField : MonoBehaviour
         NetworkViewID nviewId = nview.viewID;
         nview.RPC("buildBase", RPCMode.AllBuffered, nviewId);
         nview.RPC("fieldSet", RPCMode.AllBuffered);
+        nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)spec).Troops);
     }
 }

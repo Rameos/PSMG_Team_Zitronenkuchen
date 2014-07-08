@@ -48,7 +48,6 @@ public class HexField : MonoBehaviour {
             {
                 if (Mathf.Abs(i) + Mathf.Abs(j) != 4)
                 {
-                    Debug.Log("adding: i " + i + " j " + j);
                     list.Add(hexArray[xPos + i, yPos + j]);
                 }
             }
@@ -121,6 +120,7 @@ public class HexField : MonoBehaviour {
         unitText.transform.parent = selectedHexagon.transform;
         unitText.transform.position = selectedHexagon.transform.position;
         unitText.transform.Rotate(new Vector3(45, 0, 0));
+        text.text = "Base";
     }
 
     [RPC]
@@ -169,9 +169,9 @@ public class HexField : MonoBehaviour {
     [RPC]
     void updateTroops(NetworkViewID id, int troops)
     {
-        NetworkView view = NetworkView.Find(id);
+        /*NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
-        hex.transform.GetComponentInChildren<TextMesh>().text = "" + troops;
+        hex.transform.GetComponentInChildren<TextMesh>().text = "" + troops;*/
     }
 
     [RPC]

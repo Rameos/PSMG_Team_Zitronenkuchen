@@ -186,7 +186,17 @@ public class MainController : MonoBehaviour {
             }
            
         }
-        
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("hex"))
+        {
+            if (obj.GetComponent<HexField>().spec is BaseSpecialisation)
+            {
+                
+                Specialisation node = obj.GetComponent<HexField>().spec;
+                Debug.Log("Troops: "+((BaseSpecialisation)node).Troops);
+                NetworkView nview = node.Hex.networkView;
+                nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)node).Troops);
+            }
+        }
     }
 
     public int moveTroops(GameObject selectedHexagon)
