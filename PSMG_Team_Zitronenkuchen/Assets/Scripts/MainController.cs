@@ -93,6 +93,8 @@ public class MainController : MonoBehaviour {
             {
                 hex.GetComponent<HexField>().isFilled = true;
                 hex.GetComponent<HexField>().spec = newBuilt;
+                NetworkView nview = hex.networkView;
+                nview.RPC("setSpecialisation", RPCMode.AllBuffered, type);
                 if (newBuilt is MilitarySpecialisation)
                 {
                     extendInfluenceArea(hex);
@@ -260,30 +262,62 @@ public class MainController : MonoBehaviour {
 
     public void sendAttack(GameObject destination)
     {
+        // only working with 2 players!!!
+        // opponent nodes not on arraylist. start the rpc call insanity!
+        // this is the attacking player
+        NetworkViewID destinationNviewId = destination.networkView.viewID;
+        destination.networkView.RPC("processAttack", RPCMode.OthersBuffered, destinationNviewId, sendingTroops);
         foreach (Specialisation node in spezialisedNodes)
         {
-            if (destination.Equals(node.Hex))
-            {
-                if ((((MilitarySpecialisation)node).Troops) < sendingTroops)
-                {
-                    // successful attack
-                    ((MilitarySpecialisation)node).Troops = sendingTroops - ((MilitarySpecialisation)node).Troops;
-                    extendInfluenceArea(destination);
-                    if (Network.isServer) destination.GetComponent<HexField>().owner = 1;
-                    if (Network.isClient) destination.GetComponent<HexField>().owner = 2;
-                }
-                else
-                {
-                    // attack failed
-                    ((MilitarySpecialisation)node).Troops -= sendingTroops;
-                }
-
-            }
             if (sendOrigin.Equals(node.Hex))
             {
                 ((MilitarySpecialisation)node).Troops = 0;
             }
         }
         sendingTroops = 0;
+    }
+
+    public void receiveAttack(GameObject destination, int sentTroops)
+    {
+        // this is the defending player
+        foreach (Specialisation node in spezialisedNodes)
+        {
+            if (destination.Equals(node.Hex))
+            {
+                if ((((MilitarySpecialisation)node).Troops) < sentTroops)
+                {
+                    // successful attack
+                    Debug.Log("attack successful");
+                    int survivingTroops = sentTroops - ((MilitarySpecialisation)node).Troops;
+                    if (Network.isServer) destination.GetComponent<HexField>().owner = 1;
+                    if (Network.isClient) destination.GetComponent<HexField>().owner = 2;
+                    spezialisedNodes.Remove(node);
+                    NetworkViewID destinationNviewId = destination.networkView.viewID;
+                    destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos);
+                }
+                else
+                {
+                    // attack failed
+                    Debug.Log("attack failed");
+                    ((MilitarySpecialisation)node).Troops -= sentTroops;
+                }
+
+            }
+        }
+    }
+
+    public void attackSuccess(GameObject destination, int survivingTroops, Vector3 pos)
+    {
+        // this is the attacking player
+        // silly workaround; maybe replace later...
+        earn(150);
+        build("Military", destination, pos);
+        foreach (Specialisation node in spezialisedNodes)
+        {
+            if (destination.Equals(node.Hex))
+            {
+                ((MilitarySpecialisation)node).Troops = survivingTroops;
+            }
+        }
     }
 }
