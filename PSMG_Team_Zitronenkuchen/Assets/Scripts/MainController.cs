@@ -6,7 +6,7 @@ public class MainController : MonoBehaviour {
     private int tirkid;
     private int researchPoints;
     private ArrayList ui = new ArrayList();
-    private ArrayList specialisedNodes = new ArrayList();
+    public ArrayList specialisedNodes = new ArrayList();
     private ArrayList labelUI = new ArrayList();
     private int sendingTroops = 0;
     private GameObject sendOrigin;
@@ -58,7 +58,19 @@ public class MainController : MonoBehaviour {
                     }
                     //Debug.Log(((MilitarySpecialisation)node).Troops + " troops on " + node.Pos);
                 }
-                
+
+            }
+            else if (node is BaseSpecialisation)
+            {
+                if (((BaseSpecialisation)node).Troops < 150)
+                {
+                    if (((BaseSpecialisation)node).BuildCounter > 0)
+                    {
+                        Debug.Log(((BaseSpecialisation)node).BuildCounter);
+                        ((BaseSpecialisation)node).recruit();
+                        ((BaseSpecialisation)node).BuildCounter -= 1;
+                    }
+                }
             }
         }
     }
@@ -93,6 +105,8 @@ public class MainController : MonoBehaviour {
             {
                 hex.GetComponent<HexField>().isFilled = true;
                 hex.GetComponent<HexField>().spec = newBuilt;
+                NetworkView nview = hex.networkView;
+                nview.RPC("setSpecialisation", RPCMode.AllBuffered, type);
                 if (newBuilt is MilitarySpecialisation)
                 {
                     extendInfluenceArea(hex);
@@ -184,19 +198,14 @@ public class MainController : MonoBehaviour {
                 NetworkView nview = node.Hex.networkView;
                 nview.RPC("showTroops", RPCMode.AllBuffered, ((MilitarySpecialisation)node).Troops);
             }
-           
-        }
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("hex"))
-        {
-            if (obj.GetComponent<HexField>().spec is BaseSpecialisation)
+            else if (node is BaseSpecialisation)
             {
-                
-                Specialisation node = obj.GetComponent<HexField>().spec;
-                Debug.Log("Troops: "+((BaseSpecialisation)node).Troops);
                 NetworkView nview = node.Hex.networkView;
                 nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)node).Troops);
             }
+           
         }
+
     }
 
     public int moveTroops(GameObject selectedHexagon)
@@ -250,15 +259,31 @@ public class MainController : MonoBehaviour {
         sendingTroops = count;
     }
 
+    private void highlightMilitaryNode(HexField hex, bool ownNode)
+    {
+        if (ownNode)
+        {
+
+        }
+        else
+        {
+
+        }
+    }
+
     public void sendTroops(GameObject destination)
     {
         foreach (Specialisation node in specialisedNodes)
         {
             if (destination.Equals(node.Hex))
             {
-                if ((((MilitarySpecialisation)node).Troops + sendingTroops) <= 100)
+                if (node is MilitarySpecialisation && (((MilitarySpecialisation)node).Troops + sendingTroops) <= 100)
                 {
                     ((MilitarySpecialisation)node).Troops += sendingTroops;
+                }
+                else if (node is BaseSpecialisation && (((BaseSpecialisation)node).Troops + sendingTroops) <= 150)
+                {
+                    ((BaseSpecialisation)node).Troops += sendingTroops;
                 }
                 
             }
@@ -272,30 +297,63 @@ public class MainController : MonoBehaviour {
 
     public void sendAttack(GameObject destination)
     {
+        // only working with 2 players!!!
+        // opponent nodes not on arraylist. start the rpc call insanity!
+        // this is the attacking player
+        NetworkViewID destinationNviewId = destination.networkView.viewID;
+        destination.networkView.RPC("processAttack", RPCMode.OthersBuffered, destinationNviewId, sendingTroops);
         foreach (Specialisation node in specialisedNodes)
         {
-            if (destination.Equals(node.Hex))
-            {
-                if ((((MilitarySpecialisation)node).Troops) < sendingTroops)
-                {
-                    // successful attack
-                    ((MilitarySpecialisation)node).Troops = sendingTroops - ((MilitarySpecialisation)node).Troops;
-                    extendInfluenceArea(destination);
-                    if (Network.isServer) destination.GetComponent<HexField>().owner = 1;
-                    if (Network.isClient) destination.GetComponent<HexField>().owner = 2;
-                }
-                else
-                {
-                    // attack failed
-                    ((MilitarySpecialisation)node).Troops -= sendingTroops;
-                }
-
-            }
             if (sendOrigin.Equals(node.Hex))
             {
                 ((MilitarySpecialisation)node).Troops = 0;
             }
         }
         sendingTroops = 0;
+    }
+
+    public void receiveAttack(GameObject destination, int sentTroops)
+    {
+        // this is the defending player
+        foreach (Specialisation node in specialisedNodes)
+
+        {
+            if (destination.Equals(node.Hex))
+            {
+                if ((((MilitarySpecialisation)node).Troops) < sentTroops)
+                {
+                    // successful attack
+                    Debug.Log("attack successful");
+                    int survivingTroops = sentTroops - ((MilitarySpecialisation)node).Troops;
+                    if (Network.isServer) destination.GetComponent<HexField>().owner = 1;
+                    if (Network.isClient) destination.GetComponent<HexField>().owner = 2;
+                    specialisedNodes.Remove(node);
+                    NetworkViewID destinationNviewId = destination.networkView.viewID;
+                    destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos);
+                }
+                else
+                {
+                    // attack failed
+                    Debug.Log("attack failed");
+                    ((MilitarySpecialisation)node).Troops -= sentTroops;
+                }
+
+            }
+        }
+    }
+
+    public void attackSuccess(GameObject destination, int survivingTroops, Vector3 pos)
+    {
+        // this is the attacking player
+        // silly workaround; maybe replace later...
+        earn(150);
+        build("Military", destination, pos);
+        foreach (Specialisation node in specialisedNodes)
+        {
+            if (destination.Equals(node.Hex))
+            {
+                ((MilitarySpecialisation)node).Troops = survivingTroops;
+            }
+        }
     }
 }

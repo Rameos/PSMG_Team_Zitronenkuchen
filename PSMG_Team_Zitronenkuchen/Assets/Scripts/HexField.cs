@@ -106,7 +106,7 @@ public class HexField : MonoBehaviour {
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject milBuilding = Resources.Load("military-building2", typeof(GameObject)) as GameObject;
+        GameObject milBuilding = Resources.Load("base-building", typeof(GameObject)) as GameObject;
         GameObject militaryBuilding = Network.Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
         selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         militaryBuilding.transform.parent = selectedHexagon.transform;
@@ -188,6 +188,29 @@ public class HexField : MonoBehaviour {
     {
         gameObject.transform.GetComponentInChildren<TextMesh>().text = "" + troops;
     }
+
+    [RPC]
+    void setSpecialisation(string type)
+    {
+        specialisation = type;
+    }
+
+    [RPC]
+    void processAttack(NetworkViewID id, int sendingTroops)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().receiveAttack(hex, sendingTroops);
+    }
+
+    [RPC]
+    void successfulAttack(NetworkViewID id, int survivingTroops, Vector3 pos)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().attackSuccess(hex, survivingTroops, pos);
+    }
+
 
     
 }

@@ -35,20 +35,23 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
                 posGaze = new Vector3(Input.mousePosition.x, ((Input.mousePosition.y)-Screen.height)*(-1), 0);
                 Debug.Log(posGaze);
             }
-           
             if (!set)
             {
                 showPopupMenu(posGaze);
             }
-            else if (hit.transform.gameObject.GetComponent<HexField>().spec is MilitarySpecialisation || hit.transform.gameObject.GetComponent<HexField>().spec is BaseSpecialisation)
-            {
-                
+
+            else if (hit.transform.gameObject.GetComponent<HexField>().specialisation == "Military" || hit.transform.gameObject.GetComponent<HexField>().specialisation == "Base")
+            {                
+
                 showMilitaryMenu(posGaze);
+            }
+            else
+            {
+                Debug.Log("FAIL");
             }
             
                 
         }
-
     }
 
     private void highlightMaterial()
