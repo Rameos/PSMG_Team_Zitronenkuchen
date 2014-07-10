@@ -17,10 +17,12 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     private float maxZ = 21.1055f;
     private float minZ = 0.0f;
 
-    private double left = 0;
-    private double down = 0;
+    private double left = 5;
+    private double down = 5;
     private double right;
     private double up;
+
+    private float speed = 0.5f;
 
     private string direction;
 
@@ -29,7 +31,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     void Start()
     {
         right = Screen.width-5;
-        up = Screen.height;
+        up = Screen.height-5;
     }
 
     // Update is called once per frame
@@ -68,7 +70,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     {
 
         determineDirection(direction);
-        movement = new Vector3(0.5f * xDirection, 0, 0.5f * zDirection);
+        movement = new Vector3(speed * xDirection, 0, speed * zDirection);
         GameObject camera = GameObject.FindGameObjectWithTag("CameraWrapper");
         camera.transform.Translate(movement * Time.deltaTime * 2);
 
