@@ -29,15 +29,18 @@ public class CreateGameField : MonoBehaviour
     private NetworkView startFieldView;
     private NetworkViewID startFieldViewId;
 
+    private MainController mC;
     // Use this for initialization
     void Start()
     {
+        mC = GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>();
         if (Network.isServer)
         {
             if (!CustomGameProperties.usesMouse)
             {
                 Screen.lockCursor = true;
             }
+            mC = GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>();
             //initiateMaterial();
             FIELD_ROTATION.eulerAngles = ROTATION;
             hexagon.transform.localScale = HEX_SIZE;
@@ -104,6 +107,7 @@ public class CreateGameField : MonoBehaviour
                 Material baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
                 baseField.GetComponent<HexField>().isFilled = true;
                 baseField.renderer.material = baseMaterial;
+                specialiseBase(baseField);
                 ArrayList influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
                 foreach (GameObject obj in influenceArea)
                 {
@@ -118,6 +122,7 @@ public class CreateGameField : MonoBehaviour
                 Material baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
                 baseField.GetComponent<HexField>().isFilled = true;
                 baseField.renderer.material = baseMaterial;
+                specialiseBase(baseField);
                 ArrayList influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
                 foreach (GameObject obj in influenceArea)
                 {
@@ -133,5 +138,18 @@ public class CreateGameField : MonoBehaviour
 
         }
 
+    }
+
+    private void specialiseBase(GameObject baseNode)
+    {
+        Specialisation spec = new BaseSpecialisation(baseNode, baseNode.GetComponent<HexField>().getPos());
+        baseNode.GetComponent<HexField>().spec = spec;
+        mC.specialisedNodes.Add(spec);
+        NetworkView nview = baseNode.networkView;
+        NetworkViewID nviewId = nview.viewID;
+        nview.RPC("setSpecialisation", RPCMode.AllBuffered, "Base");
+        nview.RPC("buildBase", RPCMode.AllBuffered, nviewId);
+        nview.RPC("fieldSet", RPCMode.AllBuffered);
+        nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)spec).Troops);
     }
 }

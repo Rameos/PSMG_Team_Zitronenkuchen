@@ -48,7 +48,6 @@ public class HexField : MonoBehaviour {
             {
                 if (Mathf.Abs(i) + Mathf.Abs(j) != 4)
                 {
-                    Debug.Log("adding: i " + i + " j " + j);
                     list.Add(hexArray[xPos + i, yPos + j]);
                 }
             }
@@ -76,7 +75,10 @@ public class HexField : MonoBehaviour {
         return list;
     }
 
-    
+    public Vector3 getPos(){
+        return new Vector3(xPos, yPos);
+    }
+
     private void fillHexArray()
     {
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("hex");
@@ -97,6 +99,27 @@ public class HexField : MonoBehaviour {
         {
             obj.renderer.material = ownedMaterial;
         }       
+    }
+
+    [RPC]
+    void buildBase(NetworkViewID id)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject selectedHexagon = view.gameObject;
+        GameObject milBuilding = Resources.Load("base-building", typeof(GameObject)) as GameObject;
+        GameObject militaryBuilding = Network.Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
+        selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
+        militaryBuilding.transform.parent = selectedHexagon.transform;
+        GameObject unitText = new GameObject();
+        TextMesh text = unitText.AddComponent<TextMesh>();
+        text.characterSize = 0.1f;
+        Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        text.font = font;
+        text.renderer.material = font.material;
+        text.anchor = TextAnchor.MiddleCenter;
+        unitText.transform.parent = selectedHexagon.transform;
+        unitText.transform.position = selectedHexagon.transform.position;
+        unitText.transform.Rotate(new Vector3(45, 0, 0));
     }
 
     [RPC]
@@ -145,9 +168,9 @@ public class HexField : MonoBehaviour {
     [RPC]
     void updateTroops(NetworkViewID id, int troops)
     {
-        NetworkView view = NetworkView.Find(id);
+        /*NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
-        hex.transform.GetComponentInChildren<TextMesh>().text = "" + troops;
+        hex.transform.GetComponentInChildren<TextMesh>().text = "" + troops;*/
     }
 
     [RPC]
@@ -180,11 +203,11 @@ public class HexField : MonoBehaviour {
     }
 
     [RPC]
-    void successfulAttack(NetworkViewID id, int survivingTroops, Vector3 pos)
+    void successfulAttack(NetworkViewID id, int survivingTroops, Vector3 pos, bool win)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
-        GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().attackSuccess(hex, survivingTroops, pos);
+        GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().attackSuccess(hex, survivingTroops, pos, win);
     }
 
 
