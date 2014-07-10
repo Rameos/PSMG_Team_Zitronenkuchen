@@ -224,14 +224,14 @@ public class MainController : MonoBehaviour {
                 {
                     if ((hex.owner == 2 && Network.isServer) || (hex.owner == 1 && Network.isClient))
                     {
-                        // highlight enemy military node
+                        highlightMilitaryNode(hex, false);
                     }
                 }
                 else
                 {
                     if ((hex.owner == 1 && Network.isServer) || (hex.owner == 2 && Network.isClient))
                     {
-                        // highlight own military node
+                        highlightMilitaryNode(hex, true);
                     }
                 }
             }
@@ -244,11 +244,11 @@ public class MainController : MonoBehaviour {
     {
         if (ownNode)
         {
-
+            hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
         }
         else
         {
-
+            hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
         }
     }
 
