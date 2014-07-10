@@ -28,7 +28,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     // Use this for initialization
     void Start()
     {
-        right = Screen.width;
+        right = Screen.width-5;
         up = Screen.height;
     }
 
@@ -68,7 +68,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     {
 
         determineDirection(direction);
-        movement = new Vector3(0.2f * xDirection, 0, 0.2f * zDirection);
+        movement = new Vector3(0.5f * xDirection, 0, 0.5f * zDirection);
         GameObject camera = GameObject.FindGameObjectWithTag("CameraWrapper");
         camera.transform.Translate(movement * Time.deltaTime * 2);
 

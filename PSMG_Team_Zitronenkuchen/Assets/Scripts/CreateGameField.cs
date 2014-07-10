@@ -33,6 +33,7 @@ public class CreateGameField : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        mC = GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>();
         if (Network.isServer)
         {
             if (!CustomGameProperties.usesMouse)

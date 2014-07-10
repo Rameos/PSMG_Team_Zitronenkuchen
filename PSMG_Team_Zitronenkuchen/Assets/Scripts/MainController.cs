@@ -320,40 +320,72 @@ public class MainController : MonoBehaviour {
         {
             if (destination.Equals(node.Hex))
             {
-                if ((((MilitarySpecialisation)node).Troops) < sentTroops)
+                int troops = 0;
+                if (node is MilitarySpecialisation) troops = ((MilitarySpecialisation)node).Troops;
+                if (node is BaseSpecialisation) troops = ((BaseSpecialisation)node).Troops;
+                if (troops < sentTroops)
                 {
                     // successful attack
                     Debug.Log("attack successful");
-                    int survivingTroops = sentTroops - ((MilitarySpecialisation)node).Troops;
+                    int survivingTroops = sentTroops - troops;
                     if (Network.isServer) destination.GetComponent<HexField>().owner = 1;
                     if (Network.isClient) destination.GetComponent<HexField>().owner = 2;
                     specialisedNodes.Remove(node);
                     NetworkViewID destinationNviewId = destination.networkView.viewID;
-                    destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos);
+                    bool win = false;
+                    if (node is BaseSpecialisation)
+                    {
+                        win = true;
+                        gameEnd(!win);
+                    }
+                    destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
                 }
+                
                 else
                 {
                     // attack failed
                     Debug.Log("attack failed");
-                    ((MilitarySpecialisation)node).Troops -= sentTroops;
+                    troops -= sentTroops;
                 }
 
             }
         }
     }
 
-    public void attackSuccess(GameObject destination, int survivingTroops, Vector3 pos)
+    public void attackSuccess(GameObject destination, int survivingTroops, Vector3 pos, bool win)
     {
         // this is the attacking player
-        // silly workaround; maybe replace later...
-        earn(150);
-        build("Military", destination, pos);
-        foreach (Specialisation node in specialisedNodes)
+        if (win)
         {
-            if (destination.Equals(node.Hex))
+            gameEnd(win);
+        }
+        else
+        {
+            earn(150);
+            build("Military", destination, pos);
+            foreach (Specialisation node in specialisedNodes)
             {
-                ((MilitarySpecialisation)node).Troops = survivingTroops;
+                if (destination.Equals(node.Hex))
+                {
+                    int troops = 0;
+                    if (node is MilitarySpecialisation) troops = ((MilitarySpecialisation)node).Troops;
+                    if (node is BaseSpecialisation) troops = ((BaseSpecialisation)node).Troops;
+                    troops = survivingTroops;
+                }
             }
+        }
+        
+    }
+
+    private void gameEnd(bool win)
+    {
+        if (win)
+        {
+            Debug.Log("YOU WIN");
+        }
+        else
+        {
+            Debug.Log("YOU LOSE");
         }
     }
 }

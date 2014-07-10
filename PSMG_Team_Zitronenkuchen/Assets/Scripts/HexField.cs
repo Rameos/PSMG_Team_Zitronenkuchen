@@ -204,11 +204,11 @@ public class HexField : MonoBehaviour {
     }
 
     [RPC]
-    void successfulAttack(NetworkViewID id, int survivingTroops, Vector3 pos)
+    void successfulAttack(NetworkViewID id, int survivingTroops, Vector3 pos, bool win)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
-        GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().attackSuccess(hex, survivingTroops, pos);
+        GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().attackSuccess(hex, survivingTroops, pos, win);
     }
 
 
