@@ -300,6 +300,7 @@ public class MainController : MonoBehaviour {
         // only working with 2 players!!!
         // opponent nodes not on arraylist. start the rpc call insanity!
         // this is the attacking player
+
         NetworkViewID destinationNviewId = destination.networkView.viewID;
         destination.networkView.RPC("processAttack", RPCMode.OthersBuffered, destinationNviewId, sendingTroops);
         foreach (Specialisation node in specialisedNodes)

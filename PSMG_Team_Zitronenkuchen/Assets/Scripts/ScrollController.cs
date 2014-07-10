@@ -9,7 +9,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     private bool entered = false;
 
     private int xDirection = 1; //default 1, -1 if opposite direction, 0 if no movement
-    private int zDirection = 1; //default 1, -1 if opposite direction, 0 if no movement
+    private int yDirection = 1; //default 1, -1 if opposite direction, 0 if no movement
 
     private float maxX = 21.1055f;
     private float minX = 0.0f;
@@ -17,10 +17,18 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     private float maxZ = 21.1055f;
     private float minZ = 0.0f;
 
-    private double left = 5;
-    private double down = 5;
-    private double right;
-    private double up;
+    private float left = 5.0f;
+    private float down = 5.0f;
+    private float right;
+    private float up;
+
+    private GameObject camera;
+
+    private GameObject gameField;
+    private float borderLeft;
+    private float borderRight;
+    private float borderTop;
+    private float borderBottom;
 
     private float speed = 0.5f;
 
@@ -30,13 +38,23 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     // Use this for initialization
     void Start()
     {
-        right = Screen.width-5;
-        up = Screen.height-5;
+        camera = GameObject.FindGameObjectWithTag("CameraWrapper");
+
+        right = Screen.width-5.0f;
+        up = Screen.height-5.0f;
+
+        gameField = GameObject.FindGameObjectWithTag("gameTerrain");
+        borderLeft = gameField.transform.position.x;
+        borderBottom = gameField.transform.position.z;
+        borderTop = CreateGameField.getFieldHeight();
+        borderRight = CreateGameField.getFieldWidth();
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        //diagonal movement already possible
 
         if (Input.mousePosition.x <= left)
         {
@@ -70,21 +88,47 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     {
 
         determineDirection(direction);
-        movement = new Vector3(speed * xDirection, 0, speed * zDirection);
-        GameObject camera = GameObject.FindGameObjectWithTag("CameraWrapper");
+        movement = new Vector3(speed * xDirection, 0, speed * yDirection);
         camera.transform.Translate(movement * Time.deltaTime * 2);
 
-        if (camera.transform.position.x < minX)
-        {
-            xDirection = -1;
-            camera.transform.Translate(0.2f * xDirection * Time.deltaTime * 2, 0, 0.2f * zDirection * Time.deltaTime * 2, Space.World);
-        }
+       
+    }
 
-        if (camera.transform.position.x > maxX)
+    private bool hitBottomBorder()
+    {
+        if (camera.transform.position.z <= borderBottom)
         {
-            xDirection = 1;
-            camera.transform.Translate(0.2f * xDirection * Time.deltaTime * 2, 0, 0.2f * zDirection * Time.deltaTime * 2, Space.World);
+            return true;
         }
+        return false;
+    }
+
+    private bool hitTopBorder()
+    {
+
+        Debug.Log("this is the fieldsize" + borderTop);
+        if (camera.transform.position.z >= borderTop)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private bool hitLeftBorder()
+    {
+        if (camera.transform.position.x <= borderLeft)
+        {
+            return true;
+        }
+        return false;
+    }
+    private bool hitRightBorder()
+    {
+        if (camera.transform.position.x >= borderRight)
+        {
+            return true;
+        }
+        return false;
     }
 
     private void reEnableMovement()
@@ -97,37 +141,38 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         switch (direction)
         {
             case "Left":
-                xDirection = -1;
-                zDirection = 0;
+                xDirection = (hitLeftBorder())?0:-1;
+                yDirection = 0;
                 break;
             case "Right":
-                xDirection = 1;
-                zDirection = 0;
+                xDirection = (hitRightBorder()) ? 0 :1;
+                yDirection = 0;
                 break;
             case "Up":
                 xDirection = 0;
-                zDirection = 1;
+                yDirection = (hitTopBorder()) ? 0 :1;
                 break;
             case "Down":
                 xDirection = 0;
-                zDirection = -1;
+                yDirection = (hitBottomBorder()) ? 0 : -1;
                 break;
+            /* might use later, when eyetrackerscrolling returns :(
             case "UpRight":
                 xDirection = 1;
-                zDirection = 1;
+                yDirection = 1;
                 break;
             case "DownRight":
                 xDirection = 1;
-                zDirection = -1;
+                yDirection = -1;
                 break;
             case "DownLeft":
                 xDirection = -1;
-                zDirection = -1;
+                yDirection = -1;
                 break;
             case "UpLeft":
                 xDirection = -1;
-                zDirection = 1;
-                break;
+                yDirection = 1;
+                break; */
         }
     }
 

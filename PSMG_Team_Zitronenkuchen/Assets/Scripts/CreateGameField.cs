@@ -18,7 +18,7 @@ public class CreateGameField : MonoBehaviour
     private Vector3 FIRSTHEXAGON_POSITION;
     private Vector3 ROTATION = new Vector3(90, 0, 0);
     private Vector3 newHexPosition;
-    private Vector3 trueHexSize;
+    private static Vector3 trueHexSize;
 
     public Material defaultMaterial;
     public Material baseMaterial;
@@ -61,12 +61,23 @@ public class CreateGameField : MonoBehaviour
         }
         else
         {
-            GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(19, 1, 17);
+            GameObject.FindGameObjectWithTag("CameraWrapper").transform.position = new Vector3(19, 1, 17);
         }
+
+        GameObject.FindGameObjectWithTag("CameraWrapper").AddComponent<ScrollController> ();
     }
 
 
+    public static float getFieldWidth()
+    {
+     
+        return FIELD_SIZE *trueHexSize.x + GAP_SIZE*(FIELD_SIZE - 2);
+    }
 
+    public static float getFieldHeight()
+    {
+        return FIELD_SIZE *trueHexSize.z + GAP_SIZE*(FIELD_SIZE - 2);
+    }
 
     // Update is called once per frame
     void Update()
