@@ -120,7 +120,6 @@ public class HexField : MonoBehaviour {
         unitText.transform.parent = selectedHexagon.transform;
         unitText.transform.position = selectedHexagon.transform.position;
         unitText.transform.Rotate(new Vector3(45, 0, 0));
-        text.text = "Base";
     }
 
     [RPC]

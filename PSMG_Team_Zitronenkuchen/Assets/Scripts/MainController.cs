@@ -382,10 +382,12 @@ public class MainController : MonoBehaviour {
         if (win)
         {
             Debug.Log("YOU WIN");
+            Application.LoadLevel("WinScreen");
         }
         else
         {
             Debug.Log("YOU LOSE");
+            Application.LoadLevel("LoseScreen");
         }
     }
 }
