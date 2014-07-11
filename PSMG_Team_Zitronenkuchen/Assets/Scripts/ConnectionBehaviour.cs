@@ -6,7 +6,7 @@ public class ConnectionBehaviour : MonoBehaviour
 
     string ip = "Enter IP adress!";
 
-    public bool clickedConnect = false;
+    public static bool clickedConnect = false;
 
     public int connectionPort = 25001;
 
@@ -42,6 +42,7 @@ public class ConnectionBehaviour : MonoBehaviour
         if (gameObject.tag == "ConnectButton")
         {
             gameObject.guiText.color = new Color32 (218, 164, 59, 255); //orange
+            clickedConnect = true;
             if (Network.peerType == NetworkPeerType.Disconnected) Network.Connect(ip, connectionPort);
         }
     }
