@@ -20,7 +20,7 @@ public class SelectionMenuNavigation : MonoBehaviour {
 
     void OnMouseUp()
     {
-        if (gameObject.tag == "StartGame" && ConnectionBehaviour.clickedConnect)
+        if (gameObject.tag == "StartGame" && ConnectionBehaviour.initializedServer)
         {
             audio.PlayOneShot(UFO);
             if (Network.isServer) networkView.RPC("LoadLevel", RPCMode.AllBuffered, "Create_Gamefield");
