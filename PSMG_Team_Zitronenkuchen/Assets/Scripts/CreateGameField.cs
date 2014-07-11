@@ -70,13 +70,14 @@ public class CreateGameField : MonoBehaviour
 
     public static float getFieldWidth()
     {
-     
-        return FIELD_SIZE *trueHexSize.x + GAP_SIZE*(FIELD_SIZE - 2);
+        //50 times hexagonsize + 48 times gapsize - 1/2 of hexsize because of border
+        return FIELD_SIZE * trueHexSize.x + GAP_SIZE*(FIELD_SIZE - 2) - 1/2*  trueHexSize.x;
     }
 
     public static float getFieldHeight()
     {
-        return FIELD_SIZE *trueHexSize.z + GAP_SIZE*(FIELD_SIZE - 2);
+
+        return FIELD_SIZE * 0.7f * trueHexSize.z + GAP_SIZE * (FIELD_SIZE - 2) - 1 / 2 * trueHexSize.z;
     }
 
     // Update is called once per frame

@@ -34,20 +34,24 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 
     private string direction;
 
+    private float viewPortX;
+    private float viewPortY;
+
     private Vector3 movement;
     // Use this for initialization
     void Start()
     {
         camera = GameObject.FindGameObjectWithTag("CameraWrapper");
 
+
         right = Screen.width-5.0f;
         up = Screen.height-5.0f;
 
         gameField = GameObject.FindGameObjectWithTag("gameTerrain");
-        borderLeft = gameField.transform.position.x;
+        borderLeft = gameField.transform.position.x + 1.0f;
         borderBottom = gameField.transform.position.z;
-        borderTop = CreateGameField.getFieldHeight();
-        borderRight = CreateGameField.getFieldWidth();
+        borderTop = CreateGameField.getFieldHeight() - 0.7f;
+        borderRight = CreateGameField.getFieldWidth() - 0.7f;
     }
 
     // Update is called once per frame
@@ -89,7 +93,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 
         determineDirection(direction);
         movement = new Vector3(speed * xDirection, 0, speed * yDirection);
-        camera.transform.Translate(movement * Time.deltaTime * 2);
+        camera.transform.Translate(movement * Time.deltaTime * 2, Space.World);
 
        
     }
