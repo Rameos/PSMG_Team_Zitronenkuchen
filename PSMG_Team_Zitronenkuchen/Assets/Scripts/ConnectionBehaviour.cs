@@ -27,6 +27,7 @@ public class ConnectionBehaviour : MonoBehaviour
     {
         if (gameObject.tag == "ConnectButton" && !clickedConnect)
         {
+            // restore connect button color
             gameObject.guiText.color = Color.white;
         }
     }
@@ -35,6 +36,7 @@ public class ConnectionBehaviour : MonoBehaviour
     {
         if (gameObject.tag == "ConnectButton")
         {
+            // highlight connect button
             gameObject.guiText.color = new Color32(87, 192, 195, 255); //turqoise
         }
     }
@@ -45,6 +47,7 @@ public class ConnectionBehaviour : MonoBehaviour
         {
             gameObject.guiText.color = new Color32 (218, 164, 59, 255); //orange
             clickedConnect = true;
+            // try to connect to the entered ip
             if (Network.peerType == NetworkPeerType.Disconnected) Network.Connect(ip, connectionPort);
         }
     }
@@ -56,17 +59,20 @@ public class ConnectionBehaviour : MonoBehaviour
 
         if (Network.peerType == NetworkPeerType.Disconnected)
         {
+            // not connected
             GUI.Label(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 30 + 125, 300, 20), "Status: Disconnected");
+            // init Server
             if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 60 + 125, 120, 20), "Initialize Server"))
-            {
-                
+            {                
                 Network.InitializeServer(32, connectionPort, true);
                 initializedServer = true;
             }
         }
         else if (Network.peerType == NetworkPeerType.Client)
         {
+            // client
             GUI.Label(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 30 + 125, 300, 20), "Status: Connected as Client");
+            // disconnect button
             if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / + 60 + 125, 120, 20), "Disconnect"))
             {
                 Network.Disconnect(200);
@@ -74,7 +80,9 @@ public class ConnectionBehaviour : MonoBehaviour
         }
         else if (Network.peerType == NetworkPeerType.Server)
         {
+            // server
             GUI.Label(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 30 + 125, 300, 20), "Status: Connected as Server");
+            // disconnect button
             if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 60 + 125, 120, 20), "Disconnect"))
             {
                 Network.Disconnect(200);

@@ -1,33 +1,34 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿// postponed to nice to have features
+//using UnityEngine;
+//using System.Collections;
 
-public class ResearchSpecialisation : Specialisation {
+//public class ResearchSpecialisation : Specialisation {
 
-    public ResearchSpecialisation(GameObject hex, Vector3 pos) : base(hex, pos) { }
+//    public ResearchSpecialisation(GameObject hex, Vector3 pos) : base(hex, pos) { }
     
-    public override int Cost
-    {
-        get
-        {
-            return 300;
-        }
-    }
+//    public override int Cost
+//    {
+//        get
+//        {
+//            return 300;
+//        }
+//    }
 
-    public override string type
-    {
-        get { return "res"; }
-    }
+//    public override string type
+//    {
+//        get { return "res"; }
+//    }
 
-    public override int BuildCounter
-    {
-        get
-        {
-            return 0;
-        }
-        set
-        {
+//    public override int BuildCounter
+//    {
+//        get
+//        {
+//            return 0;
+//        }
+//        set
+//        {
 
-        }
-    }
+//        }
+//    }
 
-}
+//}

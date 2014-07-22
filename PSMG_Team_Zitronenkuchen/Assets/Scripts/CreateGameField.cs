@@ -3,15 +3,13 @@ using System.Collections;
 
 public class CreateGameField : MonoBehaviour
 {
-
-
     public GameObject hexagon;
-    public GameObject field;
-    public GameObject terrain;
+    // public GameObject field;
+    // public GameObject terrain;
     public Transform terrainPosition;
 
     private const float GAP_SIZE = 0.01f; // 0-5 seems reasonable
-    private const float FIELD_SIZE = 50; // startmenu function to select the fieldsize?
+    private const float FIELD_SIZE = 20; // startmenu function to select the fieldsize?
 
     private Quaternion FIELD_ROTATION = new Quaternion(0, 0, 0, 0);
     private Vector3 HEX_SIZE = new Vector3(5, 5, 20);
@@ -20,14 +18,9 @@ public class CreateGameField : MonoBehaviour
     private Vector3 newHexPosition;
     private static Vector3 trueHexSize;
 
-    public Material defaultMaterial;
-    public Material baseMaterial;
-
 
     private int BASE_X = 4;
     private int BASE_Y = 6;
-    private NetworkView startFieldView;
-    private NetworkViewID startFieldViewId;
 
     private MainController mC;
     // Use this for initialization
@@ -40,8 +33,6 @@ public class CreateGameField : MonoBehaviour
             {
                 Screen.lockCursor = true;
             }
-            mC = GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>();
-            //initiateMaterial();
             FIELD_ROTATION.eulerAngles = ROTATION;
             hexagon.transform.localScale = HEX_SIZE;
             trueHexSize = hexagon.renderer.bounds.size;
@@ -61,7 +52,7 @@ public class CreateGameField : MonoBehaviour
         }
         else
         {
-            GameObject.FindGameObjectWithTag("CameraWrapper").transform.position = new Vector3(19, 1, 17);
+            GameObject.FindGameObjectWithTag("CameraWrapper").transform.position = new Vector3(6.3f, 1.0f, 5.5f);
         }
 
         GameObject.FindGameObjectWithTag("CameraWrapper").AddComponent<ScrollController> ();
@@ -70,7 +61,7 @@ public class CreateGameField : MonoBehaviour
 
     public static float getFieldWidth()
     {
-        //50 times hexagonsize + 48 times gapsize - 1/2 of hexsize because of border
+        //20 times hexagonsize + 18 times gapsize - 1/2 of hexsize because of border
         return FIELD_SIZE * trueHexSize.x + GAP_SIZE*(FIELD_SIZE - 2) - 1/2*  trueHexSize.x;
     }
 
@@ -111,8 +102,8 @@ public class CreateGameField : MonoBehaviour
         bool oneSet = false;
         bool twoSet = false;
         foreach (GameObject baseField in gameObjects)
-        {
-            HexField hex = baseField.GetComponent<HexField>();
+        {// iterate through all gameobjects
+            HexField hex = baseField.GetComponent<HexField>();  // if gameobject is no hex -> null
             if (hex.xPos == (int)xPlayerOne && hex.yPos == (int)yPlayerOne)
             { // Player One Start Area
                 Debug.Log("got one");
@@ -124,7 +115,7 @@ public class CreateGameField : MonoBehaviour
                 foreach (GameObject obj in influenceArea)
                 {
                     obj.GetComponent<HexField>().owner = 1;
-                    obj.GetComponent<HexField>().colorOwnedArea(obj);
+                    if(Network.isServer) obj.GetComponent<HexField>().colorOwnedArea(obj);
                 }
                 oneSet = true;
             }
@@ -139,7 +130,7 @@ public class CreateGameField : MonoBehaviour
                 foreach (GameObject obj in influenceArea)
                 {
                     obj.GetComponent<HexField>().owner = 2;
-                    obj.GetComponent<HexField>().colorOwnedArea(obj);
+                    if(Network.isClient) obj.GetComponent<HexField>().colorOwnedArea(obj);
                 }
                 twoSet = true;
             }

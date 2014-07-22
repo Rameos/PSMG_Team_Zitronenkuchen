@@ -4,9 +4,6 @@ using iViewX;
 
 public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 {
-
-    private Material defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
-    private Material highlightedMaterial = Resources.Load("HighlightedMaterial", typeof(Material)) as Material;
     private bool set = false;
  
     PopUpMenu popUpMenu;
@@ -16,38 +13,37 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 
     public override void OnGazeEnter(RaycastHit hit)
     {
-        //Debug.Log("Enter");
+        // nothing to do here
     }
 
-    //Rotate the Element if the Gaze stays on the Collider
     public override void OnGazeStay(RaycastHit hit)
     {
-        //Debug.Log("Stay");
         highlightMaterial();
 
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-
+            // user staring at the field and pressing space -> open menu
             Vector3 posGaze = (gazeModel.posGazeLeft + gazeModel.posGazeRight) * 0.5f;
             Vector3 nullVect = new Vector3(0, 0, 0);
-            {
-                posGaze = new Vector3(Input.mousePosition.x, ((Input.mousePosition.y)-Screen.height)*(-1), 0);
-                Debug.Log(posGaze);
-            }
+
+            posGaze = new Vector3(Input.mousePosition.x, ((Input.mousePosition.y)-Screen.height)*(-1), 0);
+            Debug.Log(posGaze);
+            
             if (!set)
             {
+                // field not set yet
                 showPopupMenu(posGaze);
             }
 
             else if (hit.transform.gameObject.GetComponent<HexField>().specialisation == "Military" || hit.transform.gameObject.GetComponent<HexField>().specialisation == "Base")
             {                
-
+                // field set to military or base
                 showMilitaryMenu(posGaze);
             }
             else
             {
-                Debug.Log("FAIL");
+                // if user hits already set field that ius nit military -> nothing happens
             }
             
                 
@@ -62,7 +58,6 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     //Reset the Element.Transform when the gaze leaves the Collider
     public override void OnGazeExit()
     {
-        //Debug.Log("Exit");
         resetMaterial();
     }
 
@@ -71,34 +66,29 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
         gameObject.transform.renderer.material.shader = Shader.Find("Diffuse");
     }
 
-    // show the popup menu when a field was clicked
+    // show the standard popup menu when a field which is not set was clicked
     private void showPopupMenu(Vector3 pos)
     {
-        Debug.Log("showPopupMenu");
-
-        Debug.Log(pos);
+        // Debug.Log("showPopupMenu");
 
         GameObject field = GameObject.FindGameObjectWithTag("Field");
         int layer = LayerMask.NameToLayer("Ignore Raycast");
         moveToLayer(field.transform, layer);
 
         popUpMenu = GameObject.FindWithTag("PointLight").GetComponent<PopUpMenu>();
-        Debug.Log(popUpMenu);
         popUpMenu.openMenu(pos, gameObject, this);
     }
 
+    // show military menu when a military field is clicked
     private void showMilitaryMenu(Vector3 pos)
     {
-        Debug.Log("showMilitaryMenu");
-
-        Debug.Log(pos);
+        // Debug.Log("showMilitaryMenu");
 
         GameObject field = GameObject.FindGameObjectWithTag("Field");
         int layer = LayerMask.NameToLayer("Ignore Raycast");
         moveToLayer(field.transform, layer);
 
         milMenu = GameObject.FindWithTag("PointLight").GetComponent<MilitaryMenu>();
-        Debug.Log(milMenu);
         milMenu.openMenu(pos, gameObject, this);
     }
 

@@ -10,19 +10,18 @@ public class AlternateMenu : MonoBehaviour {
     public bool isMouse = false;
     public bool isEyetracker = false;
 
-    public float newPos1;
-    public float newPos2;
-
     public AudioClip selectSound;
 
     void OnMouseEnter()
     {
+        // option selected
         renderer.material.color = Color.cyan;
         audio.PlayOneShot(selectSound);
     }
 
     void OnMouseExit()
     {
+        // option deselected
         renderer.material.color = Color.white;
     }
 
@@ -30,11 +29,12 @@ public class AlternateMenu : MonoBehaviour {
     {
         if (isQuit == true)
         {
+            // quit the game
             Application.Quit();
         }
         else if (isStart == true)
         {
-            
+            // let the user chose between eyetracker or mouse
             transform.position = new Vector3(-75, transform.position.y, transform.position.z);
             GameObject useMouseBtn = GameObject.FindGameObjectWithTag("UseMouse");
             GameObject useEyetrackerBtn = GameObject.FindGameObjectWithTag("UseEyetracker");
@@ -43,29 +43,24 @@ public class AlternateMenu : MonoBehaviour {
         }
         else if (isMouse)
         {
+            // start using only mouse
             CustomGameProperties.usesMouse = true;
             Application.LoadLevel("Selection_Menu");
-            //TODO trigger that mouse is used in game
+            //TODO make sure Eyetracker is not used!
         }
         else if (isEyetracker)
         {
+            // start using eyetracker and mouse
             Application.LoadLevel("Selection_Menu");
-            //TODO trigger that eyetracker is used in game
         }
         else if (isCalibrate == true)
         {
+            // calibrate
             GazeControlComponent.Instance.StartCalibration(); 
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if (Input.GetKey(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-	}
 
+    // last two classes are for levelLoading
     [RPC]
     public void LoadLevel(string level)
     {
@@ -74,8 +69,6 @@ public class AlternateMenu : MonoBehaviour {
 
     private IEnumerator loadLevel(string level)
     {
-        // omitted code
-
         Application.LoadLevel(level);
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
@@ -90,35 +83,4 @@ public class AlternateMenu : MonoBehaviour {
             go.SendMessage("OnNetworkLoadedLevel", SendMessageOptions.DontRequireReceiver);
     }
 }
-
-/*
- * var isQuit=false;
-
-function OnMouseEnter(){
-//change text color
-renderer.material.color=Color.red;
-}
-
-function OnMouseExit(){
-//change text color
-renderer.material.color=Color.white;
-}
-
-function OnMouseUp(){
-//is this quit
-if (isQuit==true) {
-//quit the game
-Application.Quit();
-}
-else {
-//load level
-Application.LoadLevel(1);
-}
-}
-
-function Update(){
-//quit game if escape key is pressed
-if (Input.GetKey(KeyCode.Escape)) { Application.Quit();
-}
-}*/
 
