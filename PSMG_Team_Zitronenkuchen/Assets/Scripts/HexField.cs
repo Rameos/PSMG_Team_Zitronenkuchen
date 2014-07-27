@@ -148,9 +148,9 @@ public class HexField : MonoBehaviour {
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject resBuilding = Resources.Load("research-building2", typeof(GameObject)) as GameObject;
+        GameObject resBuilding = Resources.Load("economyECONOMY", typeof(GameObject)) as GameObject;
         GameObject researchBuilding = Instantiate(resBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
-        selectedHexagon.renderer.material = Resources.Load("researchMaterial", typeof(Material)) as Material;
+        //selectedHexagon.renderer.material = Resources.Load("researchMaterial", typeof(Material)) as Material;
         researchBuilding.transform.parent = selectedHexagon.transform;
     }
 
@@ -159,9 +159,9 @@ public class HexField : MonoBehaviour {
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject ecoBuilding = Resources.Load("economy-building2", typeof(GameObject)) as GameObject;
+        GameObject ecoBuilding = Resources.Load("economyECONOMY", typeof(GameObject)) as GameObject;
         GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
-        selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
+        //selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
         economyBuilding.transform.parent = selectedHexagon.transform;
     }
 
