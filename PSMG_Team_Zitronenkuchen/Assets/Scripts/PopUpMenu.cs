@@ -27,7 +27,7 @@ public class PopUpMenu : MonoBehaviour {
     private Vector3 pos;
 
     #region ButtonActions
-    // Action for Button_1: 
+    // Build Military: 
     public void button1_Action()
     {
         Debug.Log("Button1_Pressed");
@@ -42,20 +42,20 @@ public class PopUpMenu : MonoBehaviour {
 
     }
 
+    // Build Research: 
+    //public void button2_Action()
+    //{
+    //    Debug.Log("Button2_Pressed");
+    //    if (mainController.build("Research", selectedHexagon, pos))
+    //    {
+    //        NetworkView nview = selectedHexagon.networkView;
+    //        NetworkViewID nviewId = nview.viewID;
+    //        nview.RPC("buildResearch", RPCMode.AllBuffered, nviewId);
+    //        nview.RPC("fieldSet", RPCMode.AllBuffered);
+    //    }
+    //}
 
-    // Action for Button_2: 
-    public void button2_Action()
-    {
-        Debug.Log("Button2_Pressed");
-        if (mainController.build("Research", selectedHexagon, pos))
-        {
-            NetworkView nview = selectedHexagon.networkView;
-            NetworkViewID nviewId = nview.viewID;
-            nview.RPC("buildResearch", RPCMode.AllBuffered, nviewId);
-            nview.RPC("fieldSet", RPCMode.AllBuffered);
-        }
-    }
-    // Action for Button_3: 
+    // Build Economy: 
     public void button3_Action()
     {
         Debug.Log("Button3_Pressed");
@@ -90,12 +90,12 @@ public class PopUpMenu : MonoBehaviour {
             selectedHexagon = hex;
 
             buttonCallbackListener createMilitaryNodeButton = button1_Action;
-            buttonCallbackListener createResearchNodeButton = button2_Action;
+            // buttonCallbackListener createResearchNodeButton = button2_Action;
             buttonCallbackListener createEconomyNodeButton = button3_Action;
 
             //Create new Buttonelements and add them to the gazeUI
             gazeUI.Add(new GazeButton(new Rect(pos.x - 50, pos.y - 200, 300, 150), "Create Military Node", myStyle, createMilitaryNodeButton));
-            gazeUI.Add(new GazeButton(new Rect(pos.x, pos.y-50, 300, 150), "Create Research Node", myStyle, createResearchNodeButton));
+            // gazeUI.Add(new GazeButton(new Rect(pos.x, pos.y-50, 300, 150), "Create Research Node", myStyle, createResearchNodeButton));
             gazeUI.Add(new GazeButton(new Rect(pos.x - 50 , pos.y + 100, 300, 150), "Create Economy Node", myStyle, createEconomyNodeButton));
             Debug.Log(gazeUI);
         }
@@ -139,7 +139,7 @@ public class PopUpMenu : MonoBehaviour {
 	// Update is called once per frame
     void Update()
     {
-        //Update only if the buttons are visible (Plea
+        //Update only if the buttons are visible
         if (isDrawing)
         {
             

@@ -5,7 +5,7 @@ public class HexField : MonoBehaviour {
 
     public int owner;
     public string specialisation;
-    public int upgradLevel;
+    //public int upgradLevel; not needed yet
     public Material ownedMaterial;
     public int xPos;
     public int yPos;
@@ -25,21 +25,21 @@ public class HexField : MonoBehaviour {
         int endJ = 2;
         bool bottomLimit = false;
         if (xPos <= 1)
-        {
+        { // left edge
             bottomLimit = true;
             startI = (-1) * xPos;
         }
         if (yPos <= 1)
-        {
+        { // lower edge
             bottomLimit = true;
             startJ = (-1) * yPos;
         }
         if (xPos >= 48)
-        {
+        { // right edge
             endI = 49 - xPos;
         }
         if (yPos >= 48)
-        {
+        { // upper edge
             endJ = 49 - yPos;
         }
         for (int i = startI; i <= endI; i++)
@@ -53,16 +53,16 @@ public class HexField : MonoBehaviour {
             }
         }
         if (xPos % 2 == 0 && yPos <= 47)
-        {
-            Debug.Log("even");
+        { // even row
+            // Debug.Log("even");
             if (xPos != 0){
                 list.Remove(hexArray[xPos - 1, yPos + 2]);
             }
             list.Remove(hexArray[xPos + 1, yPos + 2]);
         }
         else if (!bottomLimit)
-        {
-            Debug.Log("odd");
+        { // odd row
+            // Debug.Log("odd");
             if (xPos != 0)
             {
                 list.Remove(hexArray[xPos - 1, yPos - 2]);
@@ -163,14 +163,6 @@ public class HexField : MonoBehaviour {
         GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
         //selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
         economyBuilding.transform.parent = selectedHexagon.transform;
-    }
-
-    [RPC]
-    void updateTroops(NetworkViewID id, int troops)
-    {
-        /*NetworkView view = NetworkView.Find(id);
-        GameObject hex = view.gameObject;
-        hex.transform.GetComponentInChildren<TextMesh>().text = "" + troops;*/
     }
 
     [RPC]

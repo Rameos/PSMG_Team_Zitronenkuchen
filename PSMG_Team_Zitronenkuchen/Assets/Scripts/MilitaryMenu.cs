@@ -28,7 +28,7 @@ public class MilitaryMenu : MonoBehaviour {
     private Vector3 pos;
 
     #region ButtonActions
-    // Action for Button_1: 
+    // Attack start action 
     public void button1_Action()
     {
         bool attack = true;
@@ -40,7 +40,7 @@ public class MilitaryMenu : MonoBehaviour {
         Debug.Log("Button1_Pressed");
     }
 
-    // Action for Button_2: 
+    // Move troops start action
     public void button2_Action()
     {
         bool attack = false;
@@ -51,27 +51,28 @@ public class MilitaryMenu : MonoBehaviour {
         }
         Debug.Log("Button2_Pressed");
     }
-    // Action for Button_3: 
+    // Recruit action
     public void button3_Action()
     {
         if (mainController.buildTroops())
         {
-            selectedHexagon.GetComponent<HexField>().spec.BuildCounter += 5;
+            ((MilitarySpecialisation) selectedHexagon.GetComponent<HexField>().spec).RecruitCounter += 5;
         }
         Debug.Log("Button3_Pressed");
     }
+    // Move here action
     public void button4_Action()
     {
         mainController.sendTroops(selectedHexagon);
         Debug.Log("Button4_Pressed");
     }
-
+    // Attack here action
     public void button5_Action()
     {
         mainController.sendAttack(selectedHexagon);
         Debug.Log("Button5_Pressed");
     }
-
+    // Cancel Troop send action
     public void button6_Action()
     {
         mainController.cancelTroopMovement();
@@ -89,57 +90,50 @@ public class MilitaryMenu : MonoBehaviour {
 
     public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
     {
-        Debug.Log(hex.GetComponent<HexField>().owner);
-        //if (hex.GetComponent<HexField>().owner == 1)
-        //{
+        //Debug.Log(hex.GetComponent<HexField>().owner);
 
-            //Set the Actions of the Buttons
-            this.pos.x = Screen.width / 2;
-            this.pos.y = Screen.height / 2;
+        //Set the Actions of the Buttons
+        this.pos.x = Screen.width / 2;
+        this.pos.y = Screen.height / 2;
 
-            fieldScript = script;
+        fieldScript = script;
 
-            selectedHexagon = hex;
+        selectedHexagon = hex;
 
-            buttonCallbackListener attackButton = button1_Action;
-            buttonCallbackListener moveButton = button2_Action;
-            buttonCallbackListener buildButton = button3_Action;
-            buttonCallbackListener moving = button4_Action;
-            buttonCallbackListener attacking = button5_Action;
-            buttonCallbackListener canceling = button6_Action;
-            bool isSending = mainController.isSending()>0;
-            Debug.Log(isSending);
-            //Create new Buttonelements and add them to the gazeUI
-            if (!isSending && ((hex.GetComponent<HexField>().owner == 1 && Network.isServer) || (hex.GetComponent<HexField>().owner == 2 && Network.isClient)))
+        buttonCallbackListener attackButton = button1_Action;
+        buttonCallbackListener moveButton = button2_Action;
+        buttonCallbackListener buildButton = button3_Action;
+        buttonCallbackListener moving = button4_Action;
+        buttonCallbackListener attacking = button5_Action;
+        buttonCallbackListener canceling = button6_Action;
+        bool isSending = mainController.isSending()>0;
+
+        //Debug.Log(isSending);
+        //Create new Buttonelements and add them to the gazeUI
+        if (!isSending && ((hex.GetComponent<HexField>().owner == 1 && Network.isServer) || (hex.GetComponent<HexField>().owner == 2 && Network.isClient)))
+        {
+            if (!(hex.GetComponent<HexField>().spec is BaseSpecialisation))
             {
-                if (!(hex.GetComponent<HexField>().spec is BaseSpecialisation))
-                {
-                    gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Attack", myStyle, attackButton));
-                    gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Move Troops", myStyle, moveButton));
-                } 
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Attack", myStyle, attackButton));
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Move Troops", myStyle, moveButton));
                 gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Build Troops" + "\n" + "150", myStyle, buildButton));
-            }
-            else if (isSending)
+            } 
+        }
+        else if (isSending) // troops are being sent
+        {
+            if ((hex.GetComponent<HexField>().owner == 2 && Network.isServer) || (hex.GetComponent<HexField>().owner == 1 && Network.isClient))
             {
-                if ((hex.GetComponent<HexField>().owner == 2 && Network.isServer) || (hex.GetComponent<HexField>().owner == 1 && Network.isClient))
-                {
-                    gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Attack here", myStyle, attacking));
-                    gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Cancel", myStyle, canceling));
-                }
-                else
-                {
-                    gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Move here", myStyle, moving));
-                    gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Cancel", myStyle, canceling));
-                }
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Attack here", myStyle, attacking));
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Cancel", myStyle, canceling));
+            }
+            else
+            {
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Move here", myStyle, moving));
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Cancel", myStyle, canceling));
+            }
                 
-            }
-            else if (true)
-            {
-
-            }
-            Debug.Log(gazeUI);
-        //}
-
+        }
+        //Debug.Log(gazeUI);
     }
 
     void closeMenu()
@@ -179,7 +173,7 @@ public class MilitaryMenu : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        //Update only if the buttons are visible (Plea
+        //Update only if the buttons are visible
         if (isDrawing)
         {
 

@@ -4,7 +4,7 @@ using System.Collections;
 public class MainController : MonoBehaviour {
 
     private int tirkid;
-    private int researchPoints;
+    // private int researchPoints;
     private ArrayList ui = new ArrayList();
     public ArrayList specialisedNodes = new ArrayList();
     private ArrayList labelUI = new ArrayList();
@@ -17,7 +17,7 @@ public class MainController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         tirkid = 500;
-        researchPoints = 0;
+        // researchPoints = 0;
         Debug.Log("Start");
         InvokeRepeating("updateRessources", 1, 1);
 	}
@@ -35,26 +35,27 @@ public class MainController : MonoBehaviour {
     void updateRessources()
     {
         earn(5);
-        research(5);
+        // research(5);
         foreach (Specialisation node in specialisedNodes)
         {
             if (node is EconomySpecialisation)
             {
                 earn(node.Level * 5);
             }
-            else if (node is ResearchSpecialisation)
-            {
-                research(node.Level * 5);
-            }
+            // Research is postponed to nice to have
+            //else if (node is ResearchSpecialisation)
+            //{
+            //    research(node.Level * 5);
+            //}
             else if (node is MilitarySpecialisation)
             {
                 if (((MilitarySpecialisation)node).Troops < 100)
                 {
-                    if (((MilitarySpecialisation)node).BuildCounter > 0)
+                    if (((MilitarySpecialisation)node).RecruitCounter > 0)
                     {
-                        Debug.Log(((MilitarySpecialisation)node).BuildCounter);
+                        Debug.Log(((MilitarySpecialisation)node).RecruitCounter);
                         ((MilitarySpecialisation)node).recruit();
-                        ((MilitarySpecialisation)node).BuildCounter -= 1;
+                        ((MilitarySpecialisation)node).RecruitCounter -= 1;
                     }
                     //Debug.Log(((MilitarySpecialisation)node).Troops + " troops on " + node.Pos);
                 }
@@ -64,11 +65,11 @@ public class MainController : MonoBehaviour {
             {
                 if (((BaseSpecialisation)node).Troops < 150)
                 {
-                    if (((BaseSpecialisation)node).BuildCounter > 0)
+                    if (((BaseSpecialisation)node).RecruitCounter > 0)
                     {
-                        Debug.Log(((BaseSpecialisation)node).BuildCounter);
+                        Debug.Log(((BaseSpecialisation)node).RecruitCounter);
                         ((BaseSpecialisation)node).recruit();
-                        ((BaseSpecialisation)node).BuildCounter -= 1;
+                        ((BaseSpecialisation)node).RecruitCounter -= 1;
                     }
                 }
             }
@@ -82,18 +83,14 @@ public class MainController : MonoBehaviour {
         {
             case "Economy":
                 newBuilt = new EconomySpecialisation(hex, pos);
-                //hex.guiText.font = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<GUIText>().font;
-                //hex.guiText.material.color = new Color(1.0f, 1.0f, 1.0f);
-                //hex.guiText.transform.position = pos;
-                //hex.guiText.text = "Economy";
-                //labelUI.Add(hex.guiText);
                 break;
             case "Military":
                 newBuilt = new MilitarySpecialisation(hex, pos);                
                 break;
-            case "Research":
-                newBuilt = new ResearchSpecialisation(hex, pos);
-                break;
+            // Research is postponed to nice to have
+            //case "Research":
+            //    newBuilt = new ResearchSpecialisation(hex, pos);
+            //    break;
             default:
                 newBuilt = null;
                 break;
@@ -110,16 +107,6 @@ public class MainController : MonoBehaviour {
                 if (newBuilt is MilitarySpecialisation)
                 {
                     extendInfluenceArea(hex);
-                    /*GameObject unitText = new GameObject();
-                    TextMesh text = unitText.AddComponent<TextMesh>();
-                    text.characterSize = 0.1f;
-                    Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-                    text.font = font;
-                    text.renderer.material = font.material;
-                    text.anchor = TextAnchor.MiddleCenter;
-                    unitText.transform.parent = hex.transform;
-                    unitText.transform.position = hex.transform.position;
-                    unitText.transform.Rotate(new Vector3(45, 0, 0));*/
                 }
                 specialisedNodes.Add(newBuilt);
                 audio.PlayOneShot(building);
@@ -169,27 +156,27 @@ public class MainController : MonoBehaviour {
         return false;
     }
 
-    private void research(int value)
-    {
-        researchPoints += value;
-    }
+    //private void research(int value)
+    //{
+    //    researchPoints += value;
+    //}
 
-    public bool discover(int value)
-    {
-        if (researchPoints >= value)
-        {
-            researchPoints -= value;
-            return true;
-        }
-        else return false;
-    }
+    //public bool discover(int value)
+    //{
+    //    if (researchPoints >= value)
+    //    {
+    //        researchPoints -= value;
+    //        return true;
+    //    }
+    //    else return false;
+    //}
 
     void OnGUI()
     {
 
         //GUI.Label(new Rect(0, 0, 300, 150), ("Tirkid: " + tirkid + "   Research: " + researchPoints));
         GameObject ressourcelabel = GameObject.FindGameObjectWithTag("GUIRessources");
-        ressourcelabel.guiText.text = "Tirkid: " + tirkid + "   Research: " + researchPoints;
+        ressourcelabel.guiText.text = "Tirkid: " + tirkid; // +"   Research: " + researchPoints;
         
         foreach (Specialisation node in specialisedNodes)
         {

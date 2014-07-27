@@ -3,10 +3,10 @@ using System.Collections;
 
 public class BaseSpecialisation : Specialisation
 {
-
 	private int troops = 0;
-    private int buildCounter = 0;
+    private int recruitCounter = 0;
 
+    // call base constructor
     public BaseSpecialisation(GameObject hex, Vector3 pos) : base(hex, pos) { }
 
     public override int Cost
@@ -34,18 +34,32 @@ public class BaseSpecialisation : Specialisation
         get { return "base"; }
     }
 
-    public override int BuildCounter
+    public int RecruitCounter
     {
         get
         {
-            return buildCounter;
+            return recruitCounter;
         }
         set
         {
-            buildCounter = value;
+            recruitCounter = value;
         }
     }
 
+    // maybe needed later for not building instant
+    //public override int BuildCounter
+    //{
+    //    get
+    //    {
+    //        return buildCounter;
+    //    }
+    //    set
+    //    {
+    //        buildCounter = value;
+    //    }
+    //}
+
+    // increase troop count
     public void recruit()
     {
         troops += 5;
