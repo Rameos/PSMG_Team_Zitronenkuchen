@@ -25,8 +25,6 @@ public class MilitaryMenu : MonoBehaviour {
     private ChangeFieldStateOnClick fieldScript;
     private MainController mainController;
 
-    private Vector3 pos;
-
     #region ButtonActions
     // Attack start action 
     public void button1_Action()
@@ -93,8 +91,7 @@ public class MilitaryMenu : MonoBehaviour {
         //Debug.Log(hex.GetComponent<HexField>().owner);
 
         //Set the Actions of the Buttons
-        this.pos.x = Screen.width / 2;
-        this.pos.y = Screen.height / 2;
+        
 
         fieldScript = script;
 
@@ -121,6 +118,7 @@ public class MilitaryMenu : MonoBehaviour {
         }
         else if (isSending) // troops are being sent
         {
+            Debug.Log("Owner: "+hex.GetComponent<HexField>().owner+", Is Server?"+Network.isServer);
             if ((hex.GetComponent<HexField>().owner == 2 && Network.isServer) || (hex.GetComponent<HexField>().owner == 1 && Network.isClient))
             {
                 gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Attack here", myStyle, attacking));

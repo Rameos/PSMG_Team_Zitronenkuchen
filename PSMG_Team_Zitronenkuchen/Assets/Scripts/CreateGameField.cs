@@ -115,7 +115,7 @@ public class CreateGameField : MonoBehaviour
                 foreach (GameObject obj in influenceArea)
                 {
                     obj.GetComponent<HexField>().owner = 1;
-                    if(Network.isServer) obj.GetComponent<HexField>().colorOwnedArea(obj);
+                    if(Network.isServer) obj.GetComponent<HexField>().colorOwnedArea();
                 }
                 oneSet = true;
             }
@@ -130,7 +130,7 @@ public class CreateGameField : MonoBehaviour
                 foreach (GameObject obj in influenceArea)
                 {
                     obj.GetComponent<HexField>().owner = 2;
-                    if(Network.isClient) obj.GetComponent<HexField>().colorOwnedArea(obj);
+                    if(Network.isClient) obj.GetComponent<HexField>().colorOwnedArea();
                 }
                 twoSet = true;
             }

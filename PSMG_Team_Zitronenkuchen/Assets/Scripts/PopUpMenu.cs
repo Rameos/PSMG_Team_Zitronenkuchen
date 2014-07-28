@@ -77,15 +77,12 @@ public class PopUpMenu : MonoBehaviour {
         mainController = GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>();
     }
 
-    public void openMenu(Vector3 eyetrackerPos, GameObject hex, ChangeFieldStateOnClick script)
+    public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
     {
         Debug.Log(hex.GetComponent<HexField>().owner);
         if ((hex.GetComponent<HexField>().owner == 1 && Network.isServer) || (hex.GetComponent<HexField>().owner == 2 && Network.isClient))
         {
-            
-            //Set the Actions of the Buttons
-            pos.x = Screen.width/2;
-            pos.y = Screen.height / 2;
+            this.pos = pos;
 
             selectedHexagon = hex;
 

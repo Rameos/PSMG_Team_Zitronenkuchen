@@ -117,6 +117,40 @@ public class MainController : MonoBehaviour {
         return false;
     }
 
+    private void updateArea(GameObject hex, int owner)
+    {
+        ArrayList neighbours = hex.GetComponent<HexField>().getSurroundingFields();
+        foreach (GameObject neighbourHex in neighbours)
+        {
+            if (neighbourHex.GetComponent<HexField>().owner == owner)
+            {
+                ArrayList neighboursNeighbours = neighbourHex.GetComponent<HexField>().getSurroundingFields();
+                foreach(GameObject neighboursNeighboursHex in neighboursNeighbours){
+                    if (!(neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Military" && neighboursNeighboursHex.GetComponent<HexField>().owner == owner))
+                    {
+                        if (owner == 1)
+                        {
+                            neighboursNeighboursHex.GetComponent<HexField>().owner = 0;
+                            neighboursNeighboursHex.GetComponent<HexField>().specialisation = null;
+                            neighboursNeighboursHex.GetComponent<HexField>().decolorUnownedArea();
+                            foreach (Specialisation node in specialisedNodes)
+                            {
+                                if (neighboursNeighboursHex.Equals(node.Hex))
+                                {
+                                    specialisedNodes.Remove(node);
+                                    foreach (Transform child in node.Hex.transform)
+                                    {
+                                        Object.Destroy(child.gameObject);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     
 
     private void extendInfluenceArea(GameObject hex)
@@ -126,7 +160,7 @@ public class MainController : MonoBehaviour {
         {
             if(Network.isServer) obj.GetComponent<HexField>().owner = 1;
             if (Network.isClient) obj.GetComponent<HexField>().owner = 2;
-            obj.GetComponent<HexField>().colorOwnedArea(obj);
+            obj.GetComponent<HexField>().colorOwnedArea();
         }
     }
 
@@ -316,9 +350,16 @@ public class MainController : MonoBehaviour {
                     // successful attack
                     Debug.Log("attack successful");
                     int survivingTroops = sentTroops - troops;
-                    if (Network.isServer) destination.GetComponent<HexField>().owner = 1;
-                    if (Network.isClient) destination.GetComponent<HexField>().owner = 2;
+                    int owner = 0;
+                    if (Network.isServer) owner = 1;
+                    if (Network.isClient) owner = 2;
+                    destination.GetComponent<HexField>().owner = owner;
                     specialisedNodes.Remove(node);
+                    foreach (Transform child in node.Hex.transform)
+                    {
+                        Object.Destroy(child.gameObject);
+                        explobumm();
+                    }
                     NetworkViewID destinationNviewId = destination.networkView.viewID;
                     bool win = false;
                     if (node is BaseSpecialisation)
@@ -326,6 +367,7 @@ public class MainController : MonoBehaviour {
                         win = true;
                         gameEnd(!win);
                     }
+                    updateArea(node.Hex, owner);
                     destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
                 }
                 
@@ -340,6 +382,11 @@ public class MainController : MonoBehaviour {
         }
     }
 
+    private void explobumm()
+    {
+        //TODO: explobumm(Partikeleffekt)
+    }
+
     public void attackSuccess(GameObject destination, int survivingTroops, Vector3 pos, bool win)
     {
         // this is the attacking player
@@ -350,6 +397,7 @@ public class MainController : MonoBehaviour {
         else
         {
             earn(150);
+            destination.networkView.RPC("buildMilitary", RPCMode.AllBuffered, destination.networkView.viewID);
             build("Military", destination, pos);
             foreach (Specialisation node in specialisedNodes)
             {

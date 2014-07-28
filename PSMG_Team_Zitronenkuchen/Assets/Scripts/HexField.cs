@@ -7,6 +7,7 @@ public class HexField : MonoBehaviour {
     public string specialisation;
     //public int upgradLevel; not needed yet
     public Material ownedMaterial;
+    public Material defaultMaterial;
     public int xPos;
     public int yPos;
     public GameObject[,] hexArray = new GameObject[50,50];
@@ -88,7 +89,7 @@ public class HexField : MonoBehaviour {
         }
     }
 
-    public void colorOwnedArea(GameObject obj)
+    public void colorOwnedArea()
     {
         ownedMaterial = Resources.Load("OwnedMaterial", typeof(Material)) as Material;
         if (ownedMaterial == null)
@@ -97,8 +98,21 @@ public class HexField : MonoBehaviour {
         }
         if (!isFilled)
         {
-            obj.renderer.material = ownedMaterial;
+            gameObject.renderer.material = ownedMaterial;
         }       
+    }
+
+    public void decolorUnownedArea()
+    {
+        defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
+        if (defaultMaterial == null)
+        {
+            Debug.Log("loading failed, check existence of Resources folder in Assets");
+        }
+        if (!isFilled)
+        {
+            gameObject.renderer.material = defaultMaterial;
+        } 
     }
 
     [RPC]
@@ -197,11 +211,15 @@ public class HexField : MonoBehaviour {
     [RPC]
     void successfulAttack(NetworkViewID id, int survivingTroops, Vector3 pos, bool win)
     {
+        StartCoroutine(SuccessfulAttack(id, survivingTroops, pos, win));
+    }
+
+    private IEnumerator SuccessfulAttack(NetworkViewID id, int survivingTroops, Vector3 pos, bool win)
+    {
+        yield return new WaitForSeconds(3);
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
         GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().attackSuccess(hex, survivingTroops, pos, win);
     }
-
-
     
 }
