@@ -142,7 +142,7 @@ public class HexField : MonoBehaviour {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
         GameObject milBuilding = Resources.Load("militaryECONOMY", typeof(GameObject)) as GameObject;
-        GameObject militaryBuilding = Network.Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
+        GameObject militaryBuilding = Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
         militaryBuilding.transform.parent = selectedHexagon.transform;
         GameObject unitText = new GameObject();
@@ -221,5 +221,19 @@ public class HexField : MonoBehaviour {
         GameObject hex = view.gameObject;
         GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().attackSuccess(hex, survivingTroops, pos, win);
     }
+
+    
+    [RPC]
+    void explobumm(NetworkViewID id)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        foreach (Transform child in hex.transform)
+        {
+            Object.Destroy(child.gameObject);
+            //TODO: explobumm(Partikeleffekt)
+        }
+    }
+    
     
 }

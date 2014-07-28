@@ -355,12 +355,8 @@ public class MainController : MonoBehaviour {
                     if (Network.isClient) owner = 2;
                     destination.GetComponent<HexField>().owner = owner;
                     specialisedNodes.Remove(node);
-                    foreach (Transform child in node.Hex.transform)
-                    {
-                        Object.Destroy(child.gameObject);
-                        explobumm();
-                    }
                     NetworkViewID destinationNviewId = destination.networkView.viewID;
+                    node.Hex.networkView.RPC("explobumm", RPCMode.All, destinationNviewId);
                     bool win = false;
                     if (node is BaseSpecialisation)
                     {
@@ -380,11 +376,6 @@ public class MainController : MonoBehaviour {
 
             }
         }
-    }
-
-    private void explobumm()
-    {
-        //TODO: explobumm(Partikeleffekt)
     }
 
     public void attackSuccess(GameObject destination, int survivingTroops, Vector3 pos, bool win)
