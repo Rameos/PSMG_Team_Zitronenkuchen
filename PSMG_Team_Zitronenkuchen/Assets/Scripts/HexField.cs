@@ -96,10 +96,10 @@ public class HexField : MonoBehaviour {
         {
             Debug.Log("loading failed, check existence of Resources folder in Assets");
         }
-        if (!isFilled)
-        {
+        //if (!isFilled)
+        //{
             gameObject.renderer.material = ownedMaterial;
-        }       
+        //}       
     }
 
     public void decolorUnownedArea()

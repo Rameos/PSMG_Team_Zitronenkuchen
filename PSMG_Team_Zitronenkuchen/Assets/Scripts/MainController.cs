@@ -169,11 +169,17 @@ public class MainController : MonoBehaviour {
     private void extendInfluenceArea(GameObject hex)
     {
         ArrayList neighbours = hex.GetComponent<HexField>().getSurroundingFields();
+        hex.GetComponent<HexField>().colorOwnedArea();
         foreach (GameObject obj in neighbours)
         {
-            if(Network.isServer) obj.GetComponent<HexField>().owner = 1;
-            if (Network.isClient) obj.GetComponent<HexField>().owner = 2;
-            obj.GetComponent<HexField>().colorOwnedArea();
+            int newOwner;
+            if(Network.isServer) newOwner = 1;
+            else newOwner = 2;
+            if (obj.GetComponent<HexField>().owner == 0)
+            {
+                obj.GetComponent<HexField>().owner = newOwner;
+                obj.GetComponent<HexField>().colorOwnedArea();
+            }
         }
     }
 
