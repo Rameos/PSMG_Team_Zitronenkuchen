@@ -142,8 +142,6 @@ public class MainController : MonoBehaviour {
                 }
                 if (destroy)
                 {
-                    neighbourHex.GetComponent<HexField>().owner = 0;
-                    neighbourHex.GetComponent<HexField>().specialisation = null;
                     Debug.Log(neighbourHex.GetComponent<HexField>().specialisation + "; " + neighbourHex.GetComponent<HexField>().owner);
                     neighbourHex.GetComponent<HexField>().decolorUnownedArea();
                     foreach (Specialisation node in specialisedNodes)
@@ -153,7 +151,7 @@ public class MainController : MonoBehaviour {
                             specialisedNodes.Remove(node);
                             NetworkView nview = node.Hex.networkView;
                             NetworkViewID nviewId = nview.viewID;
-                            nview.RPC("DestroyBuilding", RPCMode.AllBuffered, nviewId);
+                            nview.RPC("destroyBuilding", RPCMode.AllBuffered, nviewId);
                             break;
                         }
                     }
@@ -378,13 +376,17 @@ public class MainController : MonoBehaviour {
                     if (node is BaseSpecialisation)
                     {
                         win = true;
+                        destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
                         gameEnd(!win);
                     }
-                    if (Network.isServer) owner = 1;
-                    if (Network.isClient) owner = 2;
-                    updateArea(node.Hex, owner);
-                    destination.GetComponent<HexField>().decolorUnownedArea();
-                    destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
+                    else{
+                        if (Network.isServer) owner = 1;
+                        if (Network.isClient) owner = 2;
+                        updateArea(node.Hex, owner);
+                        destination.GetComponent<HexField>().decolorUnownedArea();
+                        destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
+                    }
+                        
                     break;
                 }
                 

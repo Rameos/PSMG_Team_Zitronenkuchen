@@ -251,6 +251,8 @@ public class HexField : MonoBehaviour {
     {
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
+        hex.GetComponent<HexField>().owner = 0;
+        hex.GetComponent<HexField>().specialisation = null;
         foreach (Transform child in hex.transform)
         {
             Object.Destroy(child.gameObject);
