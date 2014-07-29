@@ -104,6 +104,10 @@ public class MainController : MonoBehaviour {
                 hex.GetComponent<HexField>().spec = newBuilt;
                 NetworkView nview = hex.networkView;
                 nview.RPC("setSpecialisation", RPCMode.AllBuffered, type);
+                int owner;
+                if(Network.isServer) owner = 1;
+                else owner = 2;
+                nview.RPC("setOwner", RPCMode.AllBuffered, nview.viewID, owner);
                 if (newBuilt is MilitarySpecialisation)
                 {
                     extendInfluenceArea(hex);
@@ -142,6 +146,7 @@ public class MainController : MonoBehaviour {
                                 specialisedNodes.Remove(node);
                                 foreach (Transform child in node.Hex.transform)
                                 {
+                                    //rpc
                                     Object.Destroy(child.gameObject);
                                 }
                                 break;

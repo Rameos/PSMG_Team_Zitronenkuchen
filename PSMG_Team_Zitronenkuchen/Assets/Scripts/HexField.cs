@@ -237,6 +237,14 @@ public class HexField : MonoBehaviour {
             //TODO: explobumm(Partikeleffekt)
         }
     }
+
+    [RPC]
+    void setOwner(NetworkViewID id, int owner)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        hex.GetComponent<HexField>().owner = owner;
+    }
     
     
 }
