@@ -114,9 +114,13 @@ public class CreateGameField : MonoBehaviour
                 ArrayList influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
                 foreach (GameObject obj in influenceArea)
                 {
-                    obj.GetComponent<HexField>().owner = 1;
-                    if(Network.isServer) obj.GetComponent<HexField>().colorOwnedArea();
+                    if (Network.isServer)
+                    {
+                        obj.GetComponent<HexField>().owner = 1;
+                        obj.GetComponent<HexField>().colorOwnedArea();
+                    }
                 }
+                baseField.GetComponent<HexField>().owner = 1;
                 oneSet = true;
             }
             if (hex.xPos == (int)xPlayerTwo && hex.yPos == (int)yPlayerTwo)
@@ -129,9 +133,14 @@ public class CreateGameField : MonoBehaviour
                 ArrayList influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
                 foreach (GameObject obj in influenceArea)
                 {
-                    obj.GetComponent<HexField>().owner = 2;
-                    if(Network.isClient) obj.GetComponent<HexField>().colorOwnedArea();
+                    if (Network.isClient)
+                    {
+                        obj.GetComponent<HexField>().owner = 2;
+                        obj.GetComponent<HexField>().colorOwnedArea();
+                    }
+                    
                 }
+                baseField.GetComponent<HexField>().owner = 2;
                 twoSet = true;
             }
             if (oneSet && twoSet)
