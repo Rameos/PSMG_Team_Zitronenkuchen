@@ -153,8 +153,9 @@ public class MainController : MonoBehaviour {
                             specialisedNodes.Remove(node);
                             foreach (Transform child in node.Hex.transform)
                             {
-                                //rpc
-                                Object.Destroy(child.gameObject);
+                                NetworkView nview = child.gameObject.networkView;
+                                NetworkViewID nviewId = nview.viewID;
+                                nview.RPC("DestroyBuilding", RPCMode.AllBuffered, nviewId);
                             }
                             break;
                         }
@@ -395,6 +396,8 @@ public class MainController : MonoBehaviour {
                     // attack failed
                     Debug.Log("attack failed");
                     troops -= sentTroops;
+                    if (node is MilitarySpecialisation) ((MilitarySpecialisation)node).Troops = troops;
+                    if (node is BaseSpecialisation) ((BaseSpecialisation)node).Troops = troops;
                 }
 
             }

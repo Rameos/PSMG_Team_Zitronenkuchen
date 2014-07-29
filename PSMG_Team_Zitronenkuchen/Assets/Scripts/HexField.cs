@@ -245,6 +245,13 @@ public class HexField : MonoBehaviour {
         GameObject hex = view.gameObject;
         hex.GetComponent<HexField>().owner = owner;
     }
-    
+
+    [RPC]
+    void destroyBuilding(NetworkViewID id)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject building = view.gameObject;
+        Object.Destroy(building);
+    }
     
 }
