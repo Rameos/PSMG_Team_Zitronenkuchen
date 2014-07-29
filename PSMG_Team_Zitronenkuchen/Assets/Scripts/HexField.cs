@@ -109,10 +109,10 @@ public class HexField : MonoBehaviour {
         {
             Debug.Log("loading failed, check existence of Resources folder in Assets");
         }
-        if (isFilled)
+        if (true)
         {
             gameObject.renderer.material = defaultMaterial;
-            Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             Debug.Log(Network.isServer);
             Debug.Log(gameObject);
         } 

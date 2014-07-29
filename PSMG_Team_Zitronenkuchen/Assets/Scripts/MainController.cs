@@ -131,12 +131,13 @@ public class MainController : MonoBehaviour {
                 ArrayList neighboursNeighbours = neighbourHex.GetComponent<HexField>().getSurroundingFields();
                 bool destroy = true;
                 foreach(GameObject neighboursNeighboursHex in neighboursNeighbours){
-                    Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                    Debug.Log("Specialisation: " + neighboursNeighboursHex.GetComponent<HexField>().specialisation);
+
                     if ((neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Military" || neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Base") && neighboursNeighboursHex.GetComponent<HexField>().owner == owner)
                     {
                         destroy = false;
-                        break;                        
+                        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                        Debug.Log("Specialisation: " + neighboursNeighboursHex.GetComponent<HexField>().specialisation);
+                        break;
                     }                    
                 }
                 if (destroy)
@@ -363,8 +364,8 @@ public class MainController : MonoBehaviour {
                     Debug.Log("attack successful");
                     int survivingTroops = sentTroops - troops;
                     int owner = 0;
-                    if (Network.isServer) owner = 1;
-                    if (Network.isClient) owner = 2;
+                    if (Network.isServer) owner = 2;
+                    if (Network.isClient) owner = 1;
                     destination.GetComponent<HexField>().owner = owner;
                     specialisedNodes.Remove(node);
                     NetworkViewID destinationNviewId = destination.networkView.viewID;
@@ -375,6 +376,8 @@ public class MainController : MonoBehaviour {
                         win = true;
                         gameEnd(!win);
                     }
+                    if (Network.isServer) owner = 1;
+                    if (Network.isClient) owner = 2;
                     updateArea(node.Hex, owner);
                     destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
                     break;
