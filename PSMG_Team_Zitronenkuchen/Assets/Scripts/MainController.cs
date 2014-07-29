@@ -129,30 +129,34 @@ public class MainController : MonoBehaviour {
             if (neighbourHex.GetComponent<HexField>().owner == owner)
             {
                 ArrayList neighboursNeighbours = neighbourHex.GetComponent<HexField>().getSurroundingFields();
+                bool destroy = true;
                 foreach(GameObject neighboursNeighboursHex in neighboursNeighbours){
                     Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                     Debug.Log("Specialisation: " + neighboursNeighboursHex.GetComponent<HexField>().specialisation);
-                    if ((!(neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Military" || neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Base") && neighboursNeighboursHex.GetComponent<HexField>().owner == owner))
+                    if ((neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Military" || neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Base") && neighboursNeighboursHex.GetComponent<HexField>().owner == owner)
                     {
-                        
-                        neighbourHex.GetComponent<HexField>().owner = 0;
-                        neighbourHex.GetComponent<HexField>().specialisation = null;
-                        Debug.Log(neighbourHex.GetComponent<HexField>().specialisation + "; " + neighbourHex.GetComponent<HexField>().owner);
-                        neighbourHex.GetComponent<HexField>().decolorUnownedArea();
-                        foreach (Specialisation node in specialisedNodes)
+                        destroy = false;
+                        break;                        
+                    }                    
+                }
+                if (destroy)
+                {
+                    neighbourHex.GetComponent<HexField>().owner = 0;
+                    neighbourHex.GetComponent<HexField>().specialisation = null;
+                    Debug.Log(neighbourHex.GetComponent<HexField>().specialisation + "; " + neighbourHex.GetComponent<HexField>().owner);
+                    neighbourHex.GetComponent<HexField>().decolorUnownedArea();
+                    foreach (Specialisation node in specialisedNodes)
+                    {
+                        if (neighbourHex.Equals(node.Hex))
                         {
-                            if (neighbourHex.Equals(node.Hex))
+                            specialisedNodes.Remove(node);
+                            foreach (Transform child in node.Hex.transform)
                             {
-                                specialisedNodes.Remove(node);
-                                foreach (Transform child in node.Hex.transform)
-                                {
-                                    //rpc
-                                    Object.Destroy(child.gameObject);
-                                }
-                                break;
+                                //rpc
+                                Object.Destroy(child.gameObject);
                             }
+                            break;
                         }
-                        
                     }
                 }
             }
