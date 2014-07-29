@@ -151,12 +151,9 @@ public class MainController : MonoBehaviour {
                         if (neighbourHex.Equals(node.Hex))
                         {
                             specialisedNodes.Remove(node);
-                            foreach (Transform child in node.Hex.transform)
-                            {
-                                NetworkView nview = child.gameObject.networkView;
-                                NetworkViewID nviewId = nview.viewID;
-                                nview.RPC("DestroyBuilding", RPCMode.AllBuffered, nviewId);
-                            }
+                            NetworkView nview = node.Hex.networkView;
+                            NetworkViewID nviewId = nview.viewID;
+                            nview.RPC("DestroyBuilding", RPCMode.AllBuffered, nviewId);
                             break;
                         }
                     }

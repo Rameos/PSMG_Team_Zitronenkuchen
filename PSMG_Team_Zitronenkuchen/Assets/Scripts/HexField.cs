@@ -250,8 +250,12 @@ public class HexField : MonoBehaviour {
     void destroyBuilding(NetworkViewID id)
     {
         NetworkView view = NetworkView.Find(id);
-        GameObject building = view.gameObject;
-        Object.Destroy(building);
+        GameObject hex = view.gameObject;
+        foreach (Transform child in hex.transform)
+        {
+            Object.Destroy(child.gameObject);
+        }
+        
     }
     
 }
