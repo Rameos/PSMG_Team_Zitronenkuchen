@@ -379,6 +379,7 @@ public class MainController : MonoBehaviour {
                     if (Network.isServer) owner = 1;
                     if (Network.isClient) owner = 2;
                     updateArea(node.Hex, owner);
+                    destination.GetComponent<HexField>().decolorUnownedArea();
                     destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
                     break;
                 }
@@ -416,6 +417,7 @@ public class MainController : MonoBehaviour {
                     troops = survivingTroops;
                 }
             }
+            destination.GetComponent<HexField>().colorOwnedArea();
         }
         
     }
