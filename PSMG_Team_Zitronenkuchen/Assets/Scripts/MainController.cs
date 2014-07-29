@@ -126,25 +126,28 @@ public class MainController : MonoBehaviour {
             {
                 ArrayList neighboursNeighbours = neighbourHex.GetComponent<HexField>().getSurroundingFields();
                 foreach(GameObject neighboursNeighboursHex in neighboursNeighbours){
-                    if (!(neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Military" && neighboursNeighboursHex.GetComponent<HexField>().owner == owner))
+                    Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                    Debug.Log("Specialisation: " + neighboursNeighboursHex.GetComponent<HexField>().specialisation);
+                    if ((!(neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Military" || neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Base") && neighboursNeighboursHex.GetComponent<HexField>().owner == owner))
                     {
-                        if (owner == 1)
+                        
+                        neighbourHex.GetComponent<HexField>().owner = 0;
+                        neighbourHex.GetComponent<HexField>().specialisation = null;
+                        Debug.Log(neighbourHex.GetComponent<HexField>().specialisation + "; " + neighbourHex.GetComponent<HexField>().owner);
+                        neighbourHex.GetComponent<HexField>().decolorUnownedArea();
+                        foreach (Specialisation node in specialisedNodes)
                         {
-                            neighboursNeighboursHex.GetComponent<HexField>().owner = 0;
-                            neighboursNeighboursHex.GetComponent<HexField>().specialisation = null;
-                            neighboursNeighboursHex.GetComponent<HexField>().decolorUnownedArea();
-                            foreach (Specialisation node in specialisedNodes)
+                            if (neighbourHex.Equals(node.Hex))
                             {
-                                if (neighboursNeighboursHex.Equals(node.Hex))
+                                specialisedNodes.Remove(node);
+                                foreach (Transform child in node.Hex.transform)
                                 {
-                                    specialisedNodes.Remove(node);
-                                    foreach (Transform child in node.Hex.transform)
-                                    {
-                                        Object.Destroy(child.gameObject);
-                                    }
+                                    Object.Destroy(child.gameObject);
                                 }
+                                break;
                             }
                         }
+                        
                     }
                 }
             }
@@ -365,6 +368,7 @@ public class MainController : MonoBehaviour {
                     }
                     updateArea(node.Hex, owner);
                     destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
+                    break;
                 }
                 
                 else

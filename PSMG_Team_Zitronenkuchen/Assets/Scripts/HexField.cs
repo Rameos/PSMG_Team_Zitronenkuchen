@@ -109,9 +109,12 @@ public class HexField : MonoBehaviour {
         {
             Debug.Log("loading failed, check existence of Resources folder in Assets");
         }
-        if (!isFilled)
+        if (isFilled)
         {
             gameObject.renderer.material = defaultMaterial;
+            Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            Debug.Log(Network.isServer);
+            Debug.Log(gameObject);
         } 
     }
 
@@ -121,7 +124,7 @@ public class HexField : MonoBehaviour {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
         GameObject milBuilding = Resources.Load("base-building", typeof(GameObject)) as GameObject;
-        GameObject militaryBuilding = Network.Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
+        GameObject militaryBuilding = Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         militaryBuilding.transform.parent = selectedHexagon.transform;
         GameObject unitText = new GameObject();
@@ -142,7 +145,7 @@ public class HexField : MonoBehaviour {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
         GameObject milBuilding = Resources.Load("militaryECONOMY", typeof(GameObject)) as GameObject;
-        GameObject militaryBuilding = Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
+        GameObject militaryBuilding = Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
         militaryBuilding.transform.parent = selectedHexagon.transform;
         GameObject unitText = new GameObject();
