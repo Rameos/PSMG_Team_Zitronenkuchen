@@ -51,6 +51,7 @@ public class SelectionMenu : MonoBehaviour {
                 {
                     selected = true;
                     selectedRaceIdx = raceIndex;
+                    CustomGameProperties.alienRace = selectedRaceIdx;
                     gameObject.guiText.color = new Color32(218, 164, 59, 255);
                     scaleAlienBigger("ResearchRace");
                     rescaleAlien("MilitaryRace");
@@ -71,6 +72,7 @@ public class SelectionMenu : MonoBehaviour {
                     gameObject.guiText.color = new Color32(218, 164, 59, 255);
                     scaleAlienBigger("MilitaryRace");
                     selectedRaceIdx = raceIndex;
+                    CustomGameProperties.alienRace = selectedRaceIdx;
                     rescaleAlien("ResearchRace");
                     rescaleAlien("EconomyRace");
                     audio.PlayOneShot(growl); 
@@ -89,6 +91,7 @@ public class SelectionMenu : MonoBehaviour {
                     gameObject.guiText.color = new Color32(218, 164, 59, 255);
                     scaleAlienBigger("EconomyRace");
                     selectedRaceIdx = raceIndex;
+                    CustomGameProperties.alienRace = selectedRaceIdx;
                     rescaleAlien("MilitaryRace");
                     rescaleAlien("ResearchRace");
                     audio.PlayOneShot(growl);

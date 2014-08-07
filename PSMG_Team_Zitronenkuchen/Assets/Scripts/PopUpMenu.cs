@@ -77,12 +77,13 @@ public class PopUpMenu : MonoBehaviour {
         mainController = GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>();
     }
 
-    public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
+    public void openMenu(Vector3 posx, GameObject hex, ChangeFieldStateOnClick script)
     {
         Debug.Log(hex.GetComponent<HexField>().owner);
         if ((hex.GetComponent<HexField>().owner == 1 && Network.isServer) || (hex.GetComponent<HexField>().owner == 2 && Network.isClient))
         {
-            this.pos = pos;
+            //this.pos = pos;
+            pos = new Vector3(Screen.width / 2, Screen.height/2, 0);
 
             selectedHexagon = hex;
 
@@ -91,9 +92,9 @@ public class PopUpMenu : MonoBehaviour {
             buttonCallbackListener createEconomyNodeButton = button3_Action;
 
             //Create new Buttonelements and add them to the gazeUI
-            gazeUI.Add(new GazeButton(new Rect(pos.x - 50, pos.y - 200, 300, 150), "Create Military Node", myStyle, createMilitaryNodeButton));
+            gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "150 \n CREATE \n MILITARY NODE", myStyle, createMilitaryNodeButton));
             // gazeUI.Add(new GazeButton(new Rect(pos.x, pos.y-50, 300, 150), "Create Research Node", myStyle, createResearchNodeButton));
-            gazeUI.Add(new GazeButton(new Rect(pos.x - 50 , pos.y + 100, 300, 150), "Create Economy Node", myStyle, createEconomyNodeButton));
+            gazeUI.Add(new GazeButton(new Rect(pos.x - 100 , pos.y + 50, 220, 200), "100 \n CREATE \n ECONOMY NODE", myStyle, createEconomyNodeButton));
             Debug.Log(gazeUI);
         }
         

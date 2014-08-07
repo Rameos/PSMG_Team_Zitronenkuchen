@@ -15,6 +15,8 @@ public class HexField : MonoBehaviour {
     private bool set = false;
     public Specialisation spec;
 
+    private int selectedRace = CustomGameProperties.alienRace;
+
     public ArrayList getSurroundingFields()
     {
         ArrayList list = new ArrayList();
@@ -123,8 +125,16 @@ public class HexField : MonoBehaviour {
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject milBuilding = Resources.Load("base-building", typeof(GameObject)) as GameObject;
-        GameObject militaryBuilding = Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        GameObject baseBuilding = null;
+        if (selectedRace == 1)
+        {
+            baseBuilding = Resources.Load("baseMIL", typeof(GameObject)) as GameObject;
+        }
+        else
+        {
+            baseBuilding = Resources.Load("base-building", typeof(GameObject)) as GameObject;
+        } 
+        GameObject militaryBuilding = Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         militaryBuilding.transform.parent = selectedHexagon.transform;
         GameObject unitText = new GameObject();
@@ -144,7 +154,15 @@ public class HexField : MonoBehaviour {
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject milBuilding = Resources.Load("militaryECONOMY", typeof(GameObject)) as GameObject;
+        GameObject milBuilding = null;
+        if (selectedRace == 1)
+        {
+            milBuilding = Resources.Load("militaryMIL", typeof(GameObject)) as GameObject;
+        }
+        else
+        {
+            milBuilding = Resources.Load("militaryECONOMY", typeof(GameObject)) as GameObject;
+        }       
         GameObject militaryBuilding = Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
         militaryBuilding.transform.parent = selectedHexagon.transform;
@@ -160,23 +178,39 @@ public class HexField : MonoBehaviour {
         unitText.transform.Rotate(new Vector3(45, 0, 0));
     }
 
-    [RPC]
+    /*[RPC]
     void buildResearch(NetworkViewID id)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject resBuilding = Resources.Load("economyECONOMY", typeof(GameObject)) as GameObject;
+        GameObject resBuilding = null;
+        if (selectedRace == 1)
+        {
+            resBuilding = Resources.Load("economyMIL", typeof(GameObject)) as GameObject;
+        }
+        else
+        {
+            resBuilding = Resources.Load("economyECONOMY", typeof(GameObject)) as GameObject;
+        }
         GameObject researchBuilding = Instantiate(resBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("researchMaterial", typeof(Material)) as Material;
         researchBuilding.transform.parent = selectedHexagon.transform;
-    }
+    }*/
 
     [RPC]
     void buildEconomy(NetworkViewID id)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject ecoBuilding = Resources.Load("economyECONOMY", typeof(GameObject)) as GameObject;
+        GameObject ecoBuilding = null;
+        if (selectedRace == 1)
+        {
+            ecoBuilding = Resources.Load("economyMIL", typeof(GameObject)) as GameObject;
+        }
+        else
+        {
+            ecoBuilding = Resources.Load("economyECONOMY", typeof(GameObject)) as GameObject;
+        }
         GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
         //selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
         economyBuilding.transform.parent = selectedHexagon.transform;
