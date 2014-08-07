@@ -104,6 +104,10 @@ public class MainController : MonoBehaviour {
                 hex.GetComponent<HexField>().spec = newBuilt;
                 NetworkView nview = hex.networkView;
                 nview.RPC("setSpecialisation", RPCMode.AllBuffered, type);
+                int owner;
+                if(Network.isServer) owner = 1;
+                else owner = 2;
+                nview.RPC("setOwner", RPCMode.AllBuffered, nview.viewID, owner);
                 if (newBuilt is MilitarySpecialisation)
                 {
                     extendInfluenceArea(hex);
@@ -125,29 +129,31 @@ public class MainController : MonoBehaviour {
             if (neighbourHex.GetComponent<HexField>().owner == owner)
             {
                 ArrayList neighboursNeighbours = neighbourHex.GetComponent<HexField>().getSurroundingFields();
+                bool destroy = true;
                 foreach(GameObject neighboursNeighboursHex in neighboursNeighbours){
-                    Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                    Debug.Log("Specialisation: " + neighboursNeighboursHex.GetComponent<HexField>().specialisation);
-                    if ((!(neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Military" || neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Base") && neighboursNeighboursHex.GetComponent<HexField>().owner == owner))
+
+                    if ((neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Military" || neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Base") && neighboursNeighboursHex.GetComponent<HexField>().owner == owner)
                     {
-                        
-                        neighbourHex.GetComponent<HexField>().owner = 0;
-                        neighbourHex.GetComponent<HexField>().specialisation = null;
-                        Debug.Log(neighbourHex.GetComponent<HexField>().specialisation + "; " + neighbourHex.GetComponent<HexField>().owner);
-                        neighbourHex.GetComponent<HexField>().decolorUnownedArea();
-                        foreach (Specialisation node in specialisedNodes)
+                        destroy = false;
+                        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                        Debug.Log("Specialisation: " + neighboursNeighboursHex.GetComponent<HexField>().specialisation);
+                        break;
+                    }                    
+                }
+                if (destroy)
+                {
+                    Debug.Log(neighbourHex.GetComponent<HexField>().specialisation + "; " + neighbourHex.GetComponent<HexField>().owner);
+                    neighbourHex.GetComponent<HexField>().decolorUnownedArea();
+                    foreach (Specialisation node in specialisedNodes)
+                    {
+                        if (neighbourHex.Equals(node.Hex))
                         {
-                            if (neighbourHex.Equals(node.Hex))
-                            {
-                                specialisedNodes.Remove(node);
-                                foreach (Transform child in node.Hex.transform)
-                                {
-                                    Object.Destroy(child.gameObject);
-                                }
-                                break;
-                            }
+                            specialisedNodes.Remove(node);
+                            NetworkView nview = node.Hex.networkView;
+                            NetworkViewID nviewId = nview.viewID;
+                            nview.RPC("destroyBuilding", RPCMode.AllBuffered, nviewId);
+                            break;
                         }
-                        
                     }
                 }
             }
@@ -159,11 +165,17 @@ public class MainController : MonoBehaviour {
     private void extendInfluenceArea(GameObject hex)
     {
         ArrayList neighbours = hex.GetComponent<HexField>().getSurroundingFields();
+        hex.GetComponent<HexField>().colorOwnedArea();
         foreach (GameObject obj in neighbours)
         {
-            if(Network.isServer) obj.GetComponent<HexField>().owner = 1;
-            if (Network.isClient) obj.GetComponent<HexField>().owner = 2;
-            obj.GetComponent<HexField>().colorOwnedArea();
+            int newOwner;
+            if(Network.isServer) newOwner = 1;
+            else newOwner = 2;
+            if (obj.GetComponent<HexField>().owner == 0)
+            {
+                obj.GetComponent<HexField>().owner = newOwner;
+                obj.GetComponent<HexField>().colorOwnedArea();
+            }
         }
     }
 
@@ -354,8 +366,8 @@ public class MainController : MonoBehaviour {
                     Debug.Log("attack successful");
                     int survivingTroops = sentTroops - troops;
                     int owner = 0;
-                    if (Network.isServer) owner = 1;
-                    if (Network.isClient) owner = 2;
+                    if (Network.isServer) owner = 2;
+                    if (Network.isClient) owner = 1;
                     destination.GetComponent<HexField>().owner = owner;
                     specialisedNodes.Remove(node);
                     NetworkViewID destinationNviewId = destination.networkView.viewID;
@@ -364,10 +376,17 @@ public class MainController : MonoBehaviour {
                     if (node is BaseSpecialisation)
                     {
                         win = true;
+                        destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
                         gameEnd(!win);
                     }
-                    updateArea(node.Hex, owner);
-                    destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
+                    else{
+                        if (Network.isServer) owner = 1;
+                        if (Network.isClient) owner = 2;
+                        updateArea(node.Hex, owner);
+                        destination.GetComponent<HexField>().decolorUnownedArea();
+                        destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
+                    }
+                        
                     break;
                 }
                 
@@ -376,6 +395,8 @@ public class MainController : MonoBehaviour {
                     // attack failed
                     Debug.Log("attack failed");
                     troops -= sentTroops;
+                    if (node is MilitarySpecialisation) ((MilitarySpecialisation)node).Troops = troops;
+                    if (node is BaseSpecialisation) ((BaseSpecialisation)node).Troops = troops;
                 }
 
             }
@@ -404,6 +425,7 @@ public class MainController : MonoBehaviour {
                     troops = survivingTroops;
                 }
             }
+            destination.GetComponent<HexField>().colorOwnedArea();
         }
         
     }

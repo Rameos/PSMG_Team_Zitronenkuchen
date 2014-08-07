@@ -96,10 +96,10 @@ public class HexField : MonoBehaviour {
         {
             Debug.Log("loading failed, check existence of Resources folder in Assets");
         }
-        if (!isFilled)
-        {
+        //if (!isFilled)
+        //{
             gameObject.renderer.material = ownedMaterial;
-        }       
+        //}       
     }
 
     public void decolorUnownedArea()
@@ -109,10 +109,10 @@ public class HexField : MonoBehaviour {
         {
             Debug.Log("loading failed, check existence of Resources folder in Assets");
         }
-        if (isFilled)
+        if (true)
         {
             gameObject.renderer.material = defaultMaterial;
-            Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             Debug.Log(Network.isServer);
             Debug.Log(gameObject);
         } 
@@ -237,6 +237,27 @@ public class HexField : MonoBehaviour {
             //TODO: explobumm(Partikeleffekt)
         }
     }
-    
+
+    [RPC]
+    void setOwner(NetworkViewID id, int owner)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        hex.GetComponent<HexField>().owner = owner;
+    }
+
+    [RPC]
+    void destroyBuilding(NetworkViewID id)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        hex.GetComponent<HexField>().owner = 0;
+        hex.GetComponent<HexField>().specialisation = null;
+        foreach (Transform child in hex.transform)
+        {
+            Object.Destroy(child.gameObject);
+        }
+        
+    }
     
 }
