@@ -3,9 +3,8 @@ guid: ca73cf25b9f4d794693f6761060e4af7
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
-  - hexagon: {fileID: 100000, guid: 3ad6c17dcf195b44ab29af1745893b8a, type: 3}
-  - field: {instanceID: 0}
-  - defaultMaterial: {instanceID: 0}
+  - hexagon: {fileID: 100000, guid: 488b69741c28fbb4a97d1de0ce767303, type: 2}
+  - terrainPosition: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
