@@ -241,7 +241,7 @@ public class LANBroadcastService : MonoBehaviour
         // If the previous broadcast session was for some reason not closed, close it now
         if (currentState != enuState.NotActive) StopBroadCasting();
         // Create the client
-        objUDPClient = new UdpClient(22043);
+        objUDPClient = new UdpClient(25001);
         objUDPClient.EnableBroadcast = true;
         // Reset sending timer
         fTimeLastMessageSent = Time.time;
