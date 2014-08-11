@@ -46,10 +46,10 @@ public class ConnectionBehaviour : MonoBehaviour
         if (gameObject.tag == "ConnectButton")
         {
             gameObject.guiText.color = new Color32 (218, 164, 59, 255); //orange
-            //clickedConnect = true;
-            //// try to connect to the entered ip
-            //if (Network.peerType == NetworkPeerType.Disconnected) Network.Connect(ip, connectionPort);
-            gameObject.GetComponent<LANBroadcastService>().StartSearchBroadCasting(Connect, Initialize);
+            clickedConnect = true;
+            // try to connect to the entered ip
+            if (Network.peerType == NetworkPeerType.Disconnected) Network.Connect(ip, connectionPort);
+            // gameObject.GetComponent<LANBroadcastService>().StartSearchBroadCasting(Connect, Initialize);
         }
     }
 
@@ -65,7 +65,7 @@ public class ConnectionBehaviour : MonoBehaviour
             // init Server
             if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 60 + 125, 120, 20), "Initialize Server"))
             {                
-                Network.InitializeServer(32, connectionPort, true);
+                Network.InitializeServer(32, connectionPort, false);
                 initializedServer = true;
             }
         }
@@ -99,6 +99,6 @@ public class ConnectionBehaviour : MonoBehaviour
 
     public void Initialize()
     {
-        Network.InitializeServer(32, connectionPort, true);
+        Network.InitializeServer(32, connectionPort, false);
     }
 }
