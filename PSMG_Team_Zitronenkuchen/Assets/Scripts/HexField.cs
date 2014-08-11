@@ -15,8 +15,6 @@ public class HexField : MonoBehaviour {
     private bool set = false;
     public Specialisation spec;
 
-    private int selectedRace = CustomGameProperties.alienRace;
-
     public ArrayList getSurroundingFields()
     {
         ArrayList list = new ArrayList();
@@ -121,7 +119,7 @@ public class HexField : MonoBehaviour {
     }
 
     [RPC]
-    void buildBase(NetworkViewID id)
+    void buildBase(NetworkViewID id, int selectedRace)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
@@ -150,7 +148,7 @@ public class HexField : MonoBehaviour {
     }
 
     [RPC]
-    void buildMilitary(NetworkViewID id)
+    void buildMilitary(NetworkViewID id, int selectedRace)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
@@ -198,7 +196,7 @@ public class HexField : MonoBehaviour {
     }*/
 
     [RPC]
-    void buildEconomy(NetworkViewID id)
+    void buildEconomy(NetworkViewID id, int selectedRace)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;

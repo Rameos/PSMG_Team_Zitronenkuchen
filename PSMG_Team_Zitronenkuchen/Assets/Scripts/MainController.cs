@@ -14,6 +14,8 @@ public class MainController : MonoBehaviour {
     public AudioClip building;
     public AudioClip denied;
 
+    private int selectedRace = CustomGameProperties.alienRace;
+
 	// Use this for initialization
 	void Start () {
         tirkid = 500;
@@ -413,7 +415,7 @@ public class MainController : MonoBehaviour {
         else
         {
             earn(150);
-            destination.networkView.RPC("buildMilitary", RPCMode.AllBuffered, destination.networkView.viewID);
+            destination.networkView.RPC("buildMilitary", RPCMode.AllBuffered, destination.networkView.viewID, selectedRace);
             build("Military", destination, pos);
             foreach (Specialisation node in specialisedNodes)
             {

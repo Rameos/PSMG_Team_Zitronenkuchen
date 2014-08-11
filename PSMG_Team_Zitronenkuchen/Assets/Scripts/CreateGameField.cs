@@ -23,6 +23,9 @@ public class CreateGameField : MonoBehaviour
     private int BASE_Y = 6;
 
     private MainController mC;
+
+    private int selectedRace = CustomGameProperties.alienRace;
+
     // Use this for initialization
     void Start()
     {
@@ -160,7 +163,7 @@ public class CreateGameField : MonoBehaviour
         NetworkView nview = baseNode.networkView;
         NetworkViewID nviewId = nview.viewID;
         nview.RPC("setSpecialisation", RPCMode.AllBuffered, "Base");
-        nview.RPC("buildBase", RPCMode.AllBuffered, nviewId);
+        nview.RPC("buildBase", RPCMode.AllBuffered, nviewId, selectedRace);
         nview.RPC("fieldSet", RPCMode.AllBuffered);
         nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)spec).Troops);
     }
