@@ -121,6 +121,7 @@ public class HexField : MonoBehaviour {
     [RPC]
     void buildBase(NetworkViewID id, int selectedRace)
     {
+        Debug.Log("Build base for Race " + selectedRace);
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
         GameObject baseBuilding = null;
