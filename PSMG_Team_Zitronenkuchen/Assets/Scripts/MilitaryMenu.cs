@@ -111,9 +111,9 @@ public class MilitaryMenu : MonoBehaviour {
         {
             if (!(hex.GetComponent<HexField>().spec is BaseSpecialisation))
             {
-                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Attack", myStyle, attackButton));
-                gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Move Troops", myStyle, moveButton));
-                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Build Troops" + "\n" + "150", myStyle, buildButton));
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 220, 200), "Attack", myStyle, attackButton));
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 220, 200), "Move Troops", myStyle, moveButton));
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 220, 200), "Build Troops" + "\n" + "150", myStyle, buildButton));
             } 
         }
         else if (isSending) // troops are being sent
