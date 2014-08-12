@@ -80,6 +80,7 @@ public class HexField : MonoBehaviour {
         return new Vector3(xPos, yPos);
     }
 
+
     private void fillHexArray()
     {
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("hex");

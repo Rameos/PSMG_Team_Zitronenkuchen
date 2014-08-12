@@ -43,6 +43,7 @@ public class MilitaryMenu : MonoBehaviour {
     {
         bool attack = false;
         int troops = mainController.moveTroops(selectedHexagon);
+        mainController.setRanges();
         if (troops > 0)
         {
             mainController.startTroopSend(troops, attack);
@@ -63,18 +64,33 @@ public class MilitaryMenu : MonoBehaviour {
     {
         mainController.sendTroops(selectedHexagon);
         Debug.Log("Button4_Pressed");
+        foreach(GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter")) {
+            Destroy(highlighter);
+        }
+        mainController.resetRanges();
     }
     // Attack here action
     public void button5_Action()
     {
         mainController.sendAttack(selectedHexagon);
         Debug.Log("Button5_Pressed");
+        foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
+        {
+            Destroy(highlighter);
+        }
+        mainController.resetRanges();
     }
     // Cancel Troop send action
     public void button6_Action()
     {
         mainController.cancelTroopMovement();
         Debug.Log("Button6_Pressed");
+        foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
+        {
+            Destroy(highlighter);
+        }
+        mainController.resetRanges();
+
     }
 
     #endregion
@@ -116,7 +132,7 @@ public class MilitaryMenu : MonoBehaviour {
                 gazeUI.Add(new GazeButton(new Rect(pos.x - 210, pos.y, 220, 200), "BUILD TROOPS \n 150", myStyle, buildButton));
             } 
         }
-        else if (isSending) // troops are being sent
+        else if (isSending && hex.GetComponent<HexField>().spec.InRange) // troops are being sent
         {
             Debug.Log("Owner: "+hex.GetComponent<HexField>().owner+", Is Server?"+Network.isServer);
             if ((hex.GetComponent<HexField>().owner == 2 && Network.isServer) || (hex.GetComponent<HexField>().owner == 1 && Network.isClient))
