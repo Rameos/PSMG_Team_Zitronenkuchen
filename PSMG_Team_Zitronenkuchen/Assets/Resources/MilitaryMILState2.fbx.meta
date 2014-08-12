@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 09aa2f16594a04440bef433d1d39503f
+=======
+guid: e3721b18b386c564aa6714b99b30c6a1
+>>>>>>> jana
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:

@@ -37,11 +37,11 @@ public abstract class Specialisation {
         get;
     }
 
-    //abstract public int BuildCounter
-    //{
-    //    get;
-    //    set;
-    //}
+    abstract public int BuildCounter
+    {
+        get;
+        set;
+    }
 
     public Vector3 Pos
     {

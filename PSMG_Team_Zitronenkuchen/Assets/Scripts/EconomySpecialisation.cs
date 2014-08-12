@@ -3,7 +3,7 @@ using System.Collections;
 
 public class EconomySpecialisation : Specialisation {
 
-    // call base constructor
+    private int buildCounter = 1;
     public EconomySpecialisation(GameObject hex, Vector3 pos) : base(hex, pos) { }
 
     public override int Cost
@@ -20,16 +20,16 @@ public class EconomySpecialisation : Specialisation {
     }
 
     // maybe needed later for not building instant
-    //public override int BuildCounter
-    //{
-    //    get
-    //    {
-    //        return 0;
-    //    }
-    //    set
-    //    {
-
-    //    }
-    //}
+    public override int BuildCounter
+    {
+        get
+        {
+            return buildCounter;
+        }
+        set
+        {
+            buildCounter = value;
+        }
+    }
 	
 }
