@@ -5,6 +5,7 @@ public class BaseSpecialisation : Specialisation
 {
 	private int troops = 0;
     private int recruitCounter = 0;
+    private int buildCounter = 0;
 
     // call base constructor
     public BaseSpecialisation(GameObject hex, Vector3 pos) : base(hex, pos) { }
@@ -47,17 +48,17 @@ public class BaseSpecialisation : Specialisation
     }
 
     // maybe needed later for not building instant
-    //public override int BuildCounter
-    //{
-    //    get
-    //    {
-    //        return buildCounter;
-    //    }
-    //    set
-    //    {
-    //        buildCounter = value;
-    //    }
-    //}
+    public override int BuildCounter
+    {
+        get
+        {
+            return buildCounter;
+        }
+        set
+        {
+            buildCounter = value;
+        }
+    }
 
     // increase troop count
     public void recruit()
