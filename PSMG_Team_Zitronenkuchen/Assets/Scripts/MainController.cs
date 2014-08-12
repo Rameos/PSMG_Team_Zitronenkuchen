@@ -18,7 +18,7 @@ public class MainController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        tirkid = 500;
+        tirkid = 50000;
         // researchPoints = 0;
         Debug.Log("Start");
         InvokeRepeating("updateRessources", 1, 1);
@@ -281,6 +281,7 @@ public class MainController : MonoBehaviour {
                 {
                     if ((hex.owner == 2 && Network.isServer) || (hex.owner == 1 && Network.isClient))
                     {
+                        hex.InRange = true;
                         highlightMilitaryNode(hex, false);
                     }
                 }
@@ -288,7 +289,7 @@ public class MainController : MonoBehaviour {
                 {
                     if ((hex.owner == 1 && Network.isServer) || (hex.owner == 2 && Network.isClient))
                     {
-                        highlightMilitaryNode(hex, true);
+                        //highlightMilitaryNode(hex, true);
                     }
                 }
             }
@@ -299,13 +300,22 @@ public class MainController : MonoBehaviour {
 
     private void highlightMilitaryNode(HexField hex, bool ownNode)
     {
-        if (ownNode)
+        
+        if (ownNode && hex != sendOrigin.GetComponent<HexField>())
         {
-            hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
+            Vector3 pos = hex.transform.position;
+            pos.y = 0.65f;
+            GameObject highlighter = Resources.Load("ParticleHighlighter", typeof(GameObject)) as GameObject;
+            Instantiate(highlighter, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+            //hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
         }
-        else
+        else if(!ownNode &&  hex != sendOrigin)
         {
-            hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
+            Vector3 pos = hex.transform.position;
+            pos.y = 0.65f;
+            GameObject highlighter = Resources.Load("ParticleHighlighter", typeof(GameObject)) as GameObject;
+            Instantiate(highlighter, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+            //hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
         }
     }
 
@@ -402,6 +412,21 @@ public class MainController : MonoBehaviour {
                 }
 
             }
+        }
+    }
+
+    public void resetRanges()
+    {
+        foreach (Specialisation spec in specialisedNodes)
+        {
+            spec.Hex.GetComponent<HexField>().InRange = false;
+        }
+    }
+    public void setRanges()
+    {
+        foreach (Specialisation spec in specialisedNodes)
+        {
+            spec.Hex.GetComponent<HexField>().InRange = true;
         }
     }
 
