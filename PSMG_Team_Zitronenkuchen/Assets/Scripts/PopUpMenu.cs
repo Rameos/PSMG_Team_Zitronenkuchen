@@ -26,6 +26,8 @@ public class PopUpMenu : MonoBehaviour {
 
     private Vector3 pos;
 
+    private int selectedRace = CustomGameProperties.alienRace;
+
     #region ButtonActions
     // Build Military: 
     public void button1_Action()
@@ -35,7 +37,7 @@ public class PopUpMenu : MonoBehaviour {
         {
             NetworkView nview = selectedHexagon.networkView;
             NetworkViewID nviewId = nview.viewID;
-            nview.RPC("buildMilitary", RPCMode.AllBuffered, nviewId);
+            nview.RPC("buildMilitary", RPCMode.AllBuffered, nviewId, selectedRace);
             nview.RPC("fieldSet", RPCMode.AllBuffered);
         }
 
@@ -63,7 +65,7 @@ public class PopUpMenu : MonoBehaviour {
         {
             NetworkView nview = selectedHexagon.networkView;
             NetworkViewID nviewId = nview.viewID;
-            nview.RPC("buildEconomy", RPCMode.AllBuffered, nviewId);
+            nview.RPC("buildEconomy", RPCMode.AllBuffered, nviewId, selectedRace);
             nview.RPC("fieldSet", RPCMode.AllBuffered);
         }
 
@@ -77,13 +79,12 @@ public class PopUpMenu : MonoBehaviour {
         mainController = GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>();
     }
 
-    public void openMenu(Vector3 posx, GameObject hex, ChangeFieldStateOnClick script)
+    public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
     {
         Debug.Log(hex.GetComponent<HexField>().owner);
         if ((hex.GetComponent<HexField>().owner == 1 && Network.isServer) || (hex.GetComponent<HexField>().owner == 2 && Network.isClient))
         {
-            //this.pos = pos;
-            pos = new Vector3(Screen.width / 2, Screen.height/2, 0);
+            this.pos = pos;
 
             selectedHexagon = hex;
 

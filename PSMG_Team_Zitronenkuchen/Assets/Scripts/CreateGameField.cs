@@ -23,6 +23,9 @@ public class CreateGameField : MonoBehaviour
     private int BASE_Y = 6;
 
     private MainController mC;
+
+    private int selectedRace = CustomGameProperties.alienRace;
+
     // Use this for initialization
     void Start()
     {
@@ -104,46 +107,52 @@ public class CreateGameField : MonoBehaviour
         foreach (GameObject baseField in gameObjects)
         {// iterate through all gameobjects
             HexField hex = baseField.GetComponent<HexField>();  // if gameobject is no hex -> null
-            if (hex.xPos == (int)xPlayerOne && hex.yPos == (int)yPlayerOne)
-            { // Player One Start Area
-                Debug.Log("got one");
-                Material baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
-                baseField.GetComponent<HexField>().isFilled = true;
-                baseField.renderer.material = baseMaterial;
-                specialiseBase(baseField);
-                ArrayList influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
-                foreach (GameObject obj in influenceArea)
-                {
-                    if (Network.isServer)
+            if (Network.isServer)
+            {
+                if (hex.xPos == (int)xPlayerOne && hex.yPos == (int)yPlayerOne)
+                { // Player One Start Area
+                    Debug.Log("got one");
+                    Material baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
+                    baseField.GetComponent<HexField>().isFilled = true;
+                    baseField.renderer.material = baseMaterial;
+                    specialiseBase(baseField);
+                    ArrayList influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
+                    foreach (GameObject obj in influenceArea)
                     {
-                        obj.GetComponent<HexField>().owner = 1;
-                        obj.GetComponent<HexField>().colorOwnedArea();
+                        if (Network.isServer)
+                        {
+                            obj.GetComponent<HexField>().owner = 1;
+                            obj.GetComponent<HexField>().colorOwnedArea();
+                        }
                     }
+                    baseField.GetComponent<HexField>().owner = 1;
+                    oneSet = true;
                 }
-                baseField.GetComponent<HexField>().owner = 1;
-                oneSet = true;
             }
-            if (hex.xPos == (int)xPlayerTwo && hex.yPos == (int)yPlayerTwo)
-            { // Player Two Start Area
-                Debug.Log("got two");
-                Material baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
-                baseField.GetComponent<HexField>().isFilled = true;
-                baseField.renderer.material = baseMaterial;
-                specialiseBase(baseField);
-                ArrayList influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
-                foreach (GameObject obj in influenceArea)
-                {
-                    if (Network.isClient)
+            else
+            {
+                if (hex.xPos == (int)xPlayerTwo && hex.yPos == (int)yPlayerTwo)
+                { // Player Two Start Area
+                    Debug.Log("got two");
+                    Material baseMaterial = Resources.Load("BaseMaterial", typeof(Material)) as Material;
+                    baseField.GetComponent<HexField>().isFilled = true;
+                    baseField.renderer.material = baseMaterial;
+                    specialiseBase(baseField);
+                    ArrayList influenceArea = baseField.GetComponent<HexField>().getSurroundingFields();
+                    foreach (GameObject obj in influenceArea)
                     {
-                        obj.GetComponent<HexField>().owner = 2;
-                        obj.GetComponent<HexField>().colorOwnedArea();
+                        if (Network.isClient)
+                        {
+                            obj.GetComponent<HexField>().owner = 2;
+                            obj.GetComponent<HexField>().colorOwnedArea();
+                        }
+
                     }
-                    
+                    baseField.GetComponent<HexField>().owner = 2;
+                    twoSet = true;
                 }
-                baseField.GetComponent<HexField>().owner = 2;
-                twoSet = true;
             }
-            if (oneSet && twoSet)
+            if (oneSet || twoSet)
             {
                 break;
             }
@@ -160,7 +169,7 @@ public class CreateGameField : MonoBehaviour
         NetworkView nview = baseNode.networkView;
         NetworkViewID nviewId = nview.viewID;
         nview.RPC("setSpecialisation", RPCMode.AllBuffered, "Base");
-        nview.RPC("buildBase", RPCMode.AllBuffered, nviewId);
+        nview.RPC("buildBase", RPCMode.AllBuffered, nviewId, selectedRace);
         nview.RPC("fieldSet", RPCMode.AllBuffered);
         nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)spec).Troops);
     }
