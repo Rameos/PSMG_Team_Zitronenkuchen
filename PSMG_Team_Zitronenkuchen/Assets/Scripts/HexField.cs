@@ -14,6 +14,7 @@ public class HexField : MonoBehaviour {
     public bool isFilled;
     private bool set = false;
     public Specialisation spec;
+    private bool inRange;
 
     public ArrayList getSurroundingFields()
     {
@@ -78,6 +79,19 @@ public class HexField : MonoBehaviour {
 
     public Vector3 getPos(){
         return new Vector3(xPos, yPos);
+    }
+
+
+    public bool InRange
+    {
+        get
+        {
+            return inRange;
+        }
+        set
+        {
+            inRange = value;
+        }
     }
 
     private void fillHexArray()

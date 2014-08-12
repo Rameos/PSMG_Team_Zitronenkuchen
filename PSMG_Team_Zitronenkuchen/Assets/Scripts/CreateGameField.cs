@@ -55,7 +55,7 @@ public class CreateGameField : MonoBehaviour
         }
         else
         {
-            GameObject.FindGameObjectWithTag("CameraWrapper").transform.position = new Vector3(6.3f, 1.0f, 5.5f);
+            GameObject.FindGameObjectWithTag("CameraWrapper").transform.position = new Vector3(6.3f, 1.5f, 5.5f);
         }
 
         GameObject.FindGameObjectWithTag("CameraWrapper").AddComponent<ScrollController> ();
