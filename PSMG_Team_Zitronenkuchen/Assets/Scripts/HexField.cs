@@ -238,9 +238,9 @@ public class HexField : MonoBehaviour {
         }
         else
         {
-            ecoBuildingState1 = Resources.Load("economyECONOMYState1", typeof(GameObject)) as GameObject;
-            ecoBuildingState2 = Resources.Load("economyECONOMYState2", typeof(GameObject)) as GameObject;
-            ecoBuildingState3 = Resources.Load("economyECONOMYState3", typeof(GameObject)) as GameObject;
+            ecoBuildingState1 = Resources.Load("economyECOState1", typeof(GameObject)) as GameObject;
+            ecoBuildingState2 = Resources.Load("economyECOState2", typeof(GameObject)) as GameObject;
+            ecoBuildingState3 = Resources.Load("economyECOState3", typeof(GameObject)) as GameObject;
         }
         GameObject economyBuildingState1 = Instantiate(ecoBuildingState1, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         GameObject economyBuildingState2 = Instantiate(ecoBuildingState2, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;

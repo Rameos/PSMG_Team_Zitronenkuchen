@@ -132,7 +132,7 @@ public class MilitaryMenu : MonoBehaviour {
                 gazeUI.Add(new GazeButton(new Rect(pos.x - 240, pos.y, 220, 200), "150 \n BUILD TROPPS", myStyle, buildButton));
             } 
         }
-        else if (isSending && hex.GetComponent<HexField>().spec.InRange) // troops are being sent
+        else if (isSending && hex.GetComponent<HexField>().InRange) // troops are being sent
         {
             Debug.Log("Owner: "+hex.GetComponent<HexField>().owner+", Is Server?"+Network.isServer);
             if ((hex.GetComponent<HexField>().owner == 2 && Network.isServer) || (hex.GetComponent<HexField>().owner == 1 && Network.isClient))
