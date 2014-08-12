@@ -6,24 +6,12 @@ public abstract class Specialisation {
     private GameObject hex;
     private Vector3 pos;
     private int level = 1;
-    private bool inRange;
 
     public Specialisation(GameObject hex, Vector3 pos)
     {
         this.hex = hex;
         this.pos = pos;
         Debug.Log("pos " + pos);
-    }
-    public bool InRange
-    {
-        get
-        {
-            return inRange;
-        }
-        set
-        {
-            inRange = value;
-        }
     }
 
 

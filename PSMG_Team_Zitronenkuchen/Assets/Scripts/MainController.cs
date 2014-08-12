@@ -281,7 +281,7 @@ public class MainController : MonoBehaviour {
                 {
                     if ((hex.owner == 2 && Network.isServer) || (hex.owner == 1 && Network.isClient))
                     {
-                        hex.spec.InRange = true;
+                        hex.InRange = true;
                         highlightMilitaryNode(hex, false);
                     }
                 }
@@ -311,7 +311,11 @@ public class MainController : MonoBehaviour {
         }
         else if(!ownNode &&  hex != sendOrigin)
         {
-            hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
+            Vector3 pos = hex.transform.position;
+            pos.y = 0.65f;
+            GameObject highlighter = Resources.Load("ParticleHighlighter", typeof(GameObject)) as GameObject;
+            Instantiate(highlighter, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+            //hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
         }
     }
 
@@ -415,14 +419,14 @@ public class MainController : MonoBehaviour {
     {
         foreach (Specialisation spec in specialisedNodes)
         {
-            spec.InRange = false;
+            spec.Hex.GetComponent<HexField>().InRange = false;
         }
     }
     public void setRanges()
     {
         foreach (Specialisation spec in specialisedNodes)
         {
-            spec.InRange = true;
+            spec.Hex.GetComponent<HexField>().InRange = true;
         }
     }
 
