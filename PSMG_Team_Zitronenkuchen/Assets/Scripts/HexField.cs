@@ -106,9 +106,9 @@ public class HexField : MonoBehaviour {
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject milBuilding = Resources.Load("base-building", typeof(GameObject)) as GameObject;
+        GameObject milBuilding = Resources.Load("baseECONOMY", typeof(GameObject)) as GameObject;
         GameObject militaryBuilding = Network.Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
-        selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
+        //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         militaryBuilding.transform.parent = selectedHexagon.transform;
         GameObject unitText = new GameObject();
         TextMesh text = unitText.AddComponent<TextMesh>();

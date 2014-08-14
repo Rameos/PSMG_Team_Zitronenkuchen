@@ -62,22 +62,50 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 
         if (Input.mousePosition.x <= left)
         {
-            moveCamera("Left");
+            if (Network.isServer)
+            {
+                moveCamera("Left");
+            }
+            else
+            {
+                moveCamera("Right");
+            }
         }
 
         if (Input.mousePosition.x >= right)
         {
-            moveCamera("Right");
+            if (Network.isServer)
+            {
+                moveCamera("Right");
+            }
+            else
+            {
+                moveCamera("Left");
+            }
         }
 
         if (Input.mousePosition.y <= down)
         {
-            moveCamera("Down");
+            if (Network.isServer)
+            {
+                moveCamera("Down");
+            }
+            else
+            {
+                moveCamera("Up");
+            }
         }
 
         if (Input.mousePosition.y >= up)
         {
-            moveCamera("Up");
+            if (Network.isServer)
+            {
+                moveCamera("Up");
+            }
+            else
+            {
+                moveCamera("Down");
+            }
         }
 
     }
