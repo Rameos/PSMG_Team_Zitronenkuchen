@@ -24,22 +24,22 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
         if (Input.GetKeyDown(KeyCode.Space))
         {
             // user staring at the field and pressing space -> open menu
-            Vector3 posGaze = (gazeModel.posGazeLeft + gazeModel.posGazeRight) * 0.5f;
+            Vector3 pos = new Vector3(Screen.width / 2, Screen.height / 2, 0);
             Vector3 nullVect = new Vector3(0, 0, 0);
 
-            posGaze = new Vector3(Input.mousePosition.x, ((Input.mousePosition.y)-Screen.height)*(-1), 0);
-            Debug.Log(posGaze);
+            
+            Debug.Log(pos);
             
             if (!set)
             {
                 // field not set yet
-                showPopupMenu(posGaze);
+                showPopupMenu(pos);
             }
 
             else if (hit.transform.gameObject.GetComponent<HexField>().specialisation == "Military" || hit.transform.gameObject.GetComponent<HexField>().specialisation == "Base")
             {                
                 // field set to military or base
-                showMilitaryMenu(posGaze);
+                showMilitaryMenu(pos);
             }
             else
             {

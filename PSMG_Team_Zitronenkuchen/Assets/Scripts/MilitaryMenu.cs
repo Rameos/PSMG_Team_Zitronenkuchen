@@ -25,8 +25,6 @@ public class MilitaryMenu : MonoBehaviour {
     private ChangeFieldStateOnClick fieldScript;
     private MainController mainController;
 
-    private Vector3 pos;
-
     #region ButtonActions
     // Attack start action 
     public void button1_Action()
@@ -45,6 +43,7 @@ public class MilitaryMenu : MonoBehaviour {
     {
         bool attack = false;
         int troops = mainController.moveTroops(selectedHexagon);
+        mainController.setRanges();
         if (troops > 0)
         {
             mainController.startTroopSend(troops, attack);
@@ -65,18 +64,33 @@ public class MilitaryMenu : MonoBehaviour {
     {
         mainController.sendTroops(selectedHexagon);
         Debug.Log("Button4_Pressed");
+        foreach(GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter")) {
+            Destroy(highlighter);
+        }
+        mainController.resetRanges();
     }
     // Attack here action
     public void button5_Action()
     {
         mainController.sendAttack(selectedHexagon);
         Debug.Log("Button5_Pressed");
+        foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
+        {
+            Destroy(highlighter);
+        }
+        mainController.resetRanges();
     }
     // Cancel Troop send action
     public void button6_Action()
     {
         mainController.cancelTroopMovement();
         Debug.Log("Button6_Pressed");
+        foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
+        {
+            Destroy(highlighter);
+        }
+        mainController.resetRanges();
+
     }
 
     #endregion
@@ -93,8 +107,7 @@ public class MilitaryMenu : MonoBehaviour {
         //Debug.Log(hex.GetComponent<HexField>().owner);
 
         //Set the Actions of the Buttons
-        this.pos.x = Screen.width / 2;
-        this.pos.y = Screen.height / 2;
+        
 
         fieldScript = script;
 
@@ -114,22 +127,23 @@ public class MilitaryMenu : MonoBehaviour {
         {
             if (!(hex.GetComponent<HexField>().spec is BaseSpecialisation))
             {
-                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Attack", myStyle, attackButton));
-                gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Move Troops", myStyle, moveButton));
-                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y + 150, 300, 150), "Build Troops" + "\n" + "150", myStyle, buildButton));
+                gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y - 180, 220, 200), "ATTACK", myStyle, attackButton));
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 20, pos.y, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
+                gazeUI.Add(new GazeButton(new Rect(pos.x - 240, pos.y, 220, 200), "150 \n BUILD TROPPS", myStyle, buildButton));
             } 
         }
-        else if (isSending) // troops are being sent
+        else if (isSending && hex.GetComponent<HexField>().InRange) // troops are being sent
         {
+            Debug.Log("Owner: "+hex.GetComponent<HexField>().owner+", Is Server?"+Network.isServer);
             if ((hex.GetComponent<HexField>().owner == 2 && Network.isServer) || (hex.GetComponent<HexField>().owner == 1 && Network.isClient))
             {
-                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Attack here", myStyle, attacking));
-                gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Cancel", myStyle, canceling));
+                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "ATACK HERE", myStyle, attacking));
+                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
             }
             else
             {
-                gazeUI.Add(new GazeButton(new Rect(pos.x + 100, pos.y - 150, 300, 150), "Move here", myStyle, moving));
-                gazeUI.Add(new GazeButton(new Rect(pos.x + 150, pos.y, 300, 150), "Cancel", myStyle, canceling));
+                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "MOVE HERE", myStyle, moving));
+                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
             }
                 
         }

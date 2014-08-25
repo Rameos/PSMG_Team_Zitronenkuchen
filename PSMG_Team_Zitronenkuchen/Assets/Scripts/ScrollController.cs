@@ -138,7 +138,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     private bool hitTopBorder()
     {
 
-        Debug.Log("this is the fieldsize" + borderTop);
+        //Debug.Log("this is the fieldsize" + borderTop);
         if (camera.transform.position.z >= borderTop)
         {
             return true;

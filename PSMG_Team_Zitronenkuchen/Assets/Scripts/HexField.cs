@@ -7,12 +7,14 @@ public class HexField : MonoBehaviour {
     public string specialisation;
     //public int upgradLevel; not needed yet
     public Material ownedMaterial;
+    public Material defaultMaterial;
     public int xPos;
     public int yPos;
     public GameObject[,] hexArray = new GameObject[50,50];
     public bool isFilled;
     private bool set = false;
     public Specialisation spec;
+    private bool inRange;
 
     public ArrayList getSurroundingFields()
     {
@@ -79,6 +81,19 @@ public class HexField : MonoBehaviour {
         return new Vector3(xPos, yPos);
     }
 
+
+    public bool InRange
+    {
+        get
+        {
+            return inRange;
+        }
+        set
+        {
+            inRange = value;
+        }
+    }
+
     private void fillHexArray()
     {
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("hex");
@@ -88,27 +103,54 @@ public class HexField : MonoBehaviour {
         }
     }
 
-    public void colorOwnedArea(GameObject obj)
+    public void colorOwnedArea()
     {
         ownedMaterial = Resources.Load("OwnedMaterial", typeof(Material)) as Material;
         if (ownedMaterial == null)
         {
             Debug.Log("loading failed, check existence of Resources folder in Assets");
         }
-        if (!isFilled)
+        //if (!isFilled)
+        //{
+            gameObject.renderer.material = ownedMaterial;
+        //}       
+    }
+
+    public void decolorUnownedArea()
+    {
+        defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
+        if (defaultMaterial == null)
         {
-            obj.renderer.material = ownedMaterial;
-        }       
+            Debug.Log("loading failed, check existence of Resources folder in Assets");
+        }
+        if (true)
+        {
+            gameObject.renderer.material = defaultMaterial;
+            Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            Debug.Log(Network.isServer);
+            Debug.Log(gameObject);
+        } 
     }
 
     [RPC]
-    void buildBase(NetworkViewID id)
+    void buildBase(NetworkViewID id, int selectedRace)
     {
+        Debug.Log("Build base for Race " + selectedRace);
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
         GameObject milBuilding = Resources.Load("baseECONOMY", typeof(GameObject)) as GameObject;
         GameObject militaryBuilding = Network.Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
+        GameObject baseBuilding = null;
+        if (selectedRace == 1)
+        {
+            baseBuilding = Resources.Load("baseMIL", typeof(GameObject)) as GameObject;
+        }
+        else
+        {
+            baseBuilding = Resources.Load("base-building", typeof(GameObject)) as GameObject;
+        } 
+        selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         militaryBuilding.transform.parent = selectedHexagon.transform;
         GameObject unitText = new GameObject();
         TextMesh text = unitText.AddComponent<TextMesh>();
@@ -123,14 +165,34 @@ public class HexField : MonoBehaviour {
     }
 
     [RPC]
-    void buildMilitary(NetworkViewID id)
+    void buildMilitary(NetworkViewID id, int selectedRace)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject milBuilding = Resources.Load("militaryECONOMY", typeof(GameObject)) as GameObject;
-        GameObject militaryBuilding = Network.Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
+        GameObject milBuildingState1 = null;
+        GameObject milBuildingState2 = null;
+        GameObject milBuildingState3 = null;
+        if (selectedRace == 1)
+        {
+            milBuildingState1 = Resources.Load("militaryMILState1", typeof(GameObject)) as GameObject;
+            milBuildingState2 = Resources.Load("militaryMILState2", typeof(GameObject)) as GameObject;
+            milBuildingState3 = Resources.Load("militaryMILState3", typeof(GameObject)) as GameObject;
+        }
+        else
+        {
+            milBuildingState1 = Resources.Load("militaryECONOMYState1", typeof(GameObject)) as GameObject;
+            milBuildingState2 = Resources.Load("militaryECONOMYState2", typeof(GameObject)) as GameObject; 
+            milBuildingState3 = Resources.Load("militaryECONOMYState3", typeof(GameObject)) as GameObject;
+        }       
+        GameObject militaryBuildingState1 = Instantiate(milBuildingState1, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        GameObject militaryBuildingState2 = Instantiate(milBuildingState2, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        GameObject militaryBuildingState3 = Instantiate(milBuildingState3, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
-        militaryBuilding.transform.parent = selectedHexagon.transform;
+        militaryBuildingState1.transform.parent = selectedHexagon.transform;
+        militaryBuildingState2.transform.parent = selectedHexagon.transform;
+        militaryBuildingState3.transform.parent = selectedHexagon.transform;
+        militaryBuildingState2.SetActive(false);
+        militaryBuildingState3.SetActive(false);
         GameObject unitText = new GameObject();
         TextMesh text = unitText.AddComponent<TextMesh>();
         text.characterSize = 0.1f;
@@ -143,26 +205,54 @@ public class HexField : MonoBehaviour {
         unitText.transform.Rotate(new Vector3(45, 0, 0));
     }
 
-    [RPC]
+    /*[RPC]
     void buildResearch(NetworkViewID id)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject resBuilding = Resources.Load("economyECONOMY", typeof(GameObject)) as GameObject;
+        GameObject resBuilding = null;
+        if (selectedRace == 1)
+        {
+            resBuilding = Resources.Load("economyMIL", typeof(GameObject)) as GameObject;
+        }
+        else
+        {
+            resBuilding = Resources.Load("economyECONOMY", typeof(GameObject)) as GameObject;
+        }
         GameObject researchBuilding = Instantiate(resBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("researchMaterial", typeof(Material)) as Material;
         researchBuilding.transform.parent = selectedHexagon.transform;
-    }
+    }*/
 
     [RPC]
-    void buildEconomy(NetworkViewID id)
+    void buildEconomy(NetworkViewID id, int selectedRace)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject ecoBuilding = Resources.Load("economyECONOMY", typeof(GameObject)) as GameObject;
-        GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
+        GameObject ecoBuildingState1 = null;
+        GameObject ecoBuildingState2 = null;
+        GameObject ecoBuildingState3 = null;
+        if (selectedRace == 1)
+        {
+            ecoBuildingState1 = Resources.Load("economyMILState1", typeof(GameObject)) as GameObject;
+            ecoBuildingState2 = Resources.Load("economyMILState2", typeof(GameObject)) as GameObject;
+            ecoBuildingState3 = Resources.Load("economyMILState3", typeof(GameObject)) as GameObject;
+        }
+        else
+        {
+            ecoBuildingState1 = Resources.Load("economyECOState1", typeof(GameObject)) as GameObject;
+            ecoBuildingState2 = Resources.Load("economyECOState2", typeof(GameObject)) as GameObject;
+            ecoBuildingState3 = Resources.Load("economyECOState3", typeof(GameObject)) as GameObject;
+        }
+        GameObject economyBuildingState1 = Instantiate(ecoBuildingState1, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        GameObject economyBuildingState2 = Instantiate(ecoBuildingState2, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        GameObject economyBuildingState3 = Instantiate(ecoBuildingState3, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
-        economyBuilding.transform.parent = selectedHexagon.transform;
+        economyBuildingState1.transform.parent = selectedHexagon.transform;
+        economyBuildingState2.transform.parent = selectedHexagon.transform;
+        economyBuildingState3.transform.parent = selectedHexagon.transform;
+        economyBuildingState2.SetActive(false);
+        economyBuildingState3.SetActive(false);
     }
 
     [RPC]
@@ -197,11 +287,103 @@ public class HexField : MonoBehaviour {
     [RPC]
     void successfulAttack(NetworkViewID id, int survivingTroops, Vector3 pos, bool win)
     {
+        StartCoroutine(SuccessfulAttack(id, survivingTroops, pos, win));
+    }
+
+    private IEnumerator SuccessfulAttack(NetworkViewID id, int survivingTroops, Vector3 pos, bool win)
+    {
+        yield return new WaitForSeconds(3);
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
         GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().attackSuccess(hex, survivingTroops, pos, win);
     }
 
+    
+    [RPC]
+    void explobumm(NetworkViewID id)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        foreach (Transform child in hex.transform)
+        {
+            Object.Destroy(child.gameObject);
+            //TODO: explobumm(Partikeleffekt)
+        }
+    }
 
+    [RPC]
+    void setOwner(NetworkViewID id, int owner)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        hex.GetComponent<HexField>().owner = owner;
+    }
+
+    [RPC]
+    void toggleVisibility(NetworkViewID id, int state, string alienRaceBuilding)
+    {
+        Debug.Log("hello toggle visibility state: "+state);
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        Transform state1 = null;
+        Transform state2 = null;
+        Transform state3 = null;
+        foreach (Transform child in hex.transform)
+        {
+            Debug.Log("child name:"+ child.name);
+            if (child.name == alienRaceBuilding + "State1(Clone)")
+            {
+                state1 = child;
+            }
+            if (child.name == alienRaceBuilding + "State2(Clone)")
+            {
+                state2 = child;
+            }
+            if (child.name == alienRaceBuilding + "State3(Clone)")
+            {
+                state3 = child;
+            }     
+        }
+        switch (state)
+        {
+            case 1:
+                Debug.Log("hello toggle visibility state1");
+                state1.gameObject.SetActive(true);
+                state2.gameObject.SetActive(false);
+                state3.gameObject.SetActive(false);
+                break;
+            case 2:
+                Debug.Log("hello toggle visibility state2");
+                state2.gameObject.SetActive(true);
+                state1.gameObject.SetActive(false);
+                state3.gameObject.SetActive(false);
+                break;
+            case 3:
+                Debug.Log("hello toggle visibility state3");
+                state3.gameObject.SetActive(true);
+                state1.gameObject.SetActive(false);
+                state2.gameObject.SetActive(false);
+                break;
+            default:
+                break;
+        }
+    }
+
+    [RPC]
+    void destroyBuilding(NetworkViewID id, string alienRace)
+    {
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        //hex.GetComponent<HexField>().owner = 0;
+        //hex.GetComponent<HexField>().specialisation = null;
+        foreach (Transform child in hex.transform)
+        {
+            if (child.name != alienRace+"State3(Clone)" && child.name != "New Game Object")
+            {
+                Object.Destroy(child.gameObject);
+            }
+        }
+        
+    }
     
 }

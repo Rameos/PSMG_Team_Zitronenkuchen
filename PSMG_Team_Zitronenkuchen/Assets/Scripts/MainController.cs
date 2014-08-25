@@ -7,6 +7,7 @@ public class MainController : MonoBehaviour {
     // private int researchPoints;
     private ArrayList ui = new ArrayList();
     public ArrayList specialisedNodes = new ArrayList();
+    public ArrayList buildingNodes = new ArrayList();
     private ArrayList labelUI = new ArrayList();
     private int sendingTroops = 0;
     private GameObject sendOrigin;
@@ -14,9 +15,11 @@ public class MainController : MonoBehaviour {
     public AudioClip building;
     public AudioClip denied;
 
+    private int selectedRace = CustomGameProperties.alienRace;
+
 	// Use this for initialization
 	void Start () {
-        tirkid = 500;
+        tirkid = 50000;
         // researchPoints = 0;
         Debug.Log("Start");
         InvokeRepeating("updateRessources", 1, 1);
@@ -34,6 +37,7 @@ public class MainController : MonoBehaviour {
 
     void updateRessources()
     {
+        updateBuildingStates();
         earn(5);
         // research(5);
         foreach (Specialisation node in specialisedNodes)
@@ -58,8 +62,7 @@ public class MainController : MonoBehaviour {
                         ((MilitarySpecialisation)node).RecruitCounter -= 1;
                     }
                     //Debug.Log(((MilitarySpecialisation)node).Troops + " troops on " + node.Pos);
-                }
-
+                }              
             }
             else if (node is BaseSpecialisation)
             {
@@ -104,11 +107,16 @@ public class MainController : MonoBehaviour {
                 hex.GetComponent<HexField>().spec = newBuilt;
                 NetworkView nview = hex.networkView;
                 nview.RPC("setSpecialisation", RPCMode.AllBuffered, type);
+                int owner;
+                if(Network.isServer) owner = 1;
+                else owner = 2;
+                nview.RPC("setOwner", RPCMode.AllBuffered, nview.viewID, owner);
                 if (newBuilt is MilitarySpecialisation)
                 {
-                    extendInfluenceArea(hex);
+                    //extendInfluenceArea(hex);
                 }
-                specialisedNodes.Add(newBuilt);
+                //specialisedNodes.Add(newBuilt);
+                buildingNodes.Add(newBuilt);
                 audio.PlayOneShot(building);
                 return true;
             }
@@ -117,16 +125,123 @@ public class MainController : MonoBehaviour {
         return false;
     }
 
+    private void updateBuildingStates()
+    {
+        int state = 0;
+        string alienBuildingState = "";
+        foreach (Specialisation node in buildingNodes)
+        {
+            NetworkView nview = node.Hex.networkView;
+            NetworkViewID nviewId = nview.viewID;
+            if (node is MilitarySpecialisation)
+            {
+                if (CustomGameProperties.alienRace == 1)
+                {
+                    alienBuildingState = "militaryMIL";
+                }
+                else
+                {
+                    alienBuildingState = "militaryECO";
+                }
+                if (((MilitarySpecialisation)node).BuildCounter <= 3)
+                {
+
+                    state = ((MilitarySpecialisation)node).BuildCounter;
+                    
+                    nview.RPC("toggleVisibility", RPCMode.AllBuffered, nviewId, state, alienBuildingState);
+                    ((MilitarySpecialisation)node).BuildCounter++;
+                }
+                else
+                {
+                    nview.RPC("destroyBuilding", RPCMode.AllBuffered, nviewId, alienBuildingState);
+                    extendInfluenceArea(node.Hex);
+                    buildingNodes.Remove(node);
+                    specialisedNodes.Add(node);
+                }
+            }
+            else if (node is EconomySpecialisation)
+            {
+                if (CustomGameProperties.alienRace == 1)
+                {
+                    alienBuildingState = "economyMIL";
+                }
+                else
+                {
+                    alienBuildingState = "economyECO";
+                }
+                if (((EconomySpecialisation)node).BuildCounter <= 3)
+                {
+
+                    state = ((EconomySpecialisation)node).BuildCounter;
+                    
+                    nview.RPC("toggleVisibility", RPCMode.AllBuffered, nviewId, state, alienBuildingState);
+                    ((EconomySpecialisation)node).BuildCounter++;
+                }
+                else
+                {
+                    nview.RPC("destroyBuilding", RPCMode.AllBuffered, nviewId, alienBuildingState);
+                    buildingNodes.Remove(node);
+                    specialisedNodes.Add(node);
+                }
+            }
+        }
+    }
+
+    private void updateArea(GameObject hex, int owner)
+    {
+        ArrayList neighbours = hex.GetComponent<HexField>().getSurroundingFields();
+        foreach (GameObject neighbourHex in neighbours)
+        {
+            if (neighbourHex.GetComponent<HexField>().owner == owner)
+            {
+                ArrayList neighboursNeighbours = neighbourHex.GetComponent<HexField>().getSurroundingFields();
+                bool destroy = true;
+                foreach(GameObject neighboursNeighboursHex in neighboursNeighbours){
+
+                    if ((neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Military" || neighboursNeighboursHex.GetComponent<HexField>().specialisation == "Base") && neighboursNeighboursHex.GetComponent<HexField>().owner == owner)
+                    {
+                        destroy = false;
+                        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                        Debug.Log("Specialisation: " + neighboursNeighboursHex.GetComponent<HexField>().specialisation);
+                        break;
+                    }                    
+                }
+                if (destroy)
+                {
+                    Debug.Log(neighbourHex.GetComponent<HexField>().specialisation + "; " + neighbourHex.GetComponent<HexField>().owner);
+                    neighbourHex.GetComponent<HexField>().decolorUnownedArea();
+                    foreach (Specialisation node in specialisedNodes)
+                    {
+                        if (neighbourHex.Equals(node.Hex))
+                        {
+                            specialisedNodes.Remove(node);
+                            NetworkView nview = node.Hex.networkView;
+                            NetworkViewID nviewId = nview.viewID;
+                            nview.RPC("destroyBuilding", RPCMode.AllBuffered, nviewId);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     
 
     private void extendInfluenceArea(GameObject hex)
     {
         ArrayList neighbours = hex.GetComponent<HexField>().getSurroundingFields();
+        hex.GetComponent<HexField>().colorOwnedArea();
         foreach (GameObject obj in neighbours)
         {
-            if(Network.isServer) obj.GetComponent<HexField>().owner = 1;
-            if (Network.isClient) obj.GetComponent<HexField>().owner = 2;
-            obj.GetComponent<HexField>().colorOwnedArea(obj);
+            int newOwner;
+            if(Network.isServer) newOwner = 1;
+            else newOwner = 2;
+            if (obj.GetComponent<HexField>().owner == 0)
+            {
+                obj.GetComponent<HexField>().owner = newOwner;
+                obj.GetComponent<HexField>().colorOwnedArea();
+            }
         }
     }
 
@@ -230,6 +345,7 @@ public class MainController : MonoBehaviour {
                 {
                     if ((hex.owner == 2 && Network.isServer) || (hex.owner == 1 && Network.isClient))
                     {
+                        hex.InRange = true;
                         highlightMilitaryNode(hex, false);
                     }
                 }
@@ -237,7 +353,7 @@ public class MainController : MonoBehaviour {
                 {
                     if ((hex.owner == 1 && Network.isServer) || (hex.owner == 2 && Network.isClient))
                     {
-                        highlightMilitaryNode(hex, true);
+                        //highlightMilitaryNode(hex, true);
                     }
                 }
             }
@@ -248,13 +364,22 @@ public class MainController : MonoBehaviour {
 
     private void highlightMilitaryNode(HexField hex, bool ownNode)
     {
-        if (ownNode)
+        
+        if (ownNode && hex != sendOrigin.GetComponent<HexField>())
         {
-            hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
+            Vector3 pos = hex.transform.position;
+            pos.y = 0.65f;
+            GameObject highlighter = Resources.Load("ParticleHighlighter", typeof(GameObject)) as GameObject;
+            Instantiate(highlighter, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+            //hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
         }
-        else
+        else if(!ownNode &&  hex != sendOrigin)
         {
-            hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
+            Vector3 pos = hex.transform.position;
+            pos.y = 0.65f;
+            GameObject highlighter = Resources.Load("ParticleHighlighter", typeof(GameObject)) as GameObject;
+            Instantiate(highlighter, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+            //hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
         }
     }
 
@@ -316,17 +441,29 @@ public class MainController : MonoBehaviour {
                     // successful attack
                     Debug.Log("attack successful");
                     int survivingTroops = sentTroops - troops;
-                    if (Network.isServer) destination.GetComponent<HexField>().owner = 1;
-                    if (Network.isClient) destination.GetComponent<HexField>().owner = 2;
+                    int owner = 0;
+                    if (Network.isServer) owner = 2;
+                    if (Network.isClient) owner = 1;
+                    destination.GetComponent<HexField>().owner = owner;
                     specialisedNodes.Remove(node);
                     NetworkViewID destinationNviewId = destination.networkView.viewID;
+                    node.Hex.networkView.RPC("explobumm", RPCMode.All, destinationNviewId);
                     bool win = false;
                     if (node is BaseSpecialisation)
                     {
                         win = true;
+                        destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
                         gameEnd(!win);
                     }
-                    destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
+                    else{
+                        if (Network.isServer) owner = 1;
+                        if (Network.isClient) owner = 2;
+                        updateArea(node.Hex, owner);
+                        destination.GetComponent<HexField>().decolorUnownedArea();
+                        destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
+                    }
+                        
+                    break;
                 }
                 
                 else
@@ -334,9 +471,26 @@ public class MainController : MonoBehaviour {
                     // attack failed
                     Debug.Log("attack failed");
                     troops -= sentTroops;
+                    if (node is MilitarySpecialisation) ((MilitarySpecialisation)node).Troops = troops;
+                    if (node is BaseSpecialisation) ((BaseSpecialisation)node).Troops = troops;
                 }
 
             }
+        }
+    }
+
+    public void resetRanges()
+    {
+        foreach (Specialisation spec in specialisedNodes)
+        {
+            spec.Hex.GetComponent<HexField>().InRange = false;
+        }
+    }
+    public void setRanges()
+    {
+        foreach (Specialisation spec in specialisedNodes)
+        {
+            spec.Hex.GetComponent<HexField>().InRange = true;
         }
     }
 
@@ -350,6 +504,7 @@ public class MainController : MonoBehaviour {
         else
         {
             earn(150);
+            destination.networkView.RPC("buildMilitary", RPCMode.AllBuffered, destination.networkView.viewID, selectedRace);
             build("Military", destination, pos);
             foreach (Specialisation node in specialisedNodes)
             {
@@ -361,6 +516,7 @@ public class MainController : MonoBehaviour {
                     troops = survivingTroops;
                 }
             }
+            destination.GetComponent<HexField>().colorOwnedArea();
         }
         
     }
