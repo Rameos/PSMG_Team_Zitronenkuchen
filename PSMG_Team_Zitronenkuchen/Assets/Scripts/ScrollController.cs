@@ -121,7 +121,8 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 
         determineDirection(direction);
         movement = new Vector3(speed * xDirection, 0, speed * yDirection);
-        camera.transform.Translate(movement * Time.deltaTime * 2, Space.World);
+        camera.transform.Translate(movement * Time.deltaTime * 2);
+        
 
        
     }
