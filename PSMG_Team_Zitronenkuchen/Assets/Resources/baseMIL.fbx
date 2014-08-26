@@ -9,11 +9,11 @@ FBXHeaderExtension:  {
 	CreationTimeStamp:  {
 		Version: 1000
 		Year: 2014
-		Month: 07
-		Day: 28
-		Hour: 15
-		Minute: 23
-		Second: 36
+		Month: 08
+		Day: 26
+		Hour: 12
+		Minute: 13
+		Second: 57
 		Millisecond: 0
 	}
 	Creator: "FBX SDK/FBX Plugins build 20070228"
@@ -21,7 +21,7 @@ FBXHeaderExtension:  {
 		FlagPLE: 0
 	}
 }
-CreationTime: "2014-07-28 15:23:36:000"
+CreationTime: "2014-08-26 12:13:57:000"
 Creator: "Blender version 2.70 (sub 0)"
 
 ; Object definitions
@@ -31,13 +31,13 @@ Definitions:  {
 	Version: 100
 	Count: 15
 	ObjectType: "Model" {
-		Count: 11
+		Count: 10
 	}
 	ObjectType: "Geometry" {
 		Count: 1
 	}
 	ObjectType: "Material" {
-		Count: 1
+		Count: 2
 	}
 	ObjectType: "Texture" {
 		Count: 1
@@ -142,14 +142,14 @@ Objects:  {
 		CameraName: 100
 		CameraIndexName:
 	}
-	Model: "Model::Camera", "Camera" {
+	Model: "Model::Empty", "Null" {
 		Version: 232
 		Properties60:  {
 			Property: "QuaternionInterpolate", "bool", "",0
 			Property: "Visibility", "Visibility", "A+",1
-			Property: "Lcl Translation", "Lcl Translation", "A+",7.481131553649902,5.343665122985840,6.507639884948730
-			Property: "Lcl Rotation", "Lcl Rotation", "A+",23.240195056629602,142.362356870423241,34.212069212897042
-			Property: "Lcl Scaling", "Lcl Scaling", "A+",1.000000000000000,0.999999940395355,1.000000000000000
+			Property: "Lcl Translation", "Lcl Translation", "A+",-0.003608961822465,-0.071197561919689,0.008747703395784
+			Property: "Lcl Rotation", "Lcl Rotation", "A+",-90.000009334538021,0.000000000000000,0.000000000000000
+			Property: "Lcl Scaling", "Lcl Scaling", "A+",1.000000000000000,1.000000000000000,1.000000000000000
 			Property: "RotationOffset", "Vector3D", "",0,0,0
 			Property: "RotationPivot", "Vector3D", "",0,0,0
 			Property: "ScalingOffset", "Vector3D", "",0,0,0
@@ -216,190 +216,12 @@ Objects:  {
 			Property: "Color", "Color", "A",0.8,0.8,0.8
 			Property: "Size", "double", "",100
 			Property: "Look", "enum", "",1
-			Property: "Roll", "Roll", "A+",0
-			Property: "FieldOfView", "FieldOfView", "A+",49.134342
-			Property: "FieldOfViewX", "FieldOfView", "A+",49.134342
-			Property: "FieldOfViewY", "FieldOfView", "A+",28.841546
-			Property: "FocalLength", "Number", "A+",35.000000
-			Property: "FilmOffsetX", "Number", "A+",0.000000
-			Property: "FilmOffsetY", "Number", "A+",0.000000
-			Property: "BackgroundColor", "Color", "A+",0,0,0
-			Property: "TurnTable", "Real", "A+",0
-			Property: "DisplayTurnTableIcon", "bool", "",1
-			Property: "Motion Blur Intensity", "Real", "A+",1
-			Property: "UseMotionBlur", "bool", "",0
-			Property: "UseRealTimeMotionBlur", "bool", "",1
-			Property: "ResolutionMode", "enum", "",0
-			Property: "ApertureMode", "enum", "",3
-			Property: "GateFit", "enum", "",2
-			Property: "CameraFormat", "enum", "",0
-			Property: "AspectW", "double", "",1920
-			Property: "AspectH", "double", "",1080
-			Property: "PixelAspectRatio", "double", "",1
-			Property: "UseFrameColor", "bool", "",0
-			Property: "FrameColor", "ColorRGB", "",0.3,0.3,0.3
-			Property: "ShowName", "bool", "",1
-			Property: "ShowGrid", "bool", "",1
-			Property: "ShowOpticalCenter", "bool", "",0
-			Property: "ShowAzimut", "bool", "",1
-			Property: "ShowTimeCode", "bool", "",0
-			Property: "NearPlane", "double", "",0.100000
-			Property: "FarPlane", "double", "",99.999994
-			Property: "FilmWidth", "double", "",1.259843
-			Property: "FilmHeight", "double", "",0.708661
-			Property: "FilmAspectRatio", "double", "",1.777778
-			Property: "FilmSqueezeRatio", "double", "",1
-			Property: "FilmFormatIndex", "enum", "",0
-			Property: "ViewFrustum", "bool", "",1
-			Property: "ViewFrustumNearFarPlane", "bool", "",0
-			Property: "ViewFrustumBackPlaneMode", "enum", "",2
-			Property: "BackPlaneDistance", "double", "",100
-			Property: "BackPlaneDistanceMode", "enum", "",0
-			Property: "ViewCameraToLookAt", "bool", "",1
-			Property: "LockMode", "bool", "",0
-			Property: "LockInterestNavigation", "bool", "",0
-			Property: "FitImage", "bool", "",0
-			Property: "Crop", "bool", "",0
-			Property: "Center", "bool", "",1
-			Property: "KeepRatio", "bool", "",1
-			Property: "BackgroundMode", "enum", "",0
-			Property: "BackgroundAlphaTreshold", "double", "",0.5
-			Property: "ForegroundTransparent", "bool", "",1
-			Property: "DisplaySafeArea", "bool", "",0
-			Property: "SafeAreaDisplayStyle", "enum", "",1
-			Property: "SafeAreaAspectRatio", "double", "",1.777778
-			Property: "Use2DMagnifierZoom", "bool", "",0
-			Property: "2D Magnifier Zoom", "Real", "A+",100
-			Property: "2D Magnifier X", "Real", "A+",50
-			Property: "2D Magnifier Y", "Real", "A+",50
-			Property: "CameraProjectionType", "enum", "",0
-			Property: "UseRealTimeDOFAndAA", "bool", "",0
-			Property: "UseDepthOfField", "bool", "",0
-			Property: "FocusSource", "enum", "",0
-			Property: "FocusAngle", "double", "",3.5
-			Property: "FocusDistance", "double", "",200
-			Property: "UseAntialiasing", "bool", "",0
-			Property: "AntialiasingIntensity", "double", "",0.77777
-			Property: "UseAccumulationBuffer", "bool", "",0
-			Property: "FrameSamplingCount", "int", "",7
 		}
 		MultiLayer: 0
-		MultiTake: 0
+		MultiTake: 1
 		Shading: Y
 		Culling: "CullingOff"
-		TypeFlags: "Camera"
-		GeometryVersion: 124
-		Position: 7.481132,5.343665,6.507640
-		Up: -0.317370,0.895343,-0.312469
-		LookAt: -0.685881,0.010817,0.727634
-		ShowInfoOnMoving: 1
-		ShowAudio: 0
-		AudioColor: 0,1,0
-		CameraOrthoZoom: 1
-	}
-	Model: "Model::Lamp", "Light" {
-		Version: 232
-		Properties60:  {
-			Property: "QuaternionInterpolate", "bool", "",0
-			Property: "Visibility", "Visibility", "A+",1
-			Property: "Lcl Translation", "Lcl Translation", "A+",4.076245307922363,5.903861999511719,-1.005453944206238
-			Property: "Lcl Rotation", "Lcl Rotation", "A+",47.533574547422390,107.220753553002154,10.743666437040241
-			Property: "Lcl Scaling", "Lcl Scaling", "A+",1.000000000000000,0.999999880790710,1.000000000000000
-			Property: "RotationOffset", "Vector3D", "",0,0,0
-			Property: "RotationPivot", "Vector3D", "",0,0,0
-			Property: "ScalingOffset", "Vector3D", "",0,0,0
-			Property: "ScalingPivot", "Vector3D", "",0,0,0
-			Property: "TranslationActive", "bool", "",0
-			Property: "TranslationMin", "Vector3D", "",0,0,0
-			Property: "TranslationMax", "Vector3D", "",0,0,0
-			Property: "TranslationMinX", "bool", "",0
-			Property: "TranslationMinY", "bool", "",0
-			Property: "TranslationMinZ", "bool", "",0
-			Property: "TranslationMaxX", "bool", "",0
-			Property: "TranslationMaxY", "bool", "",0
-			Property: "TranslationMaxZ", "bool", "",0
-			Property: "RotationOrder", "enum", "",0
-			Property: "RotationSpaceForLimitOnly", "bool", "",0
-			Property: "AxisLen", "double", "",10
-			Property: "PreRotation", "Vector3D", "",0,0,0
-			Property: "PostRotation", "Vector3D", "",0,0,0
-			Property: "RotationActive", "bool", "",0
-			Property: "RotationMin", "Vector3D", "",0,0,0
-			Property: "RotationMax", "Vector3D", "",0,0,0
-			Property: "RotationMinX", "bool", "",0
-			Property: "RotationMinY", "bool", "",0
-			Property: "RotationMinZ", "bool", "",0
-			Property: "RotationMaxX", "bool", "",0
-			Property: "RotationMaxY", "bool", "",0
-			Property: "RotationMaxZ", "bool", "",0
-			Property: "RotationStiffnessX", "double", "",0
-			Property: "RotationStiffnessY", "double", "",0
-			Property: "RotationStiffnessZ", "double", "",0
-			Property: "MinDampRangeX", "double", "",0
-			Property: "MinDampRangeY", "double", "",0
-			Property: "MinDampRangeZ", "double", "",0
-			Property: "MaxDampRangeX", "double", "",0
-			Property: "MaxDampRangeY", "double", "",0
-			Property: "MaxDampRangeZ", "double", "",0
-			Property: "MinDampStrengthX", "double", "",0
-			Property: "MinDampStrengthY", "double", "",0
-			Property: "MinDampStrengthZ", "double", "",0
-			Property: "MaxDampStrengthX", "double", "",0
-			Property: "MaxDampStrengthY", "double", "",0
-			Property: "MaxDampStrengthZ", "double", "",0
-			Property: "PreferedAngleX", "double", "",0
-			Property: "PreferedAngleY", "double", "",0
-			Property: "PreferedAngleZ", "double", "",0
-			Property: "InheritType", "enum", "",0
-			Property: "ScalingActive", "bool", "",0
-			Property: "ScalingMin", "Vector3D", "",1,1,1
-			Property: "ScalingMax", "Vector3D", "",1,1,1
-			Property: "ScalingMinX", "bool", "",0
-			Property: "ScalingMinY", "bool", "",0
-			Property: "ScalingMinZ", "bool", "",0
-			Property: "ScalingMaxX", "bool", "",0
-			Property: "ScalingMaxY", "bool", "",0
-			Property: "ScalingMaxZ", "bool", "",0
-			Property: "GeometricTranslation", "Vector3D", "",0,0,0
-			Property: "GeometricRotation", "Vector3D", "",0,0,0
-			Property: "GeometricScaling", "Vector3D", "",1,1,1
-			Property: "LookAtProperty", "object", ""
-			Property: "UpVectorProperty", "object", ""
-			Property: "Show", "bool", "",1
-			Property: "NegativePercentShapeSupport", "bool", "",1
-			Property: "DefaultAttributeIndex", "int", "",0
-			Property: "Color", "Color", "A",0.8,0.8,0.8
-			Property: "Size", "double", "",100
-			Property: "Look", "enum", "",1
-			Property: "LightType", "enum", "",0
-			Property: "CastLightOnObject", "bool", "",1
-			Property: "DrawVolumetricLight", "bool", "",1
-			Property: "DrawGroundProjection", "bool", "",1
-			Property: "DrawFrontFacingVolumetricLight", "bool", "",0
-			Property: "GoboProperty", "object", ""
-			Property: "Color", "Color", "A+",1,1,1
-			Property: "Fog", "Fog", "A+",50
-			Property: "Color", "Color", "A",1.00,1.00,1.00
-			Property: "Intensity", "Intensity", "A+",100.00
-			Property: "Fog", "Fog", "A+",50
-			Property: "LightType", "enum", "",0
-			Property: "CastLightOnObject", "bool", "",1
-			Property: "DrawGroundProjection", "bool", "",1
-			Property: "DrawFrontFacingVolumetricLight", "bool", "",0
-			Property: "DrawVolumetricLight", "bool", "",1
-			Property: "GoboProperty", "object", ""
-			Property: "DecayType", "enum", "",2
-			Property: "EnableFarAttenuation", "bool", "",1
-			Property: "FarAttenuationEnd", "double", "",60.00
-			Property: "CastShadows", "bool", "",1
-			Property: "ShadowColor", "ColorRGBA", "",0,0,0,1
-		}
-		MultiLayer: 0
-		MultiTake: 0
-		Shading: Y
-		Culling: "CullingOff"
-		TypeFlags: "Light"
-		GeometryVersion: 124
+		TypeFlags: "Null"
 	}
 	Model: "Model::Cylinder", "Mesh" {
 		Version: 232
@@ -1162,9 +984,14 @@ Objects:  {
 		LayerElementMaterial: 0 {
 			Version: 101
 			Name: ""
-			MappingInformationType: "AllSame"
+			MappingInformationType: "ByPolygon"
 			ReferenceInformationType: "IndexToDirect"
-			Materials: 0
+			Materials: 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+			           0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,
+			           0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,
+			           0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+			           1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+			           1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 		}
 		Layer: 0 {
 			Version: 100
@@ -2298,6 +2125,36 @@ Objects:  {
 			Property: "Reflectivity", "double", "",0
 		}
 	}
+	Material: "Material::Highlight__BaseTexture_png", "" {
+		Version: 102
+		ShadingModel: "lambert"
+		MultiLayer: 0
+		Properties60:  {
+			Property: "ShadingModel", "KString", "", "Lambert"
+			Property: "MultiLayer", "bool", "",0
+			Property: "EmissiveColor", "ColorRGB", "",0.3307,0.8000,0.8000
+			Property: "EmissiveFactor", "double", "",0.0000
+			Property: "AmbientColor", "ColorRGB", "",1.0000,1.0000,1.0000
+			Property: "AmbientFactor", "double", "",1.0000
+			Property: "DiffuseColor", "ColorRGB", "",0.3307,0.8000,0.8000
+			Property: "DiffuseFactor", "double", "",0.8000
+			Property: "Bump", "Vector3D", "",0,0,0
+			Property: "TransparentColor", "ColorRGB", "",1,1,1
+			Property: "TransparencyFactor", "double", "",0.0000
+			Property: "SpecularColor", "ColorRGB", "",1.0000,1.0000,1.0000
+			Property: "SpecularFactor", "double", "",0.5000
+			Property: "ShininessExponent", "double", "",12.3
+			Property: "ReflectionColor", "ColorRGB", "",0,0,0
+			Property: "ReflectionFactor", "double", "",1
+			Property: "Emissive", "ColorRGB", "",0,0,0
+			Property: "Ambient", "ColorRGB", "",1.0,1.0,1.0
+			Property: "Diffuse", "ColorRGB", "",0.3,0.8,0.8
+			Property: "Specular", "ColorRGB", "",1.0,1.0,1.0
+			Property: "Shininess", "double", "",12.3
+			Property: "Opacity", "double", "",1.0
+			Property: "Reflectivity", "double", "",0
+		}
+	}
 	Video: "Video::BaseTexture_png", "Clip" {
 		Type: "Clip"
 		Properties60:  {
@@ -2353,7 +2210,11 @@ Objects:  {
 		Version: 100
 		Properties60:  {
 		}
-		NbPoseNodes: 1
+		NbPoseNodes: 2
+		PoseNode:  {
+			Node: "Model::Empty"
+			Matrix: 1.000000000000000,0.000000000000000,0.000000000000000,0.000000000000000,0.000000000000000,0.000000000000000,-1.000000000000000,0.000000000000000,0.000000000000000,1.000000000000000,0.000000000000000,0.000000000000000,-0.003608961822465,-0.071197561919689,0.008747703395784,1.000000000000000
+		}
 		PoseNode:  {
 			Node: "Model::Cylinder"
 			Matrix: 0.000000075497901,0.000000000000000,-1.000000000000000,0.000000000000000,-1.000000000000000,0.000000000000000,-0.000000075497901,0.000000000000000,0.000000000000000,1.000000000000000,0.000000000000000,0.000000000000000,0.000000000000000,0.000000000000000,0.000000000000000,1.000000000000000
@@ -2377,11 +2238,9 @@ Objects:  {
 ;------------------------------------------------------------------
 
 Relations:  {
+	Model: "Model::Empty", "Null" {
+	}
 	Model: "Model::Cylinder", "Mesh" {
-	}
-	Model: "Model::Camera", "Camera" {
-	}
-	Model: "Model::Lamp", "Light" {
 	}
 	Model: "Model::Producer Perspective", "Camera" {
 	}
@@ -2401,6 +2260,8 @@ Relations:  {
 	}
 	Material: "Material::BaseBuilding__BaseTexture_png", "" {
 	}
+	Material: "Material::Highlight__BaseTexture_png", "" {
+	}
 	Texture: "Texture::BaseTexture_png", "TextureVideoClip" {
 	}
 	Video: "Video::BaseTexture_png", "Clip" {
@@ -2412,9 +2273,9 @@ Relations:  {
 
 Connections:  {
 	Connect: "OO", "Model::Cylinder", "Model::Scene"
-	Connect: "OO", "Model::Lamp", "Model::Scene"
-	Connect: "OO", "Model::Camera", "Model::Scene"
+	Connect: "OO", "Model::Empty", "Model::Scene"
 	Connect: "OO", "Material::BaseBuilding__BaseTexture_png", "Model::Cylinder"
+	Connect: "OO", "Material::Highlight__BaseTexture_png", "Model::Cylinder"
 	Connect: "OO", "Texture::BaseTexture_png", "Model::Cylinder"
 	Connect: "OO", "Video::BaseTexture_png", "Texture::BaseTexture_png"
 }
@@ -2516,59 +2377,59 @@ Takes:  {
 				}
 			}
 		}
-		Model: "Model::Camera" {
+		Model: "Model::Empty" {
 			Version: 1.1
 			Channel: "Transform" {
 				Channel: "T" {
 					Channel: "X" {
-						Default: 7.481131553649902
+						Default: -0.003608961822465
 						KeyVer: 4005
 						KeyCount: 1
 						Key: 
-							1924423250,7.481131553649902,L
+							1924423250,-0.003608961822465,L
 						Color: 1,0,0
 					}
 					Channel: "Y" {
-						Default: 5.343665122985840
+						Default: -0.071197561919689
 						KeyVer: 4005
 						KeyCount: 1
 						Key: 
-							1924423250,5.343665122985840,L
+							1924423250,-0.071197561919689,L
 						Color: 0,1,0
 					}
 					Channel: "Z" {
-						Default: 6.507639884948730
+						Default: 0.008747703395784
 						KeyVer: 4005
 						KeyCount: 1
 						Key: 
-							1924423250,6.507639884948730,L
+							1924423250,0.008747703395784,L
 						Color: 0,0,1
 					}
 					LayerType: 1
 				}
 				Channel: "R" {
 					Channel: "X" {
-						Default: 23.240198471724188
+						Default: -90.000002504348856
 						KeyVer: 4005
 						KeyCount: 1
 						Key: 
-							1924423250,23.240198471724188,L
+							1924423250,-90.000002504348856,L
 						Color: 1,0,0
 					}
 					Channel: "Y" {
-						Default: 142.362356870423241
+						Default: -0.000000000000000
 						KeyVer: 4005
 						KeyCount: 1
 						Key: 
-							1924423250,142.362356870423241,L
+							1924423250,-0.000000000000000,L
 						Color: 0,1,0
 					}
 					Channel: "Z" {
-						Default: 34.212069212897042
+						Default: 0.000000000000000
 						KeyVer: 4005
 						KeyCount: 1
 						Key: 
-							1924423250,34.212069212897042,L
+							1924423250,0.000000000000000,L
 						Color: 0,0,1
 					}
 					LayerType: 2
@@ -2583,97 +2444,11 @@ Takes:  {
 						Color: 1,0,0
 					}
 					Channel: "Y" {
-						Default: 0.999999940395355
-						KeyVer: 4005
-						KeyCount: 1
-						Key: 
-							1924423250,0.999999940395355,L
-						Color: 0,1,0
-					}
-					Channel: "Z" {
 						Default: 1.000000000000000
 						KeyVer: 4005
 						KeyCount: 1
 						Key: 
 							1924423250,1.000000000000000,L
-						Color: 0,0,1
-					}
-					LayerType: 3
-				}
-			}
-		}
-		Model: "Model::Lamp" {
-			Version: 1.1
-			Channel: "Transform" {
-				Channel: "T" {
-					Channel: "X" {
-						Default: 4.076245307922363
-						KeyVer: 4005
-						KeyCount: 1
-						Key: 
-							1924423250,4.076245307922363,L
-						Color: 1,0,0
-					}
-					Channel: "Y" {
-						Default: 5.903861999511719
-						KeyVer: 4005
-						KeyCount: 1
-						Key: 
-							1924423250,5.903861999511719,L
-						Color: 0,1,0
-					}
-					Channel: "Z" {
-						Default: -1.005453944206238
-						KeyVer: 4005
-						KeyCount: 1
-						Key: 
-							1924423250,-1.005453944206238,L
-						Color: 0,0,1
-					}
-					LayerType: 1
-				}
-				Channel: "R" {
-					Channel: "X" {
-						Default: 47.533574547422390
-						KeyVer: 4005
-						KeyCount: 1
-						Key: 
-							1924423250,47.533574547422390,L
-						Color: 1,0,0
-					}
-					Channel: "Y" {
-						Default: 107.220760383191333
-						KeyVer: 4005
-						KeyCount: 1
-						Key: 
-							1924423250,107.220760383191333,L
-						Color: 0,1,0
-					}
-					Channel: "Z" {
-						Default: 10.743664729492949
-						KeyVer: 4005
-						KeyCount: 1
-						Key: 
-							1924423250,10.743664729492949,L
-						Color: 0,0,1
-					}
-					LayerType: 2
-				}
-				Channel: "S" {
-					Channel: "X" {
-						Default: 1.000000000000000
-						KeyVer: 4005
-						KeyCount: 1
-						Key: 
-							1924423250,1.000000000000000,L
-						Color: 1,0,0
-					}
-					Channel: "Y" {
-						Default: 0.999999880790710
-						KeyVer: 4005
-						KeyCount: 1
-						Key: 
-							1924423250,0.999999880790710,L
 						Color: 0,1,0
 					}
 					Channel: "Z" {

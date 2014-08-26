@@ -12,6 +12,8 @@ public class ConnectionBehaviour : MonoBehaviour
 
     public int connectionPort = 25001;
 
+    public GUISkin mySkin;
+
     // Use this for initialization
     void Start()
     {
@@ -55,15 +57,14 @@ public class ConnectionBehaviour : MonoBehaviour
 
     void OnGUI()
     {
-
-        ip = GUI.TextField(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 125, 160, 25), ip, 40);
+        GUI.skin = mySkin;
 
         if (Network.peerType == NetworkPeerType.Disconnected)
         {
             // not connected
-            GUI.Label(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 30 + 125, 300, 20), "Status: Disconnected");
+            GUI.Label(new Rect(Screen.width / 2 - 150, Screen.height / 2 + 50 + 125, 300, 50), "Status: Disconnected");
             // init Server
-            if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 60 + 125, 120, 20), "Initialize Server"))
+            if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 80 + 125, 300, 50), "Initialize Server"))
             {                
                 Network.InitializeServer(32, connectionPort, false);
                 initializedServer = true;
@@ -72,9 +73,9 @@ public class ConnectionBehaviour : MonoBehaviour
         else if (Network.peerType == NetworkPeerType.Client)
         {
             // client
-            GUI.Label(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 30 + 125, 300, 20), "Status: Connected as Client");
+            GUI.Label(new Rect(Screen.width / 2 - 150, Screen.height / 2 + 50 + 125, 300, 50), "Status: Connected as Client");
             // disconnect button
-            if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / + 60 + 125, 120, 20), "Disconnect"))
+            if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / + 80 + 125, 300, 50), "Disconnect"))
             {
                 Network.Disconnect(200);
                 gameObject.GetComponent<LANBroadcastService>().StopBroadCasting();
@@ -83,9 +84,9 @@ public class ConnectionBehaviour : MonoBehaviour
         else if (Network.peerType == NetworkPeerType.Server)
         {
             // server
-            GUI.Label(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 30 + 125, 300, 20), "Status: Connected as Server");
+            GUI.Label(new Rect(Screen.width / 2 - 150, Screen.height / 2 + 50 + 125, 300, 50), "Status: Connected as Server");
             // disconnect button
-            if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 60 + 125, 120, 20), "Disconnect"))
+            if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 80 + 125, 300, 50), "Disconnect"))
             {
                 Network.Disconnect(200);
                 gameObject.GetComponent<LANBroadcastService>().StopBroadCasting();

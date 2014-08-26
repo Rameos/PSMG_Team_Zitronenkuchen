@@ -1,16 +1,14 @@
 fileFormatVersion: 2
-guid: abe95defa3e80924c9a468c9424d5e05
+guid: 1a92d91c7f828574cba387cfbe2f40d5
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Camera
-    100004: Cylinder
-    100006: Lamp
+    100002: Cylinder
+    100004: Empty
     400000: //RootNode
-    400002: Camera
-    400004: Cylinder
-    400006: Lamp
+    400002: Cylinder
+    400004: Empty
     2300000: Cylinder
     3300000: Cylinder
     4300000: Cylinder
@@ -18,7 +16,7 @@ ModelImporter:
     9500000: //RootNode
   materials:
     importMaterials: 1
-    materialName: 0
+    materialName: 1
     materialSearch: 1
   animations:
     legacyGenerateAnimations: 4
@@ -53,7 +51,7 @@ ModelImporter:
     splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 1
-  importAnimation: 0
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     human: []
