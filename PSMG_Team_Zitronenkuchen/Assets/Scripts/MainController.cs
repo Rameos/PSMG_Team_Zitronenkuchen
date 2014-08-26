@@ -343,7 +343,7 @@ public class MainController : MonoBehaviour {
         foreach (GameObject obj in sendOrigin.GetComponent<HexField>().getSurroundingFields())
         {
             HexField hex = obj.GetComponent<HexField>();
-            if (hex.spec is MilitarySpecialisation)
+            if (hex.specialisation == "Military")
             {
                 if (attack)
                 {
@@ -374,7 +374,7 @@ public class MainController : MonoBehaviour {
         {
             Vector3 pos = hex.transform.position;
             pos.y = 0.65f;
-            GameObject highlighter = Resources.Load("ParticleHighlighter", typeof(GameObject)) as GameObject;
+            GameObject highlighter = Resources.Load("moveHighlighter", typeof(GameObject)) as GameObject;
             Instantiate(highlighter, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
             //hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
         }
@@ -382,7 +382,7 @@ public class MainController : MonoBehaviour {
         {
             Vector3 pos = hex.transform.position;
             pos.y = 0.65f;
-            GameObject highlighter = Resources.Load("ParticleHighlighter", typeof(GameObject)) as GameObject;
+            GameObject highlighter = Resources.Load("attackHighlighter", typeof(GameObject)) as GameObject;
             Instantiate(highlighter, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
             //hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
         }

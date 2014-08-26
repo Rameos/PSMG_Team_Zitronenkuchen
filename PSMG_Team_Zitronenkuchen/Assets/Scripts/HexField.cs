@@ -138,9 +138,6 @@ public class HexField : MonoBehaviour {
         Debug.Log("Build base for Race " + selectedRace);
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-
-        GameObject milBuilding = Resources.Load("baseECO", typeof(GameObject)) as GameObject;
-        GameObject militaryBuilding = Network.Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         GameObject baseBuilding = null;
         if (selectedRace == 1)
@@ -149,7 +146,7 @@ public class HexField : MonoBehaviour {
         }
         else
         {
-            baseBuilding = Resources.Load("baseECONOMY", typeof(GameObject)) as GameObject;
+            baseBuilding = Resources.Load("baseECO", typeof(GameObject)) as GameObject;
         } 
         GameObject basicBuilding = Network.Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
