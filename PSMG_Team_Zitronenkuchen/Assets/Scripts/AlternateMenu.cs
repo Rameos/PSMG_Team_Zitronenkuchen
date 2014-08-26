@@ -6,7 +6,7 @@ public class AlternateMenu : MonoBehaviour {
 
     public bool isQuit = false;
     public bool isStart = false;
-    public bool isCalibrate = false;
+    public bool isTutorial = false;
     public bool isMouse = false;
     public bool isEyetracker = false;
 
@@ -51,12 +51,12 @@ public class AlternateMenu : MonoBehaviour {
         else if (isEyetracker)
         {
             // start using eyetracker and mouse
+            GazeControlComponent.Instance.StartCalibration();
             Application.LoadLevel("Selection_Menu");
         }
-        else if (isCalibrate == true)
+        else if (isTutorial == true)
         {
-            // calibrate
-            GazeControlComponent.Instance.StartCalibration(); 
+            //start tutorial
         }
     }
 

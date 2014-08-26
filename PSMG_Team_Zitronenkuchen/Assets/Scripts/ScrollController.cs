@@ -61,7 +61,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
            borderBottom = gameField.transform.position.z;
            borderLeft = gameField.transform.position.x + 1.0f;
            borderRight = CreateGameField.getFieldWidth() - 0.7f;
-           Debug.Log("Network is server");
+           //Debug.Log("Network is server");
 
        }
        else
@@ -70,7 +70,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
            borderTop = gameField.transform.position.z;
            borderLeft = CreateGameField.getFieldWidth() - 0.7f;
            borderRight = gameField.transform.position.x;
-           Debug.Log(borderBottom + "top" + borderTop + "left" + borderLeft + "right" + borderRight);
+           //Debug.Log(borderBottom + "top" + borderTop + "left" + borderLeft + "right" + borderRight);
        }
     }
 
@@ -113,7 +113,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 
         determineDirection(direction);
         movement = new Vector3(speed * xDirection, 0, speed * yDirection);
-        Debug.Log(movement.x + movement.z);
+        //Debug.Log(movement.x + movement.z);
         camera.transform.Translate(movement * Time.deltaTime * 2);
         
 
