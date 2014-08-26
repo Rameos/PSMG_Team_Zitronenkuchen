@@ -110,8 +110,9 @@ public class PopUpMenu : MonoBehaviour {
         GameObject field = GameObject.FindGameObjectWithTag("Field");
         int layerDef = LayerMask.NameToLayer("Default");
         moveToLayer(field.transform, layerDef);
+        ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
         menuOpen = false;
-        ChangeFieldStateOnClick.resetHighlighting();
+
     }
 
     void moveToLayer(Transform root, int layer)
