@@ -8,6 +8,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
  
     PopUpMenu popUpMenu;
     MilitaryMenu milMenu;
+    HexField currentField;
     
 
 
@@ -36,7 +37,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
                 showPopupMenu(pos);
             }
 
-            else if (hit.transform.gameObject.GetComponent<HexField>().specialisation == "Military" || hit.transform.gameObject.GetComponent<HexField>().specialisation == "Base")
+            else if ((hit.transform.gameObject.GetComponent<HexField>().specialisation == "Military" || hit.transform.gameObject.GetComponent<HexField>().specialisation == "Base") && hit.transform.gameObject.GetComponent<HexField>().FinishedBuilding == true)
             {                
                 // field set to military or base
                 showMilitaryMenu(pos);
@@ -50,9 +51,17 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
         }
     }
 
+    public static void resetHighlighting(GameObject currentHex)
+    {
+        currentHex.transform.renderer.material.shader = Shader.Find("Diffuse");
+    }
+
     private void highlightMaterial()
     {
-        gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+        if (!PopUpMenu.isOpen() && !MilitaryMenu.isOpen())
+        {
+            gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+        }
     }
 
     //Reset the Element.Transform when the gaze leaves the Collider
@@ -63,8 +72,13 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 
     private void resetMaterial()
     {
-        gameObject.transform.renderer.material.shader = Shader.Find("Diffuse");
+        if (!PopUpMenu.isOpen() && !MilitaryMenu.isOpen())
+        {
+            gameObject.transform.renderer.material.shader = Shader.Find("Diffuse"); 
+        }
     }
+
+
 
     // show the standard popup menu when a field which is not set was clicked
     private void showPopupMenu(Vector3 pos)
