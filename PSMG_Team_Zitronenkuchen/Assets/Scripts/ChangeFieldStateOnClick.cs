@@ -58,7 +58,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 
     private void highlightMaterial()
     {
-        if (!PopUpMenu.isOpen())
+        if (!PopUpMenu.isOpen() && !MilitaryMenu.isOpen())
         {
             gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
         }

@@ -10,7 +10,7 @@ public class PopUpMenu : MonoBehaviour {
 
     public AudioClip select;
 
-    private static bool menuOpen;
+    private static bool menuOpen = false;
 
     // Save all GazeButtonElements in an arrayList / List
     private ArrayList gazeUI = new ArrayList();
