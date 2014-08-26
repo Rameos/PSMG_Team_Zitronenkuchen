@@ -351,7 +351,6 @@ public class MainController : MonoBehaviour {
                 {
                     if ((hex.owner == 2 && Network.isServer) || (hex.owner == 1 && Network.isClient))
                     {
-                        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                         hex.InRange = true;
                         highlightMilitaryNode(hex, false);
                     }

@@ -10,6 +10,8 @@ public class MilitaryMenu : MonoBehaviour {
 
     public AudioClip select;
 
+    private static bool menuOpen = false;
+
     // Save all GazeButtonElements in an arrayList / List
     private ArrayList gazeUI = new ArrayList();
     // Set an Status for the Drawing of the Elements
@@ -121,6 +123,7 @@ public class MilitaryMenu : MonoBehaviour {
         buttonCallbackListener canceling = button6_Action;
         bool isSending = mainController.isSending()>0;
 
+
         //Debug.Log(isSending);
         //Create new Buttonelements and add them to the gazeUI
         if (!isSending && ((hex.GetComponent<HexField>().owner == 1 && Network.isServer) || (hex.GetComponent<HexField>().owner == 2 && Network.isClient)))
@@ -148,6 +151,8 @@ public class MilitaryMenu : MonoBehaviour {
                 
         }
         //Debug.Log(gazeUI);
+
+        menuOpen = true;
     }
 
     void closeMenu()
@@ -156,8 +161,14 @@ public class MilitaryMenu : MonoBehaviour {
         GameObject field = GameObject.FindGameObjectWithTag("Field");
         int layerDef = LayerMask.NameToLayer("Default");
         moveToLayer(field.transform, layerDef);
+
+        menuOpen = false;
     }
 
+    public static bool isOpen()
+    {
+        return menuOpen;
+    }
     void moveToLayer(Transform root, int layer)
     {
         root.gameObject.layer = layer;
