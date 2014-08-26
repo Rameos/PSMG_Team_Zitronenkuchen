@@ -343,7 +343,7 @@ public class MainController : MonoBehaviour {
         foreach (GameObject obj in sendOrigin.GetComponent<HexField>().getSurroundingFields())
         {
             HexField hex = obj.GetComponent<HexField>();
-            if (hex.specialisation == "Military")
+            if (hex.specialisation == "Military" || hex.specialisation == "Base")
             {
                 if (attack)
                 {
