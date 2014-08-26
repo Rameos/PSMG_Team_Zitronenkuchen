@@ -156,7 +156,7 @@ public class MainController : MonoBehaviour {
                     removeNodes.Add(node);
                     extendInfluenceArea(node.Hex);
                     specialisedNodes.Add(node);
-                    nview.RPC("setBuildingState", RPCMode.AllBuffered, 1);
+                    nview.RPC("setBuildingStatus", RPCMode.AllBuffered, 1);
                 }
             }
             else if (node is EconomySpecialisation)
@@ -182,7 +182,7 @@ public class MainController : MonoBehaviour {
                     nview.RPC("destroyBuilding", RPCMode.AllBuffered, nviewId, alienBuildingState);
                     removeNodes.Add(node);
                     specialisedNodes.Add(node);
-                    nview.RPC("setBuildingState", RPCMode.AllBuffered, 1);
+                    nview.RPC("setBuildingStatus", RPCMode.AllBuffered, 1);
                 }
             }
         }

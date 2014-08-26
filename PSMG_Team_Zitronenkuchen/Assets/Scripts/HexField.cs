@@ -15,7 +15,7 @@ public class HexField : MonoBehaviour {
     private bool set = false;
     public Specialisation spec;
     private bool inRange;
-    private bool finishedBuilding;
+    private bool finishedBuilding = false;
 
     public ArrayList getSurroundingFields()
     {
@@ -153,8 +153,6 @@ public class HexField : MonoBehaviour {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
 
-        GameObject milBuilding = Resources.Load("baseECO", typeof(GameObject)) as GameObject;
-        GameObject militaryBuilding = Network.Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         GameObject baseBuilding = null;
         if (selectedRace == 1)
@@ -163,7 +161,7 @@ public class HexField : MonoBehaviour {
         }
         else
         {
-            baseBuilding = Resources.Load("baseECONOMY", typeof(GameObject)) as GameObject;
+            baseBuilding = Resources.Load("baseECO", typeof(GameObject)) as GameObject;
         } 
         GameObject basicBuilding = Network.Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
