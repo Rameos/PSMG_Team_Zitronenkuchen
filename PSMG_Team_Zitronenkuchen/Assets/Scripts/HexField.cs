@@ -15,6 +15,7 @@ public class HexField : MonoBehaviour {
     private bool set = false;
     public Specialisation spec;
     private bool inRange;
+    private bool finishedBuilding = false;
 
     public ArrayList getSurroundingFields()
     {
@@ -81,6 +82,19 @@ public class HexField : MonoBehaviour {
         return new Vector3(xPos, yPos);
     }
 
+
+
+    public bool FinishedBuilding
+    {
+        get
+        {
+            return finishedBuilding;
+        }
+        set
+        {
+            finishedBuilding = value;
+        }
+    }
 
     public bool InRange
     {
@@ -274,11 +288,23 @@ public class HexField : MonoBehaviour {
     }
 
     [RPC]
-    void setSpecialisation(string type)
+    void setSpecialisation(int type)
     {
-        specialisation = type;
+        if (type == 1)
+        {
+            finishedBuilding = true;
+        }
+        else if (type == 0)
+        {
+            finishedBuilding = false;
+        }
     }
 
+    [RPC]
+    void setBuildingStatus(bool state)
+    {
+        finishedBuilding = state;
+    }
     [RPC]
     void processAttack(NetworkViewID id, int sendingTroops)
     {

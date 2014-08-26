@@ -36,7 +36,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
                 showPopupMenu(pos);
             }
 
-            else if (hit.transform.gameObject.GetComponent<HexField>().specialisation == "Military" || hit.transform.gameObject.GetComponent<HexField>().specialisation == "Base")
+            else if ((hit.transform.gameObject.GetComponent<HexField>().specialisation == "Military" || hit.transform.gameObject.GetComponent<HexField>().specialisation == "Base") && hit.transform.gameObject.GetComponent<HexField>().FinishedBuilding == true)
             {                
                 // field set to military or base
                 showMilitaryMenu(pos);
