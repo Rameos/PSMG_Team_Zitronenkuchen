@@ -56,13 +56,16 @@ public class MainController : MonoBehaviour {
             {
                 if (((MilitarySpecialisation)node).Troops < 100)
                 {
-                    if (((MilitarySpecialisation)node).RecruitCounter > 0)
+                    if (((MilitarySpecialisation)node).RecruitCounter >= 1)
                     {
                         Debug.Log("Recruitcounter: "+((MilitarySpecialisation)node).RecruitCounter+", Time:"+Time.time);
                         ((MilitarySpecialisation)node).recruit();
-                        ((MilitarySpecialisation)node).RecruitCounter -= 1;
+                            ((MilitarySpecialisation)node).RecruitCounter--;
+                      
+                             
                     }
                     //Debug.Log(((MilitarySpecialisation)node).Troops + " troops on " + node.Pos);
+                    //Debug.Log("RECRUIT COUNTER : " + ((MilitarySpecialisation)node).RecruitCounter);
                 }              
             }
             else if (node is BaseSpecialisation)
@@ -73,7 +76,7 @@ public class MainController : MonoBehaviour {
                     {
                         Debug.Log(((BaseSpecialisation)node).RecruitCounter);
                         ((BaseSpecialisation)node).recruit();
-                        ((BaseSpecialisation)node).RecruitCounter -= 1;
+                        ((BaseSpecialisation)node).RecruitCounter--;
                     }
                 }
             }
@@ -346,6 +349,7 @@ public class MainController : MonoBehaviour {
                 {
                     if ((hex.owner == 2 && Network.isServer) || (hex.owner == 1 && Network.isClient))
                     {
+                        Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                         hex.InRange = true;
                         highlightMilitaryNode(hex, false);
                     }
@@ -354,7 +358,8 @@ public class MainController : MonoBehaviour {
                 {
                     if ((hex.owner == 1 && Network.isServer) || (hex.owner == 2 && Network.isClient))
                     {
-                        //highlightMilitaryNode(hex, true);
+                        hex.InRange = true;
+                        highlightMilitaryNode(hex, true);
                     }
                 }
             }
@@ -374,7 +379,7 @@ public class MainController : MonoBehaviour {
             Instantiate(highlighter, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
             //hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
         }
-        else if(!ownNode &&  hex != sendOrigin)
+        else if(!ownNode &&  hex != sendOrigin.GetComponent<HexField>())
         {
             Vector3 pos = hex.transform.position;
             pos.y = 0.65f;
