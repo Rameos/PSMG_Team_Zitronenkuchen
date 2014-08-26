@@ -56,11 +56,11 @@ public class LANBroadcastService : MonoBehaviour
     private delStartServer delWhenServerMustStarted; // Reference to the delegate that will be called when a server must be created, set by StartSearchBroadcasting()
     private string strServerNotReady = "wanttobeaserver"; // The actual content of the 'i am willing to start a server' message
     private string strServerReady = "iamaserver"; // The actual content of the 'i have a server ready' message
-    private float fTimeLastMessageSent;
-    private float fIntervalMessageSending = 1f; // The interval in seconds between the sending of messages
-    private float fTimeMessagesLive = 3; // The time a message 'lives' in our list, before it gets deleted
-    private float fTimeToSearch = 5; // The time the script will search, before deciding what to do
-    private float fTimeSearchStarted;
+    private long fTimeLastMessageSent;
+    private long fIntervalMessageSending = 1; // The interval in seconds between the sending of messages
+    private long fTimeMessagesLive = 3; // The time a message 'lives' in our list, before it gets deleted
+    private long fTimeToSearch = 5; // The time the script will search, before deciding what to do
+    private long fTimeSearchStarted;
     private string playerAddress;
 
     public string Message { get { return strMessage; } } // Property to read the strMessage
@@ -76,14 +76,14 @@ public class LANBroadcastService : MonoBehaviour
     {
         // Check if we need to send messages and the interval has espired
         if ((currentState == enuState.Searching || currentState == enuState.Announcing)
-            && Time.time > fTimeLastMessageSent + fIntervalMessageSending)
+            && ((DateTime.Now.Ticks) / ((long) Math.Pow(10, 7))) > fTimeLastMessageSent + fIntervalMessageSending)
         {
             // Determine out of our current state what the content of the message will be
             byte[] objByteMessageToSend = System.Text.Encoding.ASCII.GetBytes(currentState == enuState.Announcing ? strServerReady : strServerNotReady);
             // Send out the message
-            objUDPClient.Send(objByteMessageToSend, objByteMessageToSend.Length, new IPEndPoint(IPAddress.Broadcast, 22043));
+            objUDPClient.Send(objByteMessageToSend, objByteMessageToSend.Length, new IPEndPoint(IPAddress.Broadcast, 25001));
             // Restart the timer
-            fTimeLastMessageSent = Time.time;
+            fTimeLastMessageSent = ((DateTime.Now.Ticks) / ((long) Math.Pow(10, 7)));
 
             // Refresh the list of received messages (remove old messages)
             if (currentState == enuState.Searching)
@@ -94,7 +94,7 @@ public class LANBroadcastService : MonoBehaviour
                 {
                     foreach (ReceivedMessage objMessage in lstReceivedMessages)
                     {
-                        if (Time.time > objMessage.fTime + fTimeMessagesLive)
+                        if (((DateTime.Now.Ticks) / ((long) Math.Pow(10, 7))) > objMessage.fTime + fTimeMessagesLive)
                         {
                             // If this message is too old, delete it and restart the foreach loop
                             lstReceivedMessages.Remove(objMessage);
@@ -109,10 +109,12 @@ public class LANBroadcastService : MonoBehaviour
 
         if (currentState == enuState.Searching)
         {
+            Debug.Log("currently searching");
             // Check the list of messages to see if there is any 'i have a server ready' message present
             foreach (ReceivedMessage objMessage in lstReceivedMessages)
             {
                 // If we have a server that is ready, call the right delegate and stop searching
+                Debug.Log("received message is ready: " + objMessage.bIsReady);
                 if (objMessage.bIsReady)
                 {
                     StopSearching();
@@ -122,8 +124,10 @@ public class LANBroadcastService : MonoBehaviour
                 }
             }
             // Check if we're ready searching.
-            if (currentState == enuState.Searching && Time.time > fTimeSearchStarted + fTimeToSearch)
+            if (currentState == enuState.Searching && ((DateTime.Now.Ticks) / ((long) Math.Pow(10, 7))) > fTimeSearchStarted + fTimeToSearch)
             {
+                Debug.Log("Now: " + ((DateTime.Now.Ticks) / ((float)Math.Pow(10, 7))) + ", Time started: " + fTimeSearchStarted + ", time to search: " + fTimeToSearch);
+                Debug.Log("search is over");
                 // We are. Now determine who's gonna be the server.
 
                 // This string holds the ip of the new server. We will start off pointing ourselves as the new server
@@ -131,6 +135,7 @@ public class LANBroadcastService : MonoBehaviour
                 // Next, we loop through the other messages, to see if there are other players that have more right to be the server (based on IP)
                 foreach (ReceivedMessage objMessage in lstReceivedMessages)
                 {
+                    Debug.Log("search over, received message ip: " + objMessage.strIP);
                     if (ScoreOfIP(objMessage.strIP) > ScoreOfIP(strIPOfServer))
                     {
                         // The score of this received message is higher, so this will be our new server
@@ -140,6 +145,7 @@ public class LANBroadcastService : MonoBehaviour
                 // If after the loop the highest IP is still our own, call delegate to start a server and stop searching
                 if (strIPOfServer == playerAddress)
                 {
+                    Debug.Log("We will start Server");
                     StopSearching();
                     strMessage = "We will start server.";
                     delWhenServerMustStarted();
@@ -147,10 +153,11 @@ public class LANBroadcastService : MonoBehaviour
                 // If it's not, someone else must start the server. We will simply have to wait as the server is clearly not ready yet
                 else
                 {
+                    Debug.Log("Another player will start Server");
                     strMessage = "Found server. Waiting for server to get ready...";
                     // Clear the list and do the search again.
                     lstReceivedMessages.Clear();
-                    fTimeSearchStarted = Time.time;
+                    fTimeSearchStarted = ((DateTime.Now.Ticks) / ((long) Math.Pow(10, 7)));
                 }
             }
         }
@@ -178,7 +185,7 @@ public class LANBroadcastService : MonoBehaviour
             string strReceivedMessage = System.Text.Encoding.ASCII.GetString(objByteMessage);
             // Create a ReceivedMessage struct to store this message in the list
             ReceivedMessage objReceivedMessage = new ReceivedMessage();
-            objReceivedMessage.fTime = Time.time;
+            objReceivedMessage.fTime = ((DateTime.Now.Ticks) / ((long) Math.Pow(10, 7)));
             objReceivedMessage.strIP = objSendersIPEndPoint.Address.ToString();
             objReceivedMessage.bIsReady = strReceivedMessage == strServerReady ? true : false;
             lstReceivedMessages.Add(objReceivedMessage);
@@ -189,6 +196,7 @@ public class LANBroadcastService : MonoBehaviour
     // Method to start this object announcing this is a server, used by the script itself
     private void StartAnnouncing()
     {
+        Debug.Log("Started Server");
         currentState = enuState.Announcing;
         strMessage = "Announcing we are a server...";
     }
@@ -203,7 +211,7 @@ public class LANBroadcastService : MonoBehaviour
     {
         lstReceivedMessages.Clear();
         BeginAsyncReceive();
-        fTimeSearchStarted = Time.time;
+        fTimeSearchStarted = ((DateTime.Now.Ticks) / ((long) Math.Pow(10, 7)));
         currentState = enuState.Searching;
         strMessage = "Searching for other players...";
     }
@@ -244,7 +252,7 @@ public class LANBroadcastService : MonoBehaviour
         objUDPClient = new UdpClient(25001);
         objUDPClient.EnableBroadcast = true;
         // Reset sending timer
-        fTimeLastMessageSent = Time.time;
+        fTimeLastMessageSent = ((DateTime.Now.Ticks) / ((long) Math.Pow(10, 7)));
     }
     // Method to be called by some other object (eg. a NetworkController) to stop this object doing any broadcast work and free resources.
     // Must be called before the game quits!

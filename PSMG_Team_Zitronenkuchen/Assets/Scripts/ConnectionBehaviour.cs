@@ -48,8 +48,8 @@ public class ConnectionBehaviour : MonoBehaviour
             gameObject.guiText.color = new Color32 (218, 164, 59, 255); //orange
             clickedConnect = true;
             // try to connect to the entered ip
-            if (Network.peerType == NetworkPeerType.Disconnected) Network.Connect(ip, connectionPort);
-            // gameObject.GetComponent<LANBroadcastService>().StartSearchBroadCasting(Connect, Initialize);
+            //if (Network.peerType == NetworkPeerType.Disconnected) Network.Connect(ip, connectionPort);
+             gameObject.GetComponent<LANBroadcastService>().StartSearchBroadCasting(Connect, Initialize);
         }
     }
 
@@ -77,6 +77,7 @@ public class ConnectionBehaviour : MonoBehaviour
             if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / + 60 + 125, 120, 20), "Disconnect"))
             {
                 Network.Disconnect(200);
+                gameObject.GetComponent<LANBroadcastService>().StopBroadCasting();
             }
         }
         else if (Network.peerType == NetworkPeerType.Server)
@@ -87,6 +88,7 @@ public class ConnectionBehaviour : MonoBehaviour
             if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 60 + 125, 120, 20), "Disconnect"))
             {
                 Network.Disconnect(200);
+                gameObject.GetComponent<LANBroadcastService>().StopBroadCasting();
             }
         }
 
@@ -99,6 +101,9 @@ public class ConnectionBehaviour : MonoBehaviour
 
     public void Initialize()
     {
+        initializedServer = true;
         Network.InitializeServer(32, connectionPort, false);
+        gameObject.GetComponent<LANBroadcastService>().StopBroadCasting();
+        gameObject.GetComponent<LANBroadcastService>().StartAnnounceBroadCasting();
     }
 }
