@@ -43,15 +43,35 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     {
         camera = GameObject.FindGameObjectWithTag("CameraWrapper");
 
+        
 
         right = Screen.width-5.0f;
         up = Screen.height-5.0f;
 
         gameField = GameObject.FindGameObjectWithTag("gameTerrain");
-        borderLeft = gameField.transform.position.x + 1.0f;
-        borderBottom = gameField.transform.position.z;
-        borderTop = CreateGameField.getFieldHeight() - 0.7f;
-        borderRight = CreateGameField.getFieldWidth() - 0.7f;
+        setUpBorder();
+        
+    }
+
+    private void setUpBorder()
+    {
+      
+       if (Network.isServer) {
+           borderTop = CreateGameField.getFieldHeight() - 0.7f;
+           borderBottom = gameField.transform.position.z;
+           borderLeft = gameField.transform.position.x + 1.0f;
+           borderRight = CreateGameField.getFieldWidth() - 0.7f;
+           Debug.Log("Network is server");
+
+       }
+       else
+       {
+           borderBottom = CreateGameField.getFieldHeight();
+           borderTop = gameField.transform.position.z;
+           borderLeft = CreateGameField.getFieldWidth() - 0.7f;
+           borderRight = gameField.transform.position.x;
+           Debug.Log(borderBottom + "top" + borderTop + "left" + borderLeft + "right" + borderRight);
+       }
     }
 
     // Update is called once per frame
@@ -62,50 +82,22 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 
         if (Input.mousePosition.x <= left)
         {
-            if (Network.isServer)
-            {
                 moveCamera("Left");
-            }
-            else
-            {
-                moveCamera("Right");
-            }
         }
 
         if (Input.mousePosition.x >= right)
         {
-            if (Network.isServer)
-            {
                 moveCamera("Right");
-            }
-            else
-            {
-                moveCamera("Left");
-            }
         }
 
         if (Input.mousePosition.y <= down)
         {
-            if (Network.isServer)
-            {
                 moveCamera("Down");
-            }
-            else
-            {
-                moveCamera("Up");
-            }
         }
 
         if (Input.mousePosition.y >= up)
         {
-            if (Network.isServer)
-            {
                 moveCamera("Up");
-            }
-            else
-            {
-                moveCamera("Down");
-            }
         }
 
     }
@@ -121,6 +113,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 
         determineDirection(direction);
         movement = new Vector3(speed * xDirection, 0, speed * yDirection);
+        Debug.Log(movement.x + movement.z);
         camera.transform.Translate(movement * Time.deltaTime * 2);
         
 
@@ -129,37 +122,75 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 
     private bool hitBottomBorder()
     {
-        if (camera.transform.position.z <= borderBottom)
+        if (Network.isServer)
         {
-            return true;
+            if (camera.transform.position.z <= borderBottom)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (camera.transform.position.z >= borderBottom)
+            {
+                return true;
+            }
         }
         return false;
     }
 
     private bool hitTopBorder()
     {
-
-        //Debug.Log("this is the fieldsize" + borderTop);
-        if (camera.transform.position.z >= borderTop)
+        if (Network.isServer)
         {
-            return true;
+            if (camera.transform.position.z >= borderTop)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (camera.transform.position.z <= borderTop)
+            {
+                return true;
+            }
         }
         return false;
     }
 
     private bool hitLeftBorder()
     {
-        if (camera.transform.position.x <= borderLeft)
+        if (Network.isServer)
         {
-            return true;
+            if (camera.transform.position.x <= borderLeft)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (camera.transform.position.x >= borderLeft)
+            {
+                return true;
+            }
         }
         return false;
     }
     private bool hitRightBorder()
     {
-        if (camera.transform.position.x >= borderRight)
+        if (Network.isServer)
         {
-            return true;
+            if (camera.transform.position.x >= borderRight)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (camera.transform.position.x <= borderRight)
+            {
+                return true;
+            }
         }
         return false;
     }
