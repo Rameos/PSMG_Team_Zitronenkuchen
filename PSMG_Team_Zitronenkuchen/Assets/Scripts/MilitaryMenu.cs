@@ -43,7 +43,7 @@ public class MilitaryMenu : MonoBehaviour {
     {
         bool attack = false;
         int troops = mainController.moveTroops(selectedHexagon);
-        mainController.setRanges();
+        //mainController.setRanges();
         if (troops > 0)
         {
             mainController.startTroopSend(troops, attack);
