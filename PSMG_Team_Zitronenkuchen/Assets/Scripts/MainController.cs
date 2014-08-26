@@ -24,12 +24,12 @@ public class MainController : MonoBehaviour {
         // researchPoints = 0;
         Debug.Log("Start");
         InvokeRepeating("updateRessources", 1, 1);
+        //InvokeRepeating("updateBuildingStates", 1, 1);
 	}
 
 	
 	// Update is called once per frame
 	void Update () {
-
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             Application.LoadLevel("Alternate_Main_Menu");
