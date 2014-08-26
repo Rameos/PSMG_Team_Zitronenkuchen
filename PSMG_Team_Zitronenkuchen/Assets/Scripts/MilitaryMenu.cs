@@ -161,7 +161,7 @@ public class MilitaryMenu : MonoBehaviour {
         GameObject field = GameObject.FindGameObjectWithTag("Field");
         int layerDef = LayerMask.NameToLayer("Default");
         moveToLayer(field.transform, layerDef);
-
+        ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
         menuOpen = false;
     }
 
@@ -169,6 +169,7 @@ public class MilitaryMenu : MonoBehaviour {
     {
         return menuOpen;
     }
+
     void moveToLayer(Transform root, int layer)
     {
         root.gameObject.layer = layer;

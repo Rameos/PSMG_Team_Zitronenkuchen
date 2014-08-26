@@ -51,9 +51,9 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
         }
     }
 
-    public static void resetHighlighting()
+    public static void resetHighlighting(GameObject currentHex)
     {
-
+        currentHex.transform.renderer.material.shader = Shader.Find("Diffuse");
     }
 
     private void highlightMaterial()
@@ -72,7 +72,10 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 
     private void resetMaterial()
     {
-        gameObject.transform.renderer.material.shader = Shader.Find("Diffuse");
+        if (!PopUpMenu.isOpen() && !MilitaryMenu.isOpen())
+        {
+            gameObject.transform.renderer.material.shader = Shader.Find("Diffuse"); 
+        }
     }
 
 
