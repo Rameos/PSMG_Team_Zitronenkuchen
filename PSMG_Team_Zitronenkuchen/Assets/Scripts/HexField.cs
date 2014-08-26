@@ -180,9 +180,9 @@ public class HexField : MonoBehaviour {
         }
         else
         {
-            milBuildingState1 = Resources.Load("militaryECONOMYState1", typeof(GameObject)) as GameObject;
-            milBuildingState2 = Resources.Load("militaryECONOMYState2", typeof(GameObject)) as GameObject; 
-            milBuildingState3 = Resources.Load("militaryECONOMYState3", typeof(GameObject)) as GameObject;
+            milBuildingState1 = Resources.Load("militaryECOState1", typeof(GameObject)) as GameObject;
+            milBuildingState2 = Resources.Load("militaryECOState2", typeof(GameObject)) as GameObject; 
+            milBuildingState3 = Resources.Load("militaryECOState3", typeof(GameObject)) as GameObject;
         }       
         GameObject militaryBuildingState1 = Instantiate(milBuildingState1, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         GameObject militaryBuildingState2 = Instantiate(milBuildingState2, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
