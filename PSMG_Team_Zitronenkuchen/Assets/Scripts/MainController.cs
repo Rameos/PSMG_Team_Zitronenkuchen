@@ -8,6 +8,7 @@ public class MainController : MonoBehaviour {
     private ArrayList ui = new ArrayList();
     public ArrayList specialisedNodes = new ArrayList();
     public ArrayList buildingNodes = new ArrayList();
+    public ArrayList removeNodes = new ArrayList();
     private ArrayList labelUI = new ArrayList();
     private int sendingTroops = 0;
     private GameObject sendOrigin;
@@ -23,12 +24,12 @@ public class MainController : MonoBehaviour {
         // researchPoints = 0;
         Debug.Log("Start");
         InvokeRepeating("updateRessources", 1, 1);
+        //InvokeRepeating("updateBuildingStates", 1, 1);
 	}
 
 	
 	// Update is called once per frame
 	void Update () {
-
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             Application.LoadLevel("Alternate_Main_Menu");
@@ -111,11 +112,6 @@ public class MainController : MonoBehaviour {
                 if(Network.isServer) owner = 1;
                 else owner = 2;
                 nview.RPC("setOwner", RPCMode.AllBuffered, nview.viewID, owner);
-                if (newBuilt is MilitarySpecialisation)
-                {
-                    //extendInfluenceArea(hex);
-                }
-                //specialisedNodes.Add(newBuilt);
                 buildingNodes.Add(newBuilt);
                 audio.PlayOneShot(building);
                 return true;
@@ -155,7 +151,6 @@ public class MainController : MonoBehaviour {
                 {
                     nview.RPC("destroyBuilding", RPCMode.AllBuffered, nviewId, alienBuildingState);
                     extendInfluenceArea(node.Hex);
-                    buildingNodes.Remove(node);
                     specialisedNodes.Add(node);
                 }
             }
@@ -180,11 +175,16 @@ public class MainController : MonoBehaviour {
                 else
                 {
                     nview.RPC("destroyBuilding", RPCMode.AllBuffered, nviewId, alienBuildingState);
-                    buildingNodes.Remove(node);
+                    removeNodes.Add(node);
                     specialisedNodes.Add(node);
                 }
             }
         }
+        foreach (Specialisation removeNode in removeNodes)
+        {
+            buildingNodes.Remove(removeNode);
+        }
+        removeNodes.Clear();
     }
 
     private void updateArea(GameObject hex, int owner)
