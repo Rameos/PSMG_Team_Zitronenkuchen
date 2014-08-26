@@ -10,6 +10,8 @@ public class PopUpMenu : MonoBehaviour {
 
     public AudioClip select;
 
+    private static bool menuOpen;
+
     // Save all GazeButtonElements in an arrayList / List
     private ArrayList gazeUI = new ArrayList();
     // Set an Status for the Drawing of the Elements
@@ -98,6 +100,7 @@ public class PopUpMenu : MonoBehaviour {
             gazeUI.Add(new GazeButton(new Rect(pos.x - 100 , pos.y + 50, 220, 200), "100 \n CREATE \n ECONOMY NODE", myStyle, createEconomyNodeButton));
             Debug.Log(gazeUI);
         }
+        menuOpen = true;
         
     }
 
@@ -107,6 +110,8 @@ public class PopUpMenu : MonoBehaviour {
         GameObject field = GameObject.FindGameObjectWithTag("Field");
         int layerDef = LayerMask.NameToLayer("Default");
         moveToLayer(field.transform, layerDef);
+        menuOpen = false;
+        ChangeFieldStateOnClick.resetHighlighting();
     }
 
     void moveToLayer(Transform root, int layer)
@@ -114,6 +119,11 @@ public class PopUpMenu : MonoBehaviour {
         root.gameObject.layer = layer;
         foreach (Transform child in root)
             moveToLayer(child, layer);
+    }
+
+    public static bool isOpen()
+    {
+        return menuOpen;
     }
 
     void OnGUI()

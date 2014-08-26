@@ -8,6 +8,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
  
     PopUpMenu popUpMenu;
     MilitaryMenu milMenu;
+    HexField currentField;
     
 
 
@@ -50,9 +51,17 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
         }
     }
 
+    public static void resetHighlighting()
+    {
+
+    }
+
     private void highlightMaterial()
     {
-        gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+        if (!PopUpMenu.isOpen())
+        {
+            gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+        }
     }
 
     //Reset the Element.Transform when the gaze leaves the Collider
@@ -65,6 +74,8 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     {
         gameObject.transform.renderer.material.shader = Shader.Find("Diffuse");
     }
+
+
 
     // show the standard popup menu when a field which is not set was clicked
     private void showPopupMenu(Vector3 pos)
