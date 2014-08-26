@@ -167,18 +167,30 @@ public class HexField : MonoBehaviour {
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject milBuilding = null;
+        GameObject milBuildingState1 = null;
+        GameObject milBuildingState2 = null;
+        GameObject milBuildingState3 = null;
         if (selectedRace == 1)
         {
-            milBuilding = Resources.Load("militaryMIL", typeof(GameObject)) as GameObject;
+            milBuildingState1 = Resources.Load("militaryMILState1", typeof(GameObject)) as GameObject;
+            milBuildingState2 = Resources.Load("militaryMILState2", typeof(GameObject)) as GameObject;
+            milBuildingState3 = Resources.Load("militaryMILState3", typeof(GameObject)) as GameObject;
         }
         else
         {
-            milBuilding = Resources.Load("militaryECONOMY", typeof(GameObject)) as GameObject;
+            milBuildingState1 = Resources.Load("militaryECONOMYState1", typeof(GameObject)) as GameObject;
+            milBuildingState2 = Resources.Load("militaryECONOMYState2", typeof(GameObject)) as GameObject; 
+            milBuildingState3 = Resources.Load("militaryECONOMYState3", typeof(GameObject)) as GameObject;
         }       
-        GameObject militaryBuilding = Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        GameObject militaryBuildingState1 = Instantiate(milBuildingState1, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        GameObject militaryBuildingState2 = Instantiate(milBuildingState2, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        GameObject militaryBuildingState3 = Instantiate(milBuildingState3, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
-        militaryBuilding.transform.parent = selectedHexagon.transform;
+        militaryBuildingState1.transform.parent = selectedHexagon.transform;
+        militaryBuildingState2.transform.parent = selectedHexagon.transform;
+        militaryBuildingState3.transform.parent = selectedHexagon.transform;
+        militaryBuildingState2.SetActive(false);
+        militaryBuildingState3.SetActive(false);
         GameObject unitText = new GameObject();
         TextMesh text = unitText.AddComponent<TextMesh>();
         text.characterSize = 0.1f;
@@ -215,18 +227,30 @@ public class HexField : MonoBehaviour {
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-        GameObject ecoBuilding = null;
+        GameObject ecoBuildingState1 = null;
+        GameObject ecoBuildingState2 = null;
+        GameObject ecoBuildingState3 = null;
         if (selectedRace == 1)
         {
-            ecoBuilding = Resources.Load("economyMIL", typeof(GameObject)) as GameObject;
+            ecoBuildingState1 = Resources.Load("economyMILState1", typeof(GameObject)) as GameObject;
+            ecoBuildingState2 = Resources.Load("economyMILState2", typeof(GameObject)) as GameObject;
+            ecoBuildingState3 = Resources.Load("economyMILState3", typeof(GameObject)) as GameObject;
         }
         else
         {
-            ecoBuilding = Resources.Load("economyECONOMY", typeof(GameObject)) as GameObject;
+            ecoBuildingState1 = Resources.Load("economyECOState1", typeof(GameObject)) as GameObject;
+            ecoBuildingState2 = Resources.Load("economyECOState2", typeof(GameObject)) as GameObject;
+            ecoBuildingState3 = Resources.Load("economyECOState3", typeof(GameObject)) as GameObject;
         }
-        GameObject economyBuilding = Instantiate(ecoBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject; ;
+        GameObject economyBuildingState1 = Instantiate(ecoBuildingState1, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        GameObject economyBuildingState2 = Instantiate(ecoBuildingState2, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        GameObject economyBuildingState3 = Instantiate(ecoBuildingState3, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
-        economyBuilding.transform.parent = selectedHexagon.transform;
+        economyBuildingState1.transform.parent = selectedHexagon.transform;
+        economyBuildingState2.transform.parent = selectedHexagon.transform;
+        economyBuildingState3.transform.parent = selectedHexagon.transform;
+        economyBuildingState2.SetActive(false);
+        economyBuildingState3.SetActive(false);
     }
 
     [RPC]
@@ -294,15 +318,68 @@ public class HexField : MonoBehaviour {
     }
 
     [RPC]
-    void destroyBuilding(NetworkViewID id)
+    void toggleVisibility(NetworkViewID id, int state, string alienRaceBuilding)
+    {
+        Debug.Log("hello toggle visibility state: "+state);
+        NetworkView view = NetworkView.Find(id);
+        GameObject hex = view.gameObject;
+        Transform state1 = null;
+        Transform state2 = null;
+        Transform state3 = null;
+        foreach (Transform child in hex.transform)
+        {
+            Debug.Log("child name:"+ child.name);
+            if (child.name == alienRaceBuilding + "State1(Clone)")
+            {
+                state1 = child;
+            }
+            if (child.name == alienRaceBuilding + "State2(Clone)")
+            {
+                state2 = child;
+            }
+            if (child.name == alienRaceBuilding + "State3(Clone)")
+            {
+                state3 = child;
+            }     
+        }
+        switch (state)
+        {
+            case 1:
+                Debug.Log("hello toggle visibility state1");
+                state1.gameObject.SetActive(true);
+                state2.gameObject.SetActive(false);
+                state3.gameObject.SetActive(false);
+                break;
+            case 2:
+                Debug.Log("hello toggle visibility state2");
+                state2.gameObject.SetActive(true);
+                state1.gameObject.SetActive(false);
+                state3.gameObject.SetActive(false);
+                break;
+            case 3:
+                Debug.Log("hello toggle visibility state3");
+                state3.gameObject.SetActive(true);
+                state1.gameObject.SetActive(false);
+                state2.gameObject.SetActive(false);
+                break;
+            default:
+                break;
+        }
+    }
+
+    [RPC]
+    void destroyBuilding(NetworkViewID id, string alienRace)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
-        hex.GetComponent<HexField>().owner = 0;
-        hex.GetComponent<HexField>().specialisation = null;
+        //hex.GetComponent<HexField>().owner = 0;
+        //hex.GetComponent<HexField>().specialisation = null;
         foreach (Transform child in hex.transform)
         {
-            Object.Destroy(child.gameObject);
+            if (child.name != alienRace+"State3(Clone)" && child.name != "New Game Object")
+            {
+                Object.Destroy(child.gameObject);
+            }
         }
         
     }

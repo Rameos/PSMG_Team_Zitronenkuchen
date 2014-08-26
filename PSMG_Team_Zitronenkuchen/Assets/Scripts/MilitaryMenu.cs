@@ -127,9 +127,9 @@ public class MilitaryMenu : MonoBehaviour {
         {
             if (!(hex.GetComponent<HexField>().spec is BaseSpecialisation))
             {
-                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 200, 220, 200), "ATTACK", myStyle, attackButton));
-                gazeUI.Add(new GazeButton(new Rect(pos.x + 30, pos.y, 220, 200), "MOVE TROOPS", myStyle, moveButton));
-                gazeUI.Add(new GazeButton(new Rect(pos.x - 210, pos.y, 220, 200), "BUILD TROOPS \n 150", myStyle, buildButton));
+                gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y - 180, 220, 200), "ATTACK", myStyle, attackButton));
+                gazeUI.Add(new GazeButton(new Rect(pos.x + 20, pos.y, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
+                gazeUI.Add(new GazeButton(new Rect(pos.x - 240, pos.y, 220, 200), "150 \n BUILD TROPPS", myStyle, buildButton));
             } 
         }
         else if (isSending && hex.GetComponent<HexField>().InRange) // troops are being sent
@@ -137,13 +137,13 @@ public class MilitaryMenu : MonoBehaviour {
             Debug.Log("Owner: "+hex.GetComponent<HexField>().owner+", Is Server?"+Network.isServer);
             if ((hex.GetComponent<HexField>().owner == 2 && Network.isServer) || (hex.GetComponent<HexField>().owner == 1 && Network.isClient))
             {
-                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "ATTACK HERE", myStyle, attacking));
-                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y + 50, 220, 200), "CANCEL", myStyle, canceling));
+                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "ATACK HERE", myStyle, attacking));
+                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
             }
             else
             {
                 gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "MOVE HERE", myStyle, moving));
-                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y + 50, 220, 200), "CANCEL", myStyle, canceling));
+                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
             }
                 
         }
