@@ -58,7 +58,7 @@ public class MainController : MonoBehaviour {
                 {
                     if (((MilitarySpecialisation)node).RecruitCounter > 0)
                     {
-                        Debug.Log(((MilitarySpecialisation)node).RecruitCounter);
+                        Debug.Log("Recruitcounter: "+((MilitarySpecialisation)node).RecruitCounter+", Time:"+Time.time);
                         ((MilitarySpecialisation)node).recruit();
                         ((MilitarySpecialisation)node).RecruitCounter -= 1;
                     }
@@ -150,6 +150,7 @@ public class MainController : MonoBehaviour {
                 else
                 {
                     nview.RPC("destroyBuilding", RPCMode.AllBuffered, nviewId, alienBuildingState);
+                    removeNodes.Add(node);
                     extendInfluenceArea(node.Hex);
                     specialisedNodes.Add(node);
                 }
