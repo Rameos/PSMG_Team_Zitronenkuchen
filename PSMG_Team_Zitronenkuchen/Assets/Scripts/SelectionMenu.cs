@@ -29,6 +29,10 @@ public class SelectionMenu : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
        // GUI.matrix = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(horizRatio, vertRatio, 1));
+        GameObject militaryAlien = GameObject.Find("MilitaryAlienRace");
+        GameObject economyAlien = GameObject.Find("EconomyAlienRace");
+        militaryAlien.transform.position = new Vector3(0.10f,0.30f, 0);
+        economyAlien.transform.position = new Vector3(0.70f,0.30f, 0);
 	}
 
     void OnMouseEnter()
@@ -46,25 +50,6 @@ public class SelectionMenu : MonoBehaviour {
     { 
         switch (gameObject.tag)
         {
-            case "ResearchRace":
-                if (selectedRaceIdx != raceIndex) 
-                {
-                    selected = true;
-                    selectedRaceIdx = raceIndex;
-                    CustomGameProperties.alienRace = selectedRaceIdx;
-                    gameObject.guiText.color = new Color32(218, 164, 59, 255);
-                    scaleAlienBigger("ResearchRace");
-                    rescaleAlien("MilitaryRace");
-                    rescaleAlien("EconomyRace");
-                    audio.PlayOneShot(growl);
-                }
-                else
-                {
-                    rescaleAlien("ResearchRace");
-                    selectedRaceIdx = -1;
-                    selected = false;
-                }
-                break;
             case "MilitaryRace":
                 if (selectedRaceIdx != raceIndex)
                 {
@@ -73,7 +58,6 @@ public class SelectionMenu : MonoBehaviour {
                     scaleAlienBigger("MilitaryRace");
                     selectedRaceIdx = raceIndex;
                     CustomGameProperties.alienRace = selectedRaceIdx;
-                    rescaleAlien("ResearchRace");
                     rescaleAlien("EconomyRace");
                     audio.PlayOneShot(growl); 
                 } else {
@@ -93,7 +77,6 @@ public class SelectionMenu : MonoBehaviour {
                     selectedRaceIdx = raceIndex;
                     CustomGameProperties.alienRace = selectedRaceIdx;
                     rescaleAlien("MilitaryRace");
-                    rescaleAlien("ResearchRace");
                     audio.PlayOneShot(growl);
                 }
                 else

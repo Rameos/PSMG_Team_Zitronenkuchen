@@ -16,6 +16,7 @@ public class CreateGameField : MonoBehaviour
     private Vector3 FIRSTHEXAGON_POSITION;
     private Vector3 ROTATION = new Vector3(90, 0, 0);
     private Vector3 newHexPosition;
+    private Vector3 clientBasePos;
     private static Vector3 trueHexSize;
 
 
@@ -29,6 +30,7 @@ public class CreateGameField : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        trueHexSize = hexagon.renderer.bounds.size;
         mC = GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>();
         if (Network.isServer)
         {
@@ -38,7 +40,7 @@ public class CreateGameField : MonoBehaviour
             }
             FIELD_ROTATION.eulerAngles = ROTATION;
             hexagon.transform.localScale = HEX_SIZE;
-            trueHexSize = hexagon.renderer.bounds.size;
+            
             for (int i = 0; i < FIELD_SIZE; i++)
             {
                 for (int j = 0; j < FIELD_SIZE; j++)
@@ -55,7 +57,8 @@ public class CreateGameField : MonoBehaviour
         }
         else
         {
-            GameObject.FindGameObjectWithTag("CameraWrapper").transform.position = new Vector3(6.3f, 1.5f, 5.5f);
+            GameObject.FindGameObjectWithTag("CameraWrapper").transform.position = new Vector3(6.3f, 1.0f, 5.5f);
+            GameObject.FindGameObjectWithTag("CameraWrapper").transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
         }
 
         GameObject.FindGameObjectWithTag("CameraWrapper").AddComponent<ScrollController> ();
@@ -102,6 +105,7 @@ public class CreateGameField : MonoBehaviour
     {
         Debug.Log("buildStartArea at: " + xPlayerOne + ", " + yPlayerOne + " and: " + xPlayerTwo + ", " + yPlayerTwo);
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("hex");
+        clientBasePos = new Vector3(xPlayerTwo, 1.0f, yPlayerTwo);
         bool oneSet = false;
         bool twoSet = false;
         foreach (GameObject baseField in gameObjects)

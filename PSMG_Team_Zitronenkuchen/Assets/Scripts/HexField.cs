@@ -145,11 +145,12 @@ public class HexField : MonoBehaviour {
         }
         else
         {
-            baseBuilding = Resources.Load("base-building", typeof(GameObject)) as GameObject;
+            baseBuilding = Resources.Load("baseECONOMY", typeof(GameObject)) as GameObject;
         } 
-        GameObject militaryBuilding = Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        GameObject basicBuilding = Network.Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
+        //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
-        militaryBuilding.transform.parent = selectedHexagon.transform;
+        basicBuilding.transform.parent = selectedHexagon.transform;
         GameObject unitText = new GameObject();
         TextMesh text = unitText.AddComponent<TextMesh>();
         text.characterSize = 0.1f;
@@ -320,7 +321,7 @@ public class HexField : MonoBehaviour {
     [RPC]
     void toggleVisibility(NetworkViewID id, int state, string alienRaceBuilding)
     {
-        Debug.Log("hello toggle visibility state: "+state);
+        Debug.Log(gameObject.name + "I am trying to toggle");
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
         Transform state1 = null;
@@ -331,6 +332,7 @@ public class HexField : MonoBehaviour {
             Debug.Log("child name:"+ child.name);
             if (child.name == alienRaceBuilding + "State1(Clone)")
             {
+                Debug.Log("child name:" + child.name);
                 state1 = child;
             }
             if (child.name == alienRaceBuilding + "State2(Clone)")
@@ -345,19 +347,15 @@ public class HexField : MonoBehaviour {
         switch (state)
         {
             case 1:
-                Debug.Log("hello toggle visibility state1");
-                state1.gameObject.SetActive(true);
                 state2.gameObject.SetActive(false);
                 state3.gameObject.SetActive(false);
                 break;
             case 2:
-                Debug.Log("hello toggle visibility state2");
                 state2.gameObject.SetActive(true);
                 state1.gameObject.SetActive(false);
                 state3.gameObject.SetActive(false);
                 break;
             case 3:
-                Debug.Log("hello toggle visibility state3");
                 state3.gameObject.SetActive(true);
                 state1.gameObject.SetActive(false);
                 state2.gameObject.SetActive(false);
