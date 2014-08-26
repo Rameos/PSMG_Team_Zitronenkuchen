@@ -156,6 +156,7 @@ public class MainController : MonoBehaviour {
                     removeNodes.Add(node);
                     extendInfluenceArea(node.Hex);
                     specialisedNodes.Add(node);
+                    nview.RPC("setBuildingState", RPCMode.AllBuffered, 1);
                 }
             }
             else if (node is EconomySpecialisation)
@@ -181,6 +182,7 @@ public class MainController : MonoBehaviour {
                     nview.RPC("destroyBuilding", RPCMode.AllBuffered, nviewId, alienBuildingState);
                     removeNodes.Add(node);
                     specialisedNodes.Add(node);
+                    nview.RPC("setBuildingState", RPCMode.AllBuffered, 1);
                 }
             }
         }
@@ -343,7 +345,7 @@ public class MainController : MonoBehaviour {
         foreach (GameObject obj in sendOrigin.GetComponent<HexField>().getSurroundingFields())
         {
             HexField hex = obj.GetComponent<HexField>();
-            if (hex.specialisation == "Military")
+            if (hex.specialisation == "Military" || hex.specialisation == "Base")
             {
                 if (attack)
                 {
@@ -376,7 +378,6 @@ public class MainController : MonoBehaviour {
             pos.y = 0.65f;
             GameObject highlighter = Resources.Load("moveHighlighter", typeof(GameObject)) as GameObject;
             Instantiate(highlighter, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
-            //hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
         }
         else if(!ownNode &&  hex != sendOrigin.GetComponent<HexField>())
         {
@@ -384,7 +385,6 @@ public class MainController : MonoBehaviour {
             pos.y = 0.65f;
             GameObject highlighter = Resources.Load("attackHighlighter", typeof(GameObject)) as GameObject;
             Instantiate(highlighter, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
-            //hex.gameObject.transform.renderer.material.shader = Shader.Find("Rim");
         }
     }
 
