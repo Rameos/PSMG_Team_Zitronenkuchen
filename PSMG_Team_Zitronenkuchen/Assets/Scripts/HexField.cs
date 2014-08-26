@@ -138,6 +138,9 @@ public class HexField : MonoBehaviour {
         Debug.Log("Build base for Race " + selectedRace);
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
+        GameObject milBuilding = Resources.Load("baseECONOMY", typeof(GameObject)) as GameObject;
+        GameObject militaryBuilding = Network.Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
+        //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         GameObject baseBuilding = null;
         if (selectedRace == 1)
         {
@@ -147,7 +150,6 @@ public class HexField : MonoBehaviour {
         {
             baseBuilding = Resources.Load("base-building", typeof(GameObject)) as GameObject;
         } 
-        GameObject militaryBuilding = Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         militaryBuilding.transform.parent = selectedHexagon.transform;
         GameObject unitText = new GameObject();
@@ -320,7 +322,7 @@ public class HexField : MonoBehaviour {
     [RPC]
     void toggleVisibility(NetworkViewID id, int state, string alienRaceBuilding)
     {
-        Debug.Log("hello toggle visibility state: "+state);
+        Debug.Log(gameObject.name + "I am trying to toggle");
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
         Transform state1 = null;
@@ -331,6 +333,7 @@ public class HexField : MonoBehaviour {
             Debug.Log("child name:"+ child.name);
             if (child.name == alienRaceBuilding + "State1(Clone)")
             {
+                Debug.Log("child name:" + child.name);
                 state1 = child;
             }
             if (child.name == alienRaceBuilding + "State2(Clone)")
@@ -345,19 +348,15 @@ public class HexField : MonoBehaviour {
         switch (state)
         {
             case 1:
-                Debug.Log("hello toggle visibility state1");
-                state1.gameObject.SetActive(true);
                 state2.gameObject.SetActive(false);
                 state3.gameObject.SetActive(false);
                 break;
             case 2:
-                Debug.Log("hello toggle visibility state2");
                 state2.gameObject.SetActive(true);
                 state1.gameObject.SetActive(false);
                 state3.gameObject.SetActive(false);
                 break;
             case 3:
-                Debug.Log("hello toggle visibility state3");
                 state3.gameObject.SetActive(true);
                 state1.gameObject.SetActive(false);
                 state2.gameObject.SetActive(false);
