@@ -15,7 +15,7 @@ public class HexField : MonoBehaviour {
     private bool set = false;
     public Specialisation spec;
     private bool inRange;
-    private bool finishedBuilding = false;
+    private bool finishedBuilding;
 
     public ArrayList getSurroundingFields()
     {
@@ -152,6 +152,9 @@ public class HexField : MonoBehaviour {
         Debug.Log("Build base for Race " + selectedRace);
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
+
+        GameObject milBuilding = Resources.Load("baseECO", typeof(GameObject)) as GameObject;
+        GameObject militaryBuilding = Network.Instantiate(milBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         GameObject baseBuilding = null;
         if (selectedRace == 1)
@@ -160,7 +163,7 @@ public class HexField : MonoBehaviour {
         }
         else
         {
-            baseBuilding = Resources.Load("baseECO", typeof(GameObject)) as GameObject;
+            baseBuilding = Resources.Load("baseECONOMY", typeof(GameObject)) as GameObject;
         } 
         GameObject basicBuilding = Network.Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
@@ -285,22 +288,22 @@ public class HexField : MonoBehaviour {
     }
 
     [RPC]
-    void setSpecialisation(int type)
+    void setSpecialisation(string type)
     {
-        if (type == 1)
-        {
-            finishedBuilding = true;
-        }
-        else if (type == 0)
-        {
-            finishedBuilding = false;
-        }
+        specialisation = type;
     }
 
     [RPC]
-    void setBuildingStatus(bool state)
+    void setBuildingStatus(int state)
     {
-        finishedBuilding = state;
+        if (state == 1)
+        {
+            finishedBuilding = true;
+        }
+        else if (state == 0)
+        {
+            finishedBuilding = false;
+        }
     }
     [RPC]
     void processAttack(NetworkViewID id, int sendingTroops)
