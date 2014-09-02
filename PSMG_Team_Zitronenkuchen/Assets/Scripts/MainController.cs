@@ -394,13 +394,15 @@ public class MainController : MonoBehaviour {
         {
             if (destination.Equals(node.Hex))
             {
-                if (node is MilitarySpecialisation && (((MilitarySpecialisation)node).Troops + sendingTroops) <= 100)
+                if (node is MilitarySpecialisation)
                 {
-                    ((MilitarySpecialisation)node).Troops += sendingTroops;
+                    if ((((MilitarySpecialisation)node).Troops + sendingTroops) <= 100) ((MilitarySpecialisation)node).Troops += sendingTroops;
+                    else ((MilitarySpecialisation)node).Troops = 100;
                 }
-                else if (node is BaseSpecialisation && (((BaseSpecialisation)node).Troops + sendingTroops) <= 150)
+                else if (node is BaseSpecialisation)
                 {
-                    ((BaseSpecialisation)node).Troops += sendingTroops;
+                    if ((((BaseSpecialisation)node).Troops + sendingTroops) <= 150) ((BaseSpecialisation)node).Troops += sendingTroops;
+                    else ((BaseSpecialisation)node).Troops = 150;
                 }
                 
             }
