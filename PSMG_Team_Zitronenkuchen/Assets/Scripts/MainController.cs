@@ -68,18 +68,19 @@ public class MainController : MonoBehaviour {
                     //Debug.Log("RECRUIT COUNTER : " + ((MilitarySpecialisation)node).RecruitCounter);
                 }              
             }
-            else if (node is BaseSpecialisation)
-            {
-                if (((BaseSpecialisation)node).Troops < 150)
-                {
-                    if (((BaseSpecialisation)node).RecruitCounter > 0)
-                    {
-                        Debug.Log(((BaseSpecialisation)node).RecruitCounter);
-                        ((BaseSpecialisation)node).recruit();
-                        ((BaseSpecialisation)node).RecruitCounter--;
-                    }
-                }
-            }
+            // not needed anymore
+            //else if (node is BaseSpecialisation)
+            //{
+            //    if (((BaseSpecialisation)node).Troops < 150)
+            //    {
+            //        if (((BaseSpecialisation)node).RecruitCounter > 0)
+            //        {
+            //            Debug.Log(((BaseSpecialisation)node).RecruitCounter);
+            //            ((BaseSpecialisation)node).recruit();
+            //            ((BaseSpecialisation)node).RecruitCounter--;
+            //        }
+            //    }
+            //}
         }
     }
 
