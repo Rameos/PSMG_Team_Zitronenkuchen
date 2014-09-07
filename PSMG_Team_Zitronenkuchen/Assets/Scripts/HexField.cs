@@ -304,11 +304,11 @@ public class HexField : MonoBehaviour {
         }
     }
     [RPC]
-    void processAttack(NetworkViewID id, int sendingTroops)
+    void processAttack(NetworkViewID id, int sendingTroops, int attackerWeaponType)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
-        GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().receiveAttack(hex, sendingTroops);
+        GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().receiveAttack(hex, sendingTroops, attackerWeaponType);
     }
 
     [RPC]

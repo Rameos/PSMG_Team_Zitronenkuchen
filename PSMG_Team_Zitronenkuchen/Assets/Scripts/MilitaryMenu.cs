@@ -27,6 +27,8 @@ public class MilitaryMenu : MonoBehaviour {
     private ChangeFieldStateOnClick fieldScript;
     private MainController mainController;
 
+    private bool clicked = false;
+
     #region ButtonActions
     // Attack start action 
     public void button1_Action()
@@ -55,11 +57,16 @@ public class MilitaryMenu : MonoBehaviour {
     // Recruit action
     public void button3_Action()
     {
-        if (mainController.buildTroops())
+        if (!clicked)
         {
-            ((MilitarySpecialisation) selectedHexagon.GetComponent<HexField>().spec).RecruitCounter += 5;
+            if (mainController.buildTroops())
+            {
+                ((MilitarySpecialisation) selectedHexagon.GetComponent<HexField>().spec).RecruitCounter += 5;
+            }
+            clicked = true;
+            Debug.Log("Button3_Pressed");
         }
-        Debug.Log("Button3_Pressed");
+        
     }
     // Move here action
     public void button4_Action()
@@ -92,7 +99,21 @@ public class MilitaryMenu : MonoBehaviour {
             Destroy(highlighter);
         }
         mainController.resetRanges();
-
+    }
+    // Specialise on Laser
+    public void button7_Action()
+    {
+        ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.LASER;
+    }
+    // Specialise on Protons
+    public void button8_Action()
+    {
+        ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.PROTONS;
+    }
+    // Specialise on EMP
+    public void button9_Action()
+    {
+        ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.EMP;
     }
 
     #endregion
@@ -121,6 +142,10 @@ public class MilitaryMenu : MonoBehaviour {
         buttonCallbackListener moving = button4_Action;
         buttonCallbackListener attacking = button5_Action;
         buttonCallbackListener canceling = button6_Action;
+        buttonCallbackListener laser = button7_Action;
+        buttonCallbackListener protons = button8_Action;
+        buttonCallbackListener emp = button9_Action;
+
         bool isSending = mainController.isSending()>0;
 
 
@@ -130,9 +155,26 @@ public class MilitaryMenu : MonoBehaviour {
         {
             if (!(hex.GetComponent<HexField>().spec is BaseSpecialisation))
             {
-                gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y - 180, 220, 200), "ATTACK", myStyle, attackButton));
-                gazeUI.Add(new GazeButton(new Rect(pos.x + 20, pos.y, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
-                gazeUI.Add(new GazeButton(new Rect(pos.x - 240, pos.y, 220, 200), "150 \n BUILD TROPPS", myStyle, buildButton));
+                if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).WeaponType == 0)
+                {
+                    gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y - 180, 220, 200), "LASER \n FLEET", myStyle, laser));
+                    gazeUI.Add(new GazeButton(new Rect(pos.x + 20, pos.y, 220, 200), " PROTON \n TORPEDO FLEET", myStyle, protons));
+                    gazeUI.Add(new GazeButton(new Rect(pos.x - 240, pos.y, 220, 200), " EMP \n FLEET", myStyle, emp));
+                }
+                else
+                {
+                    if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).Troops < 100)
+                    {
+                        gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y - 180, 220, 200), "ATTACK", myStyle, attackButton));
+                        gazeUI.Add(new GazeButton(new Rect(pos.x + 20, pos.y, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
+                        gazeUI.Add(new GazeButton(new Rect(pos.x - 240, pos.y, 220, 200), "150 \n BUILD SHIPS", myStyle, buildButton));
+                    }
+                    else
+                    {
+                        gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "ATTACK", myStyle, attackButton));
+                        gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y + 50, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
+                    }
+                }
             } 
         }
         else if (isSending && hex.GetComponent<HexField>().InRange) // troops are being sent
@@ -141,13 +183,12 @@ public class MilitaryMenu : MonoBehaviour {
             if ((hex.GetComponent<HexField>().owner == 2 && Network.isServer) || (hex.GetComponent<HexField>().owner == 1 && Network.isClient))
             {
                 gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "ATACK HERE", myStyle, attacking));
-                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
             }
             else
             {
                 gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "MOVE HERE", myStyle, moving));
-                gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
             }
+            gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
                 
         }
         //Debug.Log(gazeUI);
@@ -163,6 +204,7 @@ public class MilitaryMenu : MonoBehaviour {
         moveToLayer(field.transform, layerDef);
         ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
         menuOpen = false;
+        clicked = false;
     }
 
     public static bool isOpen()
