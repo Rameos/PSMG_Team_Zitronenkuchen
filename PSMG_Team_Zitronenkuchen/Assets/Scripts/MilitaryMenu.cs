@@ -7,6 +7,7 @@ public class MilitaryMenu : MonoBehaviour {
     // Setup your style of the Buttons
     // Note: you must define your own style.
     public GUIStyle myStyle;
+    public GUISkin mySkin;
 
     public AudioClip select;
 
@@ -179,10 +180,11 @@ public class MilitaryMenu : MonoBehaviour {
 
     void OnGUI()
     {
-
+        GUI.skin = mySkin;
         //Draw every Button from the ArrayList gazeUI
         if (isDrawing)
         {
+            GUI.Label(new Rect(Screen.width/2, Screen.height/2, 100, 50), "This is the text string for a Label Control");
             foreach (GazeButton button in gazeUI)
             {
                 button.OnGUI();
