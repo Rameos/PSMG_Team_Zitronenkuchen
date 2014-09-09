@@ -29,6 +29,10 @@ public class MilitaryMenu : MonoBehaviour {
     private MainController mainController;
 
     private bool clicked = false;
+    private bool troopTypeSelected = false;
+
+    private string type;
+    private int troopSize;
 
     #region ButtonActions
     // Attack start action 
@@ -105,16 +109,22 @@ public class MilitaryMenu : MonoBehaviour {
     public void button7_Action()
     {
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.LASER;
+        type = "LASER";
+        troopTypeSelected = true;
     }
     // Specialise on Protons
     public void button8_Action()
     {
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.PROTONS;
+        type = "PROTONS";
+        troopTypeSelected = true;
     }
     // Specialise on EMP
     public void button9_Action()
     {
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.EMP;
+        type = "EMP";
+        troopTypeSelected = true;
     }
 
     #endregion
@@ -166,9 +176,9 @@ public class MilitaryMenu : MonoBehaviour {
                 {
                     if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).Troops < 100)
                     {
-                        gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y - 180, 220, 200), "ATTACK", myStyle, attackButton));
-                        gazeUI.Add(new GazeButton(new Rect(pos.x + 20, pos.y, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
-                        gazeUI.Add(new GazeButton(new Rect(pos.x - 240, pos.y, 220, 200), "150 \n BUILD SHIPS", myStyle, buildButton));
+                        gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y + 50, 220, 200), "ATTACK", myStyle, attackButton));
+                        gazeUI.Add(new GazeButton(new Rect(pos.x + 40, pos.y - 80, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
+                        gazeUI.Add(new GazeButton(new Rect(pos.x - 260, pos.y - 80, 220, 200), "150 \n BUILD SHIPS", myStyle, buildButton));
                     }
                     else
                     {
@@ -226,7 +236,12 @@ public class MilitaryMenu : MonoBehaviour {
         //Draw every Button from the ArrayList gazeUI
         if (isDrawing)
         {
-            GUI.Label(new Rect(Screen.width/2, Screen.height/2, 100, 50), "This is the text string for a Label Control");
+            if (troopTypeSelected)
+            {
+                troopSize = ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
+
+                GUI.Box(new Rect(Screen.width / 2 - 130, Screen.height / 2 - 180, 250, 200), "TROOP TYPE: \n "+ type+ "\n TROOP SIZE: \n" + troopSize);
+            } 
             foreach (GazeButton button in gazeUI)
             {
                 button.OnGUI();
