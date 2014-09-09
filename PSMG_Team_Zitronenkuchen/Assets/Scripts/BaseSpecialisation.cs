@@ -6,6 +6,11 @@ public class BaseSpecialisation : Specialisation
 	private int troops = 0;
     private int recruitCounter = 0;
     private int buildCounter = 0;
+    private int weaponType = 0;
+
+    public const int LASER = 1;
+    public const int PROTONS = 2;
+    public const int EMP = 3;
 
     // call base constructor
     public BaseSpecialisation(GameObject hex, Vector3 pos) : base(hex, pos) { }
@@ -61,8 +66,31 @@ public class BaseSpecialisation : Specialisation
     }
 
     // increase troop count
-    public void recruit()
+    //public void recruit()
+    //{
+    //    troops += 5;
+    //}
+
+    public int WeaponType
     {
-        troops += 5;
+        get
+        {
+            return weaponType;
+        }
+        set
+        {
+            switch (value)
+            {
+                case 1:
+                    weaponType = LASER;
+                    break;
+                case 2:
+                    weaponType = PROTONS;
+                    break;
+                case 3:
+                    weaponType = EMP;
+                    break;
+            }
+        }
     }
 }

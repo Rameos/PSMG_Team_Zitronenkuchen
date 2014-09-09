@@ -127,6 +127,7 @@ public class CreateGameField : MonoBehaviour
                         {
                             obj.GetComponent<HexField>().owner = 1;
                             obj.GetComponent<HexField>().colorOwnedArea();
+                            obj.GetComponent<HexField>().FinishedBuilding = true;
                         }
                     }
                     baseField.GetComponent<HexField>().owner = 1;
@@ -149,6 +150,7 @@ public class CreateGameField : MonoBehaviour
                         {
                             obj.GetComponent<HexField>().owner = 2;
                             obj.GetComponent<HexField>().colorOwnedArea();
+                            obj.GetComponent<HexField>().FinishedBuilding = true;   
                         }
 
                     }

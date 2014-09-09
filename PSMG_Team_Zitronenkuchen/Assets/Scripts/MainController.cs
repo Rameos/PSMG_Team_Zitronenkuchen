@@ -68,18 +68,18 @@ public class MainController : MonoBehaviour {
                     //Debug.Log("RECRUIT COUNTER : " + ((MilitarySpecialisation)node).RecruitCounter);
                 }              
             }
-            else if (node is BaseSpecialisation)
-            {
-                if (((BaseSpecialisation)node).Troops < 150)
-                {
-                    if (((BaseSpecialisation)node).RecruitCounter > 0)
-                    {
-                        Debug.Log(((BaseSpecialisation)node).RecruitCounter);
-                        ((BaseSpecialisation)node).recruit();
-                        ((BaseSpecialisation)node).RecruitCounter--;
-                    }
-                }
-            }
+            //else if (node is BaseSpecialisation)
+            //{
+            //    if (((BaseSpecialisation)node).Troops < 150)
+            //    {
+            //        if (((BaseSpecialisation)node).RecruitCounter > 0)
+            //        {
+            //            Debug.Log(((BaseSpecialisation)node).RecruitCounter);
+            //            ((BaseSpecialisation)node).recruit();
+            //            ((BaseSpecialisation)node).RecruitCounter--;
+            //        }
+            //    }
+            //}
         }
     }
 
@@ -351,16 +351,19 @@ public class MainController : MonoBehaviour {
                 {
                     if ((hex.owner == 2 && Network.isServer) || (hex.owner == 1 && Network.isClient))
                     {
+                        highlightMilitaryNode(hex, true);
                         hex.InRange = true;
-                        highlightMilitaryNode(hex, false);
                     }
                 }
                 else
                 {
                     if ((hex.owner == 1 && Network.isServer) || (hex.owner == 2 && Network.isClient))
                     {
-                        hex.InRange = true;
-                        highlightMilitaryNode(hex, true);
+                        if (((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType == ((MilitarySpecialisation) hex.spec).WeaponType)
+                        {
+                            highlightMilitaryNode(hex, false);
+                            hex.InRange = true;
+                        }
                     }
                 }
             }
@@ -394,13 +397,15 @@ public class MainController : MonoBehaviour {
         {
             if (destination.Equals(node.Hex))
             {
-                if (node is MilitarySpecialisation && (((MilitarySpecialisation)node).Troops + sendingTroops) <= 100)
+                if (node is MilitarySpecialisation)
                 {
-                    ((MilitarySpecialisation)node).Troops += sendingTroops;
+                    if ((((MilitarySpecialisation)node).Troops + sendingTroops) <= 100) ((MilitarySpecialisation)node).Troops += sendingTroops;
+                    else ((MilitarySpecialisation)node).Troops = 100;
                 }
-                else if (node is BaseSpecialisation && (((BaseSpecialisation)node).Troops + sendingTroops) <= 150)
+                else if (node is BaseSpecialisation)
                 {
-                    ((BaseSpecialisation)node).Troops += sendingTroops;
+                    if ((((BaseSpecialisation)node).Troops + sendingTroops) <= 150) ((BaseSpecialisation)node).Troops += sendingTroops;
+                    else ((BaseSpecialisation)node).Troops = 150;
                 }
                 
             }
@@ -419,7 +424,8 @@ public class MainController : MonoBehaviour {
         // this is the attacking player
 
         NetworkViewID destinationNviewId = destination.networkView.viewID;
-        destination.networkView.RPC("processAttack", RPCMode.OthersBuffered, destinationNviewId, sendingTroops);
+        int attackerWeapontype = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+        destination.networkView.RPC("processAttack", RPCMode.OthersBuffered, destinationNviewId, sendingTroops, attackerWeapontype);
         foreach (Specialisation node in specialisedNodes)
         {
             if (sendOrigin.Equals(node.Hex))
@@ -430,18 +436,76 @@ public class MainController : MonoBehaviour {
         sendingTroops = 0;
     }
 
-    public void receiveAttack(GameObject destination, int sentTroops)
+    public void receiveAttack(GameObject destination, int sentTroops, int attackerWeaponType)
     {
         // this is the defending player
         foreach (Specialisation node in specialisedNodes)
-
         {
             if (destination.Equals(node.Hex))
             {
+                int defenderWeaponType = ((MilitarySpecialisation)node).WeaponType;
                 int troops = 0;
                 if (node is MilitarySpecialisation) troops = ((MilitarySpecialisation)node).Troops;
                 if (node is BaseSpecialisation) troops = ((BaseSpecialisation)node).Troops;
+                bool attackSuccess = false;
                 if (troops < sentTroops)
+                {
+                    attackSuccess = true;
+                }                
+                else if(troops > sentTroops)
+                {
+                    attackSuccess = false;
+                }
+                // tropps == senttroops
+                else
+                {
+                    switch (attackerWeaponType)
+                    {
+                        case MilitarySpecialisation.LASER:
+                            switch (defenderWeaponType)
+                            {
+                                case MilitarySpecialisation.LASER:
+                                    attackSuccess = false;
+                                    break;
+                                case MilitarySpecialisation.PROTONS:
+                                    attackSuccess = true;
+                                    break;
+                                case MilitarySpecialisation.EMP:
+                                    attackSuccess = false;
+                                    break;
+                            }
+                            break;
+                        case MilitarySpecialisation.PROTONS:
+                            switch (defenderWeaponType)
+                            {
+                                case MilitarySpecialisation.LASER:
+                                    attackSuccess = false;
+                                    break;
+                                case MilitarySpecialisation.PROTONS:
+                                    attackSuccess = false;
+                                    break;
+                                case MilitarySpecialisation.EMP:
+                                    attackSuccess = true;
+                                    break;
+                            }
+                            break;
+                        case MilitarySpecialisation.EMP:
+                            switch (defenderWeaponType)
+                            {
+                                case MilitarySpecialisation.LASER:
+                                    attackSuccess = true;
+                                    break;
+                                case MilitarySpecialisation.PROTONS:
+                                    attackSuccess = false;
+                                    break;
+                                case MilitarySpecialisation.EMP:
+                                    attackSuccess = false;
+                                    break;
+                            }
+                            break;
+                    }
+                }
+                if (attackSuccess)
                 {
                     // successful attack
                     Debug.Log("attack successful");
@@ -460,17 +524,17 @@ public class MainController : MonoBehaviour {
                         destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
                         gameEnd(!win);
                     }
-                    else{
+                    else
+                    {
                         if (Network.isServer) owner = 1;
                         if (Network.isClient) owner = 2;
                         updateArea(node.Hex, owner);
                         destination.GetComponent<HexField>().decolorUnownedArea();
                         destination.networkView.RPC("successfulAttack", RPCMode.OthersBuffered, destinationNviewId, survivingTroops, node.Pos, win);
                     }
-                        
+
                     break;
                 }
-                
                 else
                 {
                     // attack failed
@@ -478,8 +542,9 @@ public class MainController : MonoBehaviour {
                     troops -= sentTroops;
                     if (node is MilitarySpecialisation) ((MilitarySpecialisation)node).Troops = troops;
                     if (node is BaseSpecialisation) ((BaseSpecialisation)node).Troops = troops;
-                }
 
+                    break;
+                }
             }
         }
     }
