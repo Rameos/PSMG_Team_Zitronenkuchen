@@ -359,11 +359,23 @@ public class MainController : MonoBehaviour {
                 {
                     if ((hex.owner == 1 && Network.isServer) || (hex.owner == 2 && Network.isClient))
                     {
-                        if (((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType == ((MilitarySpecialisation) hex.spec).WeaponType)
+                        if (hex.specialisation == "Military")
                         {
-                            highlightMilitaryNode(hex, false);
-                            hex.InRange = true;
+                            if (((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType == ((MilitarySpecialisation)hex.spec).WeaponType || ((MilitarySpecialisation)hex.spec).WeaponType == 0)
+                            {
+                                highlightMilitaryNode(hex, false);
+                                hex.InRange = true;
+                            }
                         }
+                        else if (hex.specialisation == "Base")
+                        {
+                            if (((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType == ((BaseSpecialisation)hex.spec).WeaponType || ((BaseSpecialisation)hex.spec).WeaponType == 0)
+                            {
+                                highlightMilitaryNode(hex, false);
+                                hex.InRange = true;
+                            }
+                        }
+                        
                     }
                 }
             }
