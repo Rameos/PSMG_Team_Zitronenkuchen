@@ -81,8 +81,9 @@ public class MilitaryMenu : MonoBehaviour {
     public void button4_Action()
     {
         HexField currentField = gameObject.GetComponent<HexField>();
+        attackingHex.GetComponent<HexField>().unPrepareShip();
         attackingHex.GetComponent<HexField>().sendShip(attackingHex, selectedHexagon);
-
+        
         mainController.sendTroops(selectedHexagon);
         
 
@@ -111,7 +112,7 @@ public class MilitaryMenu : MonoBehaviour {
     public void button6_Action()
     {
         mainController.cancelTroopMovement();
-        gameObject.GetComponent<HexField>().unPrepareShip();
+        attackingHex.GetComponent<HexField>().unPrepareShip();
         Debug.Log("Button6_Pressed");
         foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
         {
@@ -132,7 +133,7 @@ public class MilitaryMenu : MonoBehaviour {
     private void placeEmptySpaceShip()
     {
         HexField currentField = selectedHexagon.GetComponent<HexField>();
-        currentField.initiateTroopBuilding(CustomGameProperties.alienRace);
+        currentField.initiateTroopBuilding(CustomGameProperties.alienRace, selectedHexagon);
        
     }
     // Specialise on Protons

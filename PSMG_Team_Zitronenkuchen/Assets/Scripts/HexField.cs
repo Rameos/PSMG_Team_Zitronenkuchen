@@ -19,6 +19,7 @@ public class HexField : MonoBehaviour {
     private int troopsOnField = 0;
 
     private GameObject spaceship;
+    GameObject spaceshipOrig;
 
     public ArrayList getSurroundingFields()
     {
@@ -182,17 +183,16 @@ public class HexField : MonoBehaviour {
         unitText.transform.Rotate(new Vector3(45, 0, 0));
     }
 
-    public void initiateTroopBuilding(int selectedRace)
+    public void initiateTroopBuilding(int selectedRace, GameObject hexagon)
     {
         bool alreadyBuilt = false;
-        foreach (Transform child in gameObject.transform)
+        foreach (Transform child in hexagon.transform)
         {
             if (child.name == "spaceshipECO(Clone)" || child.name == "spaceshipMIL(Clone)")
                 alreadyBuilt = true;
         }
 
         if (troopsOnField == 0 && !alreadyBuilt) {
-            GameObject spaceshipOrig = null;
             spaceshipOrig = (selectedRace == 1) ? Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject : Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject;
             spaceship = Instantiate(spaceshipOrig, gameObject.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
            
@@ -201,16 +201,33 @@ public class HexField : MonoBehaviour {
         
     }
 
+    
+
     public void prepareShip()
     {
         Vector3 elevate = new Vector3 (0.0f, 0.6f, 0.0f);
-        spaceship.transform.Translate(elevate * Time.deltaTime * 4);
+        if (spaceship != null)
+            spaceship.transform.Translate(elevate * Time.deltaTime * 4);
+    }
+
+    private void animateFlyingShip(GameObject origin, GameObject destination)
+    {
+        GameObject tempSpaceship = Instantiate(spaceshipOrig, origin.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+
+        Vector3 movement = destination.transform.position - origin.transform.position;
+        Debug.Log("MOOOOVEMENT" + Time.deltaTime);
+        tempSpaceship.transform.Translate(movement);
+        Destroy(tempSpaceship);
+        //tempSpaceship.transform.position += movement;
+        
+
     }
 
     public void unPrepareShip()
     {
         Vector3 lower = new Vector3 (0.0f, - 0.6f, 0.0f);
-        spaceship.transform.Translate(lower * Time.deltaTime * 4);
+        if (spaceship != null)
+            spaceship.transform.Translate(lower * Time.deltaTime * 4);
     }
 
     public void sendShip(GameObject origin, GameObject destination)
@@ -228,12 +245,12 @@ public class HexField : MonoBehaviour {
                destinationNeedsShip = false;
         }
 
+        animateFlyingShip(origin, destination);
+
         if (destinationNeedsShip)
         {
-            spaceship.transform.parent = null;
-            spaceship.transform.position = origin.transform.position;
-            spaceship.transform.position = destination.transform.position;
-            spaceship.transform.parent = destination.transform;
+            destination.GetComponent<HexField>().initiateTroopBuilding(CustomGameProperties.alienRace, destination);
+           
         }
        
     }
