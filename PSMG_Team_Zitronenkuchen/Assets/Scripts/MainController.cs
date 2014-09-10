@@ -437,6 +437,8 @@ public class MainController : MonoBehaviour {
 
         NetworkViewID destinationNviewId = destination.networkView.viewID;
         int attackerWeapontype = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+
+ 
         destination.networkView.RPC("processAttack", RPCMode.OthersBuffered, destinationNviewId, sendingTroops, attackerWeapontype);
         foreach (Specialisation node in specialisedNodes)
         {

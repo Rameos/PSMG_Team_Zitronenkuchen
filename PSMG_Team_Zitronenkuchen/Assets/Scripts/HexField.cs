@@ -18,6 +18,8 @@ public class HexField : MonoBehaviour {
     private bool finishedBuilding = false;
     private int troopsOnField = 0;
 
+    private GameObject spaceship;
+
     public ArrayList getSurroundingFields()
     {
         ArrayList list = new ArrayList();
@@ -182,13 +184,58 @@ public class HexField : MonoBehaviour {
 
     public void initiateTroopBuilding(int selectedRace)
     {
-        if (troopsOnField == 0) {
+        bool alreadyBuilt = false;
+        foreach (Transform child in gameObject.transform)
+        {
+            if (child.name == "spaceshipECO(Clone)" || child.name == "spaceshipMIL(Clone)")
+                alreadyBuilt = true;
+        }
+
+        if (troopsOnField == 0 && !alreadyBuilt) {
             GameObject spaceshipOrig = null;
             spaceshipOrig = (selectedRace == 1) ? Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject : Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject;
-            GameObject spaceship = Instantiate(spaceshipOrig, gameObject.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+            spaceship = Instantiate(spaceshipOrig, gameObject.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+           
             spaceship.transform.parent = gameObject.transform;
         }
         
+    }
+
+    public void prepareShip()
+    {
+        Vector3 elevate = new Vector3 (0.0f, 0.6f, 0.0f);
+        spaceship.transform.Translate(elevate * Time.deltaTime * 4);
+    }
+
+    public void unPrepareShip()
+    {
+        Vector3 lower = new Vector3 (0.0f, - 0.6f, 0.0f);
+        spaceship.transform.Translate(lower * Time.deltaTime * 4);
+    }
+
+    public void sendShip(GameObject origin, GameObject destination)
+    {
+        Vector3 destinationLoc = destination.transform.position;
+        Vector3 movement = origin.transform.position - destinationLoc;
+
+        bool destinationNeedsShip = true;
+        foreach (Transform child in destination.transform)
+        {
+            if (child.name == "spaceshipECO(Clone)" || child.name == "spaceshipMIL(Clone)")
+               destinationNeedsShip = false;
+
+             if (child.name == "baseECO(Clone)" || child.name == "baseMIL(Clone)")
+               destinationNeedsShip = false;
+        }
+
+        if (destinationNeedsShip)
+        {
+            spaceship.transform.parent = null;
+            spaceship.transform.position = origin.transform.position;
+            spaceship.transform.position = destination.transform.position;
+            spaceship.transform.parent = destination.transform;
+        }
+       
     }
 
     [RPC]
