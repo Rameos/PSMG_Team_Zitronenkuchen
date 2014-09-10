@@ -246,6 +246,7 @@ public class MilitaryMenu : MonoBehaviour {
                 }
                 else troopSize = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
                 GUI.Box(new Rect(Screen.width / 2 - 130, Screen.height / 2 - 180, 250, 200), "FLEET TYPE: \n "+ type+ "\n FLEET SIZE: \n" + troopSize);
+                troopTypeSelected = false;
             } 
             foreach (GazeButton button in gazeUI)
             {

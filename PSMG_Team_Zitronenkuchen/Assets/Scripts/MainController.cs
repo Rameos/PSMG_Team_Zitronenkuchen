@@ -18,6 +18,10 @@ public class MainController : MonoBehaviour {
 
     private int selectedRace = CustomGameProperties.alienRace;
 
+    private float barDisplay = 0;
+    
+
+
 	// Use this for initialization
 	void Start () {
         tirkid = 50000;
@@ -30,6 +34,7 @@ public class MainController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             Application.LoadLevel("Alternate_Main_Menu");
@@ -59,6 +64,7 @@ public class MainController : MonoBehaviour {
                     if (((MilitarySpecialisation)node).RecruitCounter >= 1)
                     {
                         Debug.Log("Recruitcounter: "+((MilitarySpecialisation)node).RecruitCounter+", Time:"+Time.time);
+
                         ((MilitarySpecialisation)node).recruit();
                             ((MilitarySpecialisation)node).RecruitCounter--;
                       
@@ -299,17 +305,19 @@ public class MainController : MonoBehaviour {
         GameObject ressourcelabel = GameObject.FindGameObjectWithTag("GUIRessources");
         ressourcelabel.guiText.text = "Tirkid: " + tirkid; // +"   Research: " + researchPoints;
         
+        
+        
         foreach (Specialisation node in specialisedNodes)
         {
             if (node is MilitarySpecialisation)
             {
                 NetworkView nview = node.Hex.networkView;
-                nview.RPC("showTroops", RPCMode.AllBuffered, ((MilitarySpecialisation)node).Troops);
+                nview.RPC("showTroops", RPCMode.AllBuffered, ((MilitarySpecialisation)node).Troops, barDisplay);
             }
             else if (node is BaseSpecialisation)
             {
                 NetworkView nview = node.Hex.networkView;
-                nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)node).Troops);
+                nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)node).Troops, barDisplay);
             }
            
         }

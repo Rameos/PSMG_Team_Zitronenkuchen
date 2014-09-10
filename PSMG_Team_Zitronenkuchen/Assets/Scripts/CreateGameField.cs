@@ -177,6 +177,6 @@ public class CreateGameField : MonoBehaviour
         nview.RPC("setSpecialisation", RPCMode.AllBuffered, "Base");
         nview.RPC("buildBase", RPCMode.AllBuffered, nviewId, selectedRace);
         nview.RPC("fieldSet", RPCMode.AllBuffered);
-        nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)spec).Troops);
+        nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)spec).Troops, 0.0f);
     }
 }
