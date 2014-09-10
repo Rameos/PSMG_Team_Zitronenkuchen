@@ -67,6 +67,7 @@ public class MilitaryMenu : MonoBehaviour {
             if (mainController.buildTroops())
             {
                 ((MilitarySpecialisation) selectedHexagon.GetComponent<HexField>().spec).RecruitCounter += 5;
+               
             }
             clicked = true;
             Debug.Log("Button3_Pressed");
@@ -108,21 +109,37 @@ public class MilitaryMenu : MonoBehaviour {
     // Specialise on Laser
     public void button7_Action()
     {
+        Debug.Log("LASER");
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.LASER;
+        placeEmptySpaceShip();
         type = "LASER";
         troopTypeSelected = true;
+    }
+
+    private void placeEmptySpaceShip()
+    {
+        if (!troopTypeSelected)
+        {
+            HexField currentField = selectedHexagon.GetComponent<HexField>();
+            currentField.initiateTroopBuilding(CustomGameProperties.alienRace);
+        }
+       
     }
     // Specialise on Protons
     public void button8_Action()
     {
+        Debug.Log("PROTONS");
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.PROTONS;
+        placeEmptySpaceShip();
         type = "PROTONS";
         troopTypeSelected = true;
     }
     // Specialise on EMP
     public void button9_Action()
     {
+        Debug.Log("EMP");
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.EMP;
+        placeEmptySpaceShip();
         type = "EMP";
         troopTypeSelected = true;
     }

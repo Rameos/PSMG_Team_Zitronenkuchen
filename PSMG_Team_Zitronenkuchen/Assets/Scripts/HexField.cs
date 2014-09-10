@@ -16,6 +16,7 @@ public class HexField : MonoBehaviour {
     public Specialisation spec;
     private bool inRange;
     private bool finishedBuilding = false;
+    private int troopsOnField = 0;
 
     public ArrayList getSurroundingFields()
     {
@@ -179,6 +180,17 @@ public class HexField : MonoBehaviour {
         unitText.transform.Rotate(new Vector3(45, 0, 0));
     }
 
+    public void initiateTroopBuilding(int selectedRace)
+    {
+        if (troopsOnField == 0) {
+            GameObject spaceshipOrig = null;
+            spaceshipOrig = (selectedRace == 1) ? Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject : Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject;
+            GameObject spaceship = Instantiate(spaceshipOrig, gameObject.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+            spaceship.transform.parent = gameObject.transform;
+        }
+        
+    }
+
     [RPC]
     void buildMilitary(NetworkViewID id, int selectedRace)
     {
@@ -187,6 +199,7 @@ public class HexField : MonoBehaviour {
         GameObject milBuildingState1 = null;
         GameObject milBuildingState2 = null;
         GameObject milBuildingState3 = null;
+        
         if (selectedRace == 1)
         {
             milBuildingState1 = Resources.Load("militaryMILState1", typeof(GameObject)) as GameObject;
@@ -203,11 +216,14 @@ public class HexField : MonoBehaviour {
         GameObject militaryBuildingState2 = Instantiate(milBuildingState2, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         GameObject militaryBuildingState3 = Instantiate(milBuildingState3, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
+
         militaryBuildingState1.transform.parent = selectedHexagon.transform;
         militaryBuildingState2.transform.parent = selectedHexagon.transform;
         militaryBuildingState3.transform.parent = selectedHexagon.transform;
+
         militaryBuildingState2.SetActive(false);
         militaryBuildingState3.SetActive(false);
+
         GameObject unitText = new GameObject();
         TextMesh text = unitText.AddComponent<TextMesh>();
         text.characterSize = 0.1f;
@@ -282,6 +298,7 @@ public class HexField : MonoBehaviour {
     [RPC]
     void showTroops(int troops)
     {
+        troopsOnField += troops;
         gameObject.transform.GetComponentInChildren<TextMesh>().text = "" + troops;
     }
 
