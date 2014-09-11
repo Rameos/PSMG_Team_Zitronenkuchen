@@ -394,7 +394,6 @@ public class MainController : MonoBehaviour {
 
     private void highlightMilitaryNode(HexField hex, bool ownNode)
     {
-        
         if (ownNode && hex != sendOrigin.GetComponent<HexField>())
         {
             Vector3 pos = hex.transform.position;
