@@ -141,7 +141,7 @@ public class HexField : MonoBehaviour {
 
     public void decolorUnownedArea()
     {
-        defaultMaterial = Resources.Load("DefaultMaterial", typeof(Material)) as Material;
+        defaultMaterial = Resources.Load("HexLava", typeof(Material)) as Material;
         if (defaultMaterial == null)
         {
             Debug.Log("loading failed, check existence of Resources folder in Assets");
@@ -156,7 +156,7 @@ public class HexField : MonoBehaviour {
     }
 
     [RPC]
-    void buildBase(NetworkViewID id, int selectedRace)
+    void buildBase(NetworkViewID id, int selectedRace, int callingOwner)
     {
         Debug.Log("Build base for Race " + selectedRace);
         NetworkView view = NetworkView.Find(id);
@@ -171,10 +171,12 @@ public class HexField : MonoBehaviour {
         else
         {
             baseBuilding = Resources.Load("baseECO", typeof(GameObject)) as GameObject;
-        } 
-        GameObject basicBuilding = Network.Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f), 0) as GameObject;
+        }
+        GameObject basicBuilding = Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        selectedHexagon.GetComponent<HexField>().owner = callingOwner;
+        FinishedBuilding = true;
         //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
-        selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
+        //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         basicBuilding.transform.parent = selectedHexagon.transform;
         GameObject unitText = new GameObject();
         TextMesh text = unitText.AddComponent<TextMesh>();
@@ -287,7 +289,7 @@ public class HexField : MonoBehaviour {
     }
 
     [RPC]
-    void buildMilitary(NetworkViewID id, int selectedRace)
+    void buildMilitary(NetworkViewID id, int selectedRace, int builder)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
@@ -319,6 +321,10 @@ public class HexField : MonoBehaviour {
         militaryBuildingState2.SetActive(false);
         militaryBuildingState3.SetActive(false);
 
+        if ((builder == 2 && Network.isServer) || builder == 1 && Network.isClient)
+        {
+            decolorUnownedArea();
+        }
         GameObject unitText = new GameObject();
         TextMesh text = unitText.AddComponent<TextMesh>();
         text.characterSize = 0.1f;
