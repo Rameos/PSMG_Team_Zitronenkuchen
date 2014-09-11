@@ -19,7 +19,12 @@ public class HexField : MonoBehaviour {
     private int troopsOnField = 0;
 
     private GameObject spaceship;
+    private GameObject tempSpaceship;
+    private GameObject destinationHex;
+    private Vector3 direction;
     GameObject spaceshipOrig;
+    bool destinationNeedsShip = true;
+    public AudioClip spaceShipRising = Resources.Load("UFO2", typeof(AudioClip)) as AudioClip;
 
     public ArrayList getSurroundingFields()
     {
@@ -205,29 +210,48 @@ public class HexField : MonoBehaviour {
 
     public void prepareShip()
     {
-        Vector3 elevate = new Vector3 (0.0f, 0.6f, 0.0f);
+        //does not work yet
+        gameObject.AddComponent<AudioSource>();
+        audio.PlayOneShot(spaceShipRising);
+
+        Vector3 elevate = new Vector3 (0.0f, 0.06f, 0.0f);
         if (spaceship != null)
-            spaceship.transform.Translate(elevate * Time.deltaTime * 4);
+            spaceship.transform.Translate(elevate * Time.deltaTime * 18);
+    }
+
+    void Update()
+    {
+        if (tempSpaceship != null)
+        {
+            tempSpaceship.transform.Translate(direction * 18 * Time.deltaTime);
+            if (Mathf.Abs(tempSpaceship.transform.position.x - destinationHex.transform.position.x) <= 0.01f && Mathf.Abs(tempSpaceship.transform.position.z - destinationHex.transform.position.z) <= 0.004f)
+            {
+                Destroy(tempSpaceship);
+                if (destinationNeedsShip)
+                {
+                    destinationHex.GetComponent<HexField>().initiateTroopBuilding(CustomGameProperties.alienRace, destinationHex);
+
+                }
+            }
+                
+        }
     }
 
     private void animateFlyingShip(GameObject origin, GameObject destination)
     {
-        GameObject tempSpaceship = Instantiate(spaceshipOrig, origin.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        tempSpaceship = Instantiate(spaceshipOrig, origin.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        destinationHex = destination;
 
-        Vector3 movement = destination.transform.position - origin.transform.position;
-        Debug.Log("MOOOOVEMENT" + Time.deltaTime);
-        tempSpaceship.transform.Translate(movement);
-        Destroy(tempSpaceship);
-        //tempSpaceship.transform.position += movement;
+        direction = (destination.transform.position - origin.transform.position).normalized * 0.04f;
         
 
     }
 
     public void unPrepareShip()
     {
-        Vector3 lower = new Vector3 (0.0f, - 0.6f, 0.0f);
+        Vector3 lower = new Vector3 (0.0f, - 0.06f, 0.0f);
         if (spaceship != null)
-            spaceship.transform.Translate(lower * Time.deltaTime * 4);
+            spaceship.transform.Translate(lower * Time.deltaTime * 18);
     }
 
     public void sendShip(GameObject origin, GameObject destination)
@@ -235,7 +259,7 @@ public class HexField : MonoBehaviour {
         Vector3 destinationLoc = destination.transform.position;
         Vector3 movement = origin.transform.position - destinationLoc;
 
-        bool destinationNeedsShip = true;
+        
         foreach (Transform child in destination.transform)
         {
             if (child.name == "spaceshipECO(Clone)" || child.name == "spaceshipMIL(Clone)")
@@ -247,11 +271,7 @@ public class HexField : MonoBehaviour {
 
         animateFlyingShip(origin, destination);
 
-        if (destinationNeedsShip)
-        {
-            destination.GetComponent<HexField>().initiateTroopBuilding(CustomGameProperties.alienRace, destination);
-           
-        }
+     
        
     }
 
@@ -415,6 +435,7 @@ public class HexField : MonoBehaviour {
         foreach (Transform child in hex.transform)
         {
             Object.Destroy(child.gameObject);
+            Destroy(tempSpaceship);
             //TODO: explobumm(Partikeleffekt)
         }
     }
