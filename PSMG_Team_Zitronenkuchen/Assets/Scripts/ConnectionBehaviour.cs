@@ -4,7 +4,7 @@ using System.Collections;
 public class ConnectionBehaviour : MonoBehaviour
 {
 
-    string ip = "Enter IP adress!";
+    string ip = "127.0.0.1";
 
     public static bool clickedConnect = false;
 
@@ -50,8 +50,8 @@ public class ConnectionBehaviour : MonoBehaviour
             gameObject.guiText.color = new Color32 (218, 164, 59, 255); //orange
             clickedConnect = true;
             // try to connect to the entered ip
-            //if (Network.peerType == NetworkPeerType.Disconnected) Network.Connect(ip, connectionPort);
-             gameObject.GetComponent<LANBroadcastService>().StartSearchBroadCasting(Connect, Initialize);
+            if (Network.peerType == NetworkPeerType.Disconnected) Network.Connect(ip, connectionPort);
+             //gameObject.GetComponent<LANBroadcastService>().StartSearchBroadCasting(Connect, Initialize);
         }
     }
 

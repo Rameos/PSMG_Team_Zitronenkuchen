@@ -76,12 +76,17 @@ public class MilitaryMenu : MonoBehaviour {
     // Move here action
     public void button4_Action()
     {
-        mainController.sendTroops(selectedHexagon);
-        Debug.Log("Button4_Pressed");
-        foreach(GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter")) {
-            Destroy(highlighter);
+        if (!clicked)
+        {
+            mainController.sendTroops(selectedHexagon);
+            Debug.Log("Button4_Pressed");
+            foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
+            {
+                Destroy(highlighter);
+            }
+            mainController.resetRanges();
+            clicked = true;
         }
-        mainController.resetRanges();
     }
     // Attack here action
     public void button5_Action()
@@ -161,7 +166,7 @@ public class MilitaryMenu : MonoBehaviour {
         bool isSending = mainController.isSending()>0;
 
 
-        Debug.Log(isSending);
+        Debug.Log(isSending + ", " + hex.GetComponent<HexField>().InRange);
         //Create new Buttonelements and add them to the gazeUI
         if (!isSending && ((hex.GetComponent<HexField>().owner == 1 && Network.isServer) || (hex.GetComponent<HexField>().owner == 2 && Network.isClient)))
         {
@@ -238,15 +243,18 @@ public class MilitaryMenu : MonoBehaviour {
         //Draw every Button from the ArrayList gazeUI
         if (isDrawing)
         {
-            if (troopTypeSelected)
+            if ((selectedHexagon.GetComponent<HexField>().owner == 1 && Network.isServer) || (selectedHexagon.GetComponent<HexField>().owner == 2 && Network.isClient))
             {
-                if (selectedHexagon.GetComponent<HexField>().spec is MilitarySpecialisation)
+                if (troopTypeSelected)
                 {
-                    troopSize = ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
+                    if (selectedHexagon.GetComponent<HexField>().spec is MilitarySpecialisation)
+                    {
+                        troopSize = ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
+                    }
+                    else troopSize = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
+                    GUI.Box(new Rect(Screen.width / 2 - 130, Screen.height / 2 - 180, 250, 200), "FLEET TYPE: \n " + type + "\n FLEET SIZE: \n" + troopSize);
                 }
-                else troopSize = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
-                GUI.Box(new Rect(Screen.width / 2 - 130, Screen.height / 2 - 180, 250, 200), "FLEET TYPE: \n "+ type+ "\n FLEET SIZE: \n" + troopSize);
-            } 
+            }
             foreach (GazeButton button in gazeUI)
             {
                 button.OnGUI();

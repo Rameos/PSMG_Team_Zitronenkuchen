@@ -39,7 +39,8 @@ public class PopUpMenu : MonoBehaviour {
         {
             NetworkView nview = selectedHexagon.networkView;
             NetworkViewID nviewId = nview.viewID;
-            nview.RPC("buildMilitary", RPCMode.AllBuffered, nviewId, selectedRace);
+            int builder = Network.isServer ? 1 : 2;
+            nview.RPC("buildMilitary", RPCMode.AllBuffered, nviewId, selectedRace, builder);
             nview.RPC("fieldSet", RPCMode.AllBuffered);
         }
 

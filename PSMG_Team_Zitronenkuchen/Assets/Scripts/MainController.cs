@@ -18,6 +18,7 @@ public class MainController : MonoBehaviour {
 
     private int selectedRace = CustomGameProperties.alienRace;
 
+
 	// Use this for initialization
 	void Start () {
         tirkid = 50000;
@@ -241,7 +242,7 @@ public class MainController : MonoBehaviour {
         foreach (GameObject obj in neighbours)
         {
             int newOwner;
-            if(Network.isServer) newOwner = 1;
+            if (Network.isServer) newOwner = 1;
             else newOwner = 2;
             if (obj.GetComponent<HexField>().owner == 0)
             {
@@ -351,7 +352,7 @@ public class MainController : MonoBehaviour {
                 {
                     if ((hex.owner == 2 && Network.isServer) || (hex.owner == 1 && Network.isClient))
                     {
-                        highlightMilitaryNode(hex, true);
+                        highlightMilitaryNode(hex, false);
                         hex.InRange = true;
                     }
                 }
@@ -363,7 +364,7 @@ public class MainController : MonoBehaviour {
                         {
                             if (((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType == ((MilitarySpecialisation)hex.spec).WeaponType || ((MilitarySpecialisation)hex.spec).WeaponType == 0)
                             {
-                                highlightMilitaryNode(hex, false);
+                                highlightMilitaryNode(hex, true);
                                 hex.InRange = true;
                             }
                         }
@@ -371,7 +372,7 @@ public class MainController : MonoBehaviour {
                         {
                             if (((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType == ((BaseSpecialisation)hex.spec).WeaponType || ((BaseSpecialisation)hex.spec).WeaponType == 0)
                             {
-                                highlightMilitaryNode(hex, false);
+                                highlightMilitaryNode(hex, true);
                                 hex.InRange = true;
                             }
                         }
@@ -405,25 +406,30 @@ public class MainController : MonoBehaviour {
 
     public void sendTroops(GameObject destination)
     {
-        foreach (Specialisation node in specialisedNodes)
+        if (sendOrigin != destination)
         {
-            if (destination.Equals(node.Hex))
+            foreach (Specialisation node in specialisedNodes)
             {
-                if (node is MilitarySpecialisation)
+                if (destination.Equals(node.Hex))
                 {
-                    if ((((MilitarySpecialisation)node).Troops + sendingTroops) <= 100) ((MilitarySpecialisation)node).Troops += sendingTroops;
-                    else ((MilitarySpecialisation)node).Troops = 100;
+                    if (node is MilitarySpecialisation)
+                    {
+                        if ((((MilitarySpecialisation)node).Troops + sendingTroops) <= 100) ((MilitarySpecialisation)node).Troops += sendingTroops;
+                        else ((MilitarySpecialisation)node).Troops = 100;
+                        ((MilitarySpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+                    }
+                    else if (node is BaseSpecialisation)
+                    {
+                        if ((((BaseSpecialisation)node).Troops + sendingTroops) <= 150) ((BaseSpecialisation)node).Troops += sendingTroops;
+                        else ((BaseSpecialisation)node).Troops = 150;
+                        ((BaseSpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+                    }
+
                 }
-                else if (node is BaseSpecialisation)
+                else if (sendOrigin.Equals(node.Hex))
                 {
-                    if ((((BaseSpecialisation)node).Troops + sendingTroops) <= 150) ((BaseSpecialisation)node).Troops += sendingTroops;
-                    else ((BaseSpecialisation)node).Troops = 150;
+                    ((MilitarySpecialisation)node).Troops = 0;
                 }
-                
-            }
-            if (sendOrigin.Equals(node.Hex))
-            {
-                ((MilitarySpecialisation)node).Troops = 0;
             }
         }
         sendingTroops = 0;
@@ -455,7 +461,9 @@ public class MainController : MonoBehaviour {
         {
             if (destination.Equals(node.Hex))
             {
-                int defenderWeaponType = ((MilitarySpecialisation)node).WeaponType;
+                int defenderWeaponType = 0;
+                if (node is MilitarySpecialisation) defenderWeaponType= ((MilitarySpecialisation)node).WeaponType;
+                if (node is BaseSpecialisation) defenderWeaponType = ((BaseSpecialisation)node).WeaponType;
                 int troops = 0;
                 if (node is MilitarySpecialisation) troops = ((MilitarySpecialisation)node).Troops;
                 if (node is BaseSpecialisation) troops = ((BaseSpecialisation)node).Troops;
@@ -586,16 +594,25 @@ public class MainController : MonoBehaviour {
         else
         {
             earn(150);
-            destination.networkView.RPC("buildMilitary", RPCMode.AllBuffered, destination.networkView.viewID, selectedRace);
-            build("Military", destination, pos);
+            int builder = Network.isServer ? 1:0;
+            destination.networkView.RPC("buildMilitary", RPCMode.AllBuffered, destination.networkView.viewID, selectedRace, builder);
             foreach (Specialisation node in specialisedNodes)
             {
                 if (destination.Equals(node.Hex))
                 {
-                    int troops = 0;
-                    if (node is MilitarySpecialisation) troops = ((MilitarySpecialisation)node).Troops;
-                    if (node is BaseSpecialisation) troops = ((BaseSpecialisation)node).Troops;
-                    troops = survivingTroops;
+                    int troops = survivingTroops;
+                    if (node is MilitarySpecialisation)
+                    {
+                        ((MilitarySpecialisation)node).Troops = troops;
+                        ((MilitarySpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+                        ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType = 0;
+                    }
+                    //doesn't happen, if node is base specialisation win is true!
+                    //if (node is BaseSpecialisation)
+                    //{
+                    //    troops = ((BaseSpecialisation)node).Troops;
+                    //    ((BaseSpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+                    //}
                 }
             }
             destination.GetComponent<HexField>().colorOwnedArea();
