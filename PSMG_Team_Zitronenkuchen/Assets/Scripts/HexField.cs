@@ -286,7 +286,7 @@ public class HexField : MonoBehaviour {
     }
 
     [RPC]
-    void showTroops(int troops, float barDisplay)
+    void showTroops(int troops)
     {
         gameObject.transform.GetComponentInChildren<TextMesh>().text = "" + troops;
     }

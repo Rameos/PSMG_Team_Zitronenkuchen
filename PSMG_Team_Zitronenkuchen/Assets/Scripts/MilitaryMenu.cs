@@ -31,7 +31,7 @@ public class MilitaryMenu : MonoBehaviour {
     private bool clicked = false;
     private bool troopTypeSelected = false;
 
-    private string type;
+    private string type = "NONE";
     private int troopSize;
 
     #region ButtonActions
@@ -114,22 +114,16 @@ public class MilitaryMenu : MonoBehaviour {
     public void button7_Action()
     {
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.LASER;
-        type = "LASER";
-        //troopTypeSelected = true;
     }
     // Specialise on Protons
     public void button8_Action()
     {
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.PROTONS;
-        type = "PROTONS";
-        //troopTypeSelected = true;
     }
     // Specialise on EMP
     public void button9_Action()
     {
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.EMP;
-        type = "EMP";
-        //troopTypeSelected = true;
     }
 
     #endregion
@@ -143,7 +137,7 @@ public class MilitaryMenu : MonoBehaviour {
 
     public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
     {
-        Debug.Log("open mil menu on base");
+        
         //Debug.Log(hex.GetComponent<HexField>().owner);
 
         //Set the Actions of the Buttons
@@ -172,7 +166,7 @@ public class MilitaryMenu : MonoBehaviour {
         {
             if (!(hex.GetComponent<HexField>().spec is BaseSpecialisation))
             {
-                
+
                 if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).WeaponType == 0)
                 {
                     troopTypeSelected = false;
@@ -197,6 +191,7 @@ public class MilitaryMenu : MonoBehaviour {
                     }
                 }
             }
+            else troopTypeSelected = true;
         }
         else if (isSending && hex.GetComponent<HexField>().InRange) // troops are being sent
         {
@@ -226,6 +221,7 @@ public class MilitaryMenu : MonoBehaviour {
         ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
         menuOpen = false;
         clicked = false;
+        troopTypeSelected = false;
     }
 
     public static bool isOpen()
@@ -253,8 +249,13 @@ public class MilitaryMenu : MonoBehaviour {
                     if (selectedHexagon.GetComponent<HexField>().spec is MilitarySpecialisation)
                     {
                         troopSize = ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
+                        type = ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponName;
                     }
-                    else troopSize = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
+                    else
+                    {
+                        troopSize = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
+                        type = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponName;
+                    }
                     GUI.Box(new Rect(Screen.width / 2 - 130, Screen.height / 2 - 180, 250, 200), "FLEET TYPE: \n " + type + "\n FLEET SIZE: \n" + troopSize);
                 }
             }
