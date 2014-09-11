@@ -29,9 +29,9 @@ public class MilitaryMenu : MonoBehaviour {
     private MainController mainController;
 
     private bool clicked = false;
-    private bool troopTypeSelected = false;
+    private bool showInfoPanel = false;
 
-    private string type = "NONE";
+    private string type;
     private int troopSize;
 
     #region ButtonActions
@@ -169,7 +169,7 @@ public class MilitaryMenu : MonoBehaviour {
 
                 if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).WeaponType == 0)
                 {
-                    troopTypeSelected = false;
+                    showInfoPanel = false;
                     gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y - 180, 220, 200), "LASER \n FLEET", myStyle, laser));
                     gazeUI.Add(new GazeButton(new Rect(pos.x + 20, pos.y, 220, 200), " PROTON \n TORPEDO FLEET", myStyle, protons));
                     gazeUI.Add(new GazeButton(new Rect(pos.x - 240, pos.y, 220, 200), " EMP \n FLEET", myStyle, emp));
@@ -178,20 +178,23 @@ public class MilitaryMenu : MonoBehaviour {
                 {
                     if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).Troops < 100)
                     {
-                        troopTypeSelected = true;
-                        gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y + 50, 220, 200), "ATTACK", myStyle, attackButton));
-                        gazeUI.Add(new GazeButton(new Rect(pos.x + 40, pos.y - 80, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
-                        gazeUI.Add(new GazeButton(new Rect(pos.x - 260, pos.y - 80, 220, 200), "150 \n BUILD SHIPS", myStyle, buildButton));
+                        showInfoPanel = true;
+                        if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).RecruitCounter == 0)
+                        {
+                            gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y + 50, 220, 200), "ATTACK", myStyle, attackButton));
+                            gazeUI.Add(new GazeButton(new Rect(pos.x + 40, pos.y - 80, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
+                            gazeUI.Add(new GazeButton(new Rect(pos.x - 260, pos.y - 80, 220, 200), "150 \n BUILD SHIPS", myStyle, buildButton));
+                        }   
                     }
                     else
                     {
-                        troopTypeSelected = false;
-                        gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "ATTACK", myStyle, attackButton));
-                        gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y + 50, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
+                        showInfoPanel = true;
+                        gazeUI.Add(new GazeButton(new Rect(pos.x - 260, pos.y - 80, 220, 200), "ATTACK", myStyle, attackButton));
+                        gazeUI.Add(new GazeButton(new Rect(pos.x + 40, pos.y - 80, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
                     }
                 }
             }
-            else troopTypeSelected = true;
+            else showInfoPanel = true;
         }
         else if (isSending && hex.GetComponent<HexField>().InRange) // troops are being sent
         {
@@ -204,7 +207,7 @@ public class MilitaryMenu : MonoBehaviour {
             {
                 gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "MOVE HERE", myStyle, moving));
             }
-            troopTypeSelected = false;
+            showInfoPanel = false;
             gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
                 
         }
@@ -221,7 +224,7 @@ public class MilitaryMenu : MonoBehaviour {
         ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
         menuOpen = false;
         clicked = false;
-        troopTypeSelected = false;
+        showInfoPanel = false;
     }
 
     public static bool isOpen()
@@ -244,7 +247,7 @@ public class MilitaryMenu : MonoBehaviour {
         {
             if ((selectedHexagon.GetComponent<HexField>().owner == 1 && Network.isServer) || (selectedHexagon.GetComponent<HexField>().owner == 2 && Network.isClient))
             {
-                if (troopTypeSelected)
+                if (showInfoPanel)
                 {
                     if (selectedHexagon.GetComponent<HexField>().spec is MilitarySpecialisation)
                     {
