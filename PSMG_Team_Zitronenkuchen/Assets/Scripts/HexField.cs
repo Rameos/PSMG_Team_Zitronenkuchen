@@ -214,11 +214,11 @@ public class HexField : MonoBehaviour {
         gameObject.AddComponent<AudioSource>();
         audio.PlayOneShot(spaceShipRising);
 
-        Vector3 elevate = new Vector3 (0.0f, 0.2f, 0.0f);
+        Vector3 elevate = new Vector3 (0.0f, 0.23f, 0.0f);
         if (spaceship != null)
         {
             elevate += spaceship.transform.position;
-            spaceship.transform.position = Vector3.Lerp(spaceship.transform.position, elevate, 0.1f);
+            spaceship.transform.position = Vector3.Lerp(spaceship.transform.position, elevate, 0.12f);
             
         }
             
@@ -231,8 +231,8 @@ public class HexField : MonoBehaviour {
             tempSpaceship.transform.Translate(direction * 18 * Time.deltaTime);
             if (Mathf.Abs(tempSpaceship.transform.position.x - destinationHex.transform.position.x) <= 0.018f && Mathf.Abs(tempSpaceship.transform.position.z - destinationHex.transform.position.z) <= 0.008f)
             {
+                
                 Destroy(tempSpaceship);
-                Debug.Log(destinationNeedsShip);
                 if (destinationNeedsShip)
                 {
                     destinationHex.GetComponent<HexField>().initiateTroopBuilding(CustomGameProperties.alienRace, destinationHex);
@@ -255,12 +255,12 @@ public class HexField : MonoBehaviour {
 
     public void unPrepareShip()
     {
-        Vector3 lower = new Vector3 (0.0f, - 0.2f, 0.0f);
+        Vector3 lower = new Vector3 (0.0f, - 0.25f, 0.0f);
 
         if (spaceship != null)
         {
             lower += spaceship.transform.position;
-            spaceship.transform.position = Vector3.Lerp(spaceship.transform.position, lower,0.1f);
+            spaceship.transform.position = Vector3.Lerp(spaceship.transform.position, lower,0.12f);
         }
             
     }
