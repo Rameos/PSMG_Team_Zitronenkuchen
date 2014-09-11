@@ -83,13 +83,11 @@ public class MilitaryMenu : MonoBehaviour {
         HexField currentField = gameObject.GetComponent<HexField>();
         attackingHex.GetComponent<HexField>().unPrepareShip();
         attackingHex.GetComponent<HexField>().sendShip(attackingHex, selectedHexagon);
-        
+
         mainController.sendTroops(selectedHexagon);
-        
+
 
         Debug.Log("Button4_Pressed");
-        foreach(GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter")) {
-            Destroy(highlighter);
         if (!clicked)
         {
             mainController.sendTroops(selectedHexagon);
@@ -102,6 +100,7 @@ public class MilitaryMenu : MonoBehaviour {
             clicked = true;
         }
     }
+
     // Attack here action
     public void button5_Action()
     {
