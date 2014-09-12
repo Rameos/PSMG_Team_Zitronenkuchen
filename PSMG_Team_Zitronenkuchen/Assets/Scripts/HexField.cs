@@ -203,7 +203,7 @@ public class HexField : MonoBehaviour {
         }
 
         if (!alreadyBuilt) {
-            spaceshipOrig = (selectedRace == 1) ? Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject : Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject;
+            spaceshipOrig = (selectedRace == 1) ? Resources.Load("spaceshipMIL", typeof(GameObject)) as GameObject : Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject;
             spaceship = Instantiate(spaceshipOrig, hexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
            
             spaceship.transform.parent = hexagon.transform;
