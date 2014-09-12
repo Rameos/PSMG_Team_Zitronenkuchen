@@ -190,8 +190,11 @@ public class HexField : MonoBehaviour {
         unitText.transform.Rotate(new Vector3(45, 0, 0));
     }
 
-    public void initiateTroopBuilding(int selectedRace, GameObject hexagon)
+    [RPC]
+    public void initiateTroopBuilding(int selectedRace, NetworkViewID id)
     {
+        NetworkView view = NetworkView.Find(id);
+        GameObject hexagon = view.gameObject;
         bool alreadyBuilt = false;
         foreach (Transform child in hexagon.transform)
         {
@@ -209,7 +212,7 @@ public class HexField : MonoBehaviour {
     }
 
     
-
+    [RPC]
     public void prepareShip()
     {
         //does not work yet
@@ -237,7 +240,9 @@ public class HexField : MonoBehaviour {
                 Destroy(tempSpaceship);
                 if (destinationNeedsShip)
                 {
-                    destinationHex.GetComponent<HexField>().initiateTroopBuilding(CustomGameProperties.alienRace, destinationHex);
+                    NetworkView view = destinationHex.networkView;
+                    NetworkViewID id = view.viewID;
+                    view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id);
 
                 }
             }
@@ -255,6 +260,7 @@ public class HexField : MonoBehaviour {
 
     }
 
+    [RPC]
     public void unPrepareShip()
     {
         Vector3 lower = new Vector3 (0.0f, - 0.25f, 0.0f);
@@ -267,8 +273,14 @@ public class HexField : MonoBehaviour {
             
     }
 
-    public void sendShip(GameObject origin, GameObject destination)
+    [RPC]
+    public void sendShip(NetworkViewID originId, NetworkViewID destinationId)
     {
+        NetworkView originView = NetworkView.Find(originId);
+        GameObject origin = originView.gameObject;
+        NetworkView destinationView = NetworkView.Find(destinationId);
+        GameObject destination = destinationView.gameObject;
+
         Vector3 destinationLoc = destination.transform.position;
         Vector3 movement = origin.transform.position - destinationLoc;
 

@@ -597,7 +597,14 @@ public class MainController : MonoBehaviour {
         {
             earn(150);
             int builder = Network.isServer ? 1:0;
+            destination.GetComponent<HexField>().owner = Network.isServer ? 1 : 2;
             destination.networkView.RPC("buildMilitary", RPCMode.AllBuffered, destination.networkView.viewID, selectedRace, builder);
+            Specialisation spec = new MilitarySpecialisation(destination, destination.transform.position);
+            buildingNodes.Add(spec);
+            audio.PlayOneShot(building);
+            destination.GetComponent<HexField>().isFilled = true;
+            destination.GetComponent<HexField>().spec = spec;
+            destination.networkView.RPC("setSpecialisation", RPCMode.AllBuffered, "Military");
             foreach (Specialisation node in specialisedNodes)
             {
                 if (destination.Equals(node.Hex))
