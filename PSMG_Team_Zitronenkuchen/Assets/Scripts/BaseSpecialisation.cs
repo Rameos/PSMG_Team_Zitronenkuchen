@@ -93,4 +93,22 @@ public class BaseSpecialisation : Specialisation
             }
         }
     }
+
+    public string WeaponName
+    {
+        get
+        {
+            switch (weaponType)
+            {
+                case 1:
+                    return "LASER";
+                case 2:
+                    return "PROTONS";
+                case 3:
+                    return "EMP";
+                default:
+                    return "NONE";
+            }
+        }
+    }
 }

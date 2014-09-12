@@ -41,6 +41,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
                 // field set to military or base
                 if ((hit.transform.gameObject.GetComponent<HexField>().owner == 1 && Network.isServer) || (hit.transform.gameObject.GetComponent<HexField>().owner == 2 && Network.isClient))
                 {
+                    //necessary???!!!
                     if (hit.transform.gameObject.GetComponent<HexField>().specialisation == "Military")
                     {
                         if (((MilitarySpecialisation)hit.transform.gameObject.GetComponent<HexField>().spec).RecruitCounter == 0) showMilitaryMenu(pos);

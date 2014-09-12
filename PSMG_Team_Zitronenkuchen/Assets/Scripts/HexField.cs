@@ -178,7 +178,7 @@ public class HexField : MonoBehaviour {
         //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         basicBuilding.transform.parent = selectedHexagon.transform;
-        GameObject unitText = new GameObject();
+        /*GameObject unitText = new GameObject();
         TextMesh text = unitText.AddComponent<TextMesh>();
         text.characterSize = 0.1f;
         Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
@@ -187,7 +187,7 @@ public class HexField : MonoBehaviour {
         text.anchor = TextAnchor.MiddleCenter;
         unitText.transform.parent = selectedHexagon.transform;
         unitText.transform.position = selectedHexagon.transform.position;
-        unitText.transform.Rotate(new Vector3(45, 0, 0));
+        unitText.transform.Rotate(new Vector3(45, 0, 0));*/
     }
 
     [RPC]
@@ -337,7 +337,7 @@ public class HexField : MonoBehaviour {
         {
             decolorUnownedArea();
         }
-        GameObject unitText = new GameObject();
+        /*GameObject unitText = new GameObject();
         TextMesh text = unitText.AddComponent<TextMesh>();
         text.characterSize = 0.1f;
         Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
@@ -346,7 +346,7 @@ public class HexField : MonoBehaviour {
         text.anchor = TextAnchor.MiddleCenter;
         unitText.transform.parent = selectedHexagon.transform;
         unitText.transform.position = selectedHexagon.transform.position;
-        unitText.transform.Rotate(new Vector3(45, 0, 0));
+        unitText.transform.Rotate(new Vector3(45, 0, 0));*/
     }
 
     /*[RPC]
@@ -411,8 +411,9 @@ public class HexField : MonoBehaviour {
     [RPC]
     void showTroops(int troops)
     {
-        troopsOnField += troops;
-        gameObject.transform.GetComponentInChildren<TextMesh>().text = "" + troops;
+
+        //gameObject.transform.GetComponentInChildren<TextMesh>().text = "" + troops;
+
     }
 
     [RPC]

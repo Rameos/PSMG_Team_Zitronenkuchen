@@ -129,7 +129,7 @@ public class CreateGameField : MonoBehaviour
                             {
                                 obj.GetComponent<HexField>().owner = 1;
                                 obj.GetComponent<HexField>().colorOwnedArea();
-                                obj.GetComponent<HexField>().FinishedBuilding = true;
+                                //obj.GetComponent<HexField>().FinishedBuilding = true;
                             }
                         }
                         oneSet = true;
@@ -151,7 +151,7 @@ public class CreateGameField : MonoBehaviour
                             {
                                 obj.GetComponent<HexField>().owner = 2;
                                 obj.GetComponent<HexField>().colorOwnedArea();
-                                obj.GetComponent<HexField>().FinishedBuilding = true;   
+                                //obj.GetComponent<HexField>().FinishedBuilding = true;   
                             }
 
                         }
@@ -180,6 +180,6 @@ public class CreateGameField : MonoBehaviour
         nview.RPC("setSpecialisation", RPCMode.AllBuffered, "Base");
         nview.RPC("buildBase", RPCMode.AllBuffered, nviewId, selectedRace, owner);
         nview.RPC("fieldSet", RPCMode.AllBuffered);
-        nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)spec).Troops);
+        nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)spec).Troops, 0.0f);
     }
 }

@@ -30,7 +30,7 @@ public class MilitaryMenu : MonoBehaviour {
     private MainController mainController;
 
     private bool clicked = false;
-    private bool troopTypeSelected = false;
+    private bool showInfoPanel = false;
 
     private string type;
     private int troopSize;
@@ -144,7 +144,6 @@ public class MilitaryMenu : MonoBehaviour {
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.LASER;
         placeEmptySpaceShip();
         type = "LASER";
-        troopTypeSelected = true;
     }
     // Specialise on Protons
     public void button8_Action()
@@ -153,7 +152,6 @@ public class MilitaryMenu : MonoBehaviour {
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.PROTONS;
         placeEmptySpaceShip();
         type = "PROTONS";
-        troopTypeSelected = true;
     }
     // Specialise on EMP
     public void button9_Action()
@@ -162,7 +160,6 @@ public class MilitaryMenu : MonoBehaviour {
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.EMP;
         placeEmptySpaceShip();
         type = "EMP";
-        troopTypeSelected = true;
     }
 
     #endregion
@@ -176,7 +173,7 @@ public class MilitaryMenu : MonoBehaviour {
 
     public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
     {
-        Debug.Log("open mil menu on base");
+        
         //Debug.Log(hex.GetComponent<HexField>().owner);
 
         //Set the Actions of the Buttons
@@ -205,9 +202,10 @@ public class MilitaryMenu : MonoBehaviour {
         {
             if (!(hex.GetComponent<HexField>().spec is BaseSpecialisation))
             {
-                
+
                 if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).WeaponType == 0)
                 {
+                    showInfoPanel = false;
                     gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y - 180, 220, 200), "LASER \n FLEET", myStyle, laser));
                     gazeUI.Add(new GazeButton(new Rect(pos.x + 20, pos.y, 220, 200), " PROTON \n TORPEDO FLEET", myStyle, protons));
                     gazeUI.Add(new GazeButton(new Rect(pos.x - 240, pos.y, 220, 200), " EMP \n FLEET", myStyle, emp));
@@ -217,17 +215,23 @@ public class MilitaryMenu : MonoBehaviour {
                     if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).Troops < 100)
                     {
                         attackingHex = selectedHexagon;
-                        gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y + 50, 220, 200), "ATTACK", myStyle, attackButton));
-                        gazeUI.Add(new GazeButton(new Rect(pos.x + 40, pos.y - 80, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
-                        gazeUI.Add(new GazeButton(new Rect(pos.x - 260, pos.y - 80, 220, 200), "150 \n BUILD SHIPS", myStyle, buildButton));
+                        showInfoPanel = true;
+                        if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).RecruitCounter == 0)
+                        {
+                            gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y + 50, 220, 200), "ATTACK", myStyle, attackButton));
+                            gazeUI.Add(new GazeButton(new Rect(pos.x + 40, pos.y - 80, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
+                            gazeUI.Add(new GazeButton(new Rect(pos.x - 260, pos.y - 80, 220, 200), "150 \n BUILD SHIPS", myStyle, buildButton));
+                        }   
                     }
                     else
                     {
-                        gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "ATTACK", myStyle, attackButton));
-                        gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y + 50, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
+                        showInfoPanel = true;
+                        gazeUI.Add(new GazeButton(new Rect(pos.x - 260, pos.y - 80, 220, 200), "ATTACK", myStyle, attackButton));
+                        gazeUI.Add(new GazeButton(new Rect(pos.x + 40, pos.y - 80, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
                     }
                 }
             }
+            else showInfoPanel = true;
         }
         else if (isSending && hex.GetComponent<HexField>().InRange) // troops are being sent
         {
@@ -240,11 +244,11 @@ public class MilitaryMenu : MonoBehaviour {
             {
                 gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "MOVE HERE", myStyle, moving));
             }
+            showInfoPanel = false;
             gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
                 
         }
         //Debug.Log(gazeUI);
-
         menuOpen = true;
     }
 
@@ -257,6 +261,7 @@ public class MilitaryMenu : MonoBehaviour {
         ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
         menuOpen = false;
         clicked = false;
+        showInfoPanel = false;
     }
 
     private void placeEmptySpaceShip()
@@ -287,13 +292,18 @@ public class MilitaryMenu : MonoBehaviour {
         {
             if ((selectedHexagon.GetComponent<HexField>().owner == 1 && Network.isServer) || (selectedHexagon.GetComponent<HexField>().owner == 2 && Network.isClient))
             {
-                if (troopTypeSelected)
+                if (showInfoPanel)
                 {
                     if (selectedHexagon.GetComponent<HexField>().spec is MilitarySpecialisation)
                     {
                         troopSize = ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
+                        type = ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponName;
                     }
-                    else troopSize = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
+                    else
+                    {
+                        troopSize = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
+                        type = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponName;
+                    }
                     GUI.Box(new Rect(Screen.width / 2 - 130, Screen.height / 2 - 180, 250, 200), "FLEET TYPE: \n " + type + "\n FLEET SIZE: \n" + troopSize);
                 }
             }
