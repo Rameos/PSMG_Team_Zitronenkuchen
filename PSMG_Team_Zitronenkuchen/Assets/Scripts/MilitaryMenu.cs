@@ -133,12 +133,8 @@ public class MilitaryMenu : MonoBehaviour {
     {
         Debug.Log("LASER");
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.LASER;
-<<<<<<< HEAD
-=======
         placeEmptySpaceShip();
         type = "LASER";
-        troopTypeSelected = true;
->>>>>>> 3f0f55d23fdff88ce68353542c3c7baf13017745
     }
 
     private void placeEmptySpaceShip()
@@ -152,24 +148,16 @@ public class MilitaryMenu : MonoBehaviour {
     {
         Debug.Log("PROTONS");
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.PROTONS;
-<<<<<<< HEAD
-=======
         placeEmptySpaceShip();
         type = "PROTONS";
-        troopTypeSelected = true;
->>>>>>> 3f0f55d23fdff88ce68353542c3c7baf13017745
     }
     // Specialise on EMP
     public void button9_Action()
     {
         Debug.Log("EMP");
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.EMP;
-<<<<<<< HEAD
-=======
         placeEmptySpaceShip();
         type = "EMP";
-        troopTypeSelected = true;
->>>>>>> 3f0f55d23fdff88ce68353542c3c7baf13017745
     }
 
     #endregion
@@ -224,7 +212,7 @@ public class MilitaryMenu : MonoBehaviour {
                 {
                     if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).Troops < 100)
                     {
-<<<<<<< HEAD
+                        attackingHex = selectedHexagon;
                         showInfoPanel = true;
                         if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).RecruitCounter == 0)
                         {
@@ -232,12 +220,6 @@ public class MilitaryMenu : MonoBehaviour {
                             gazeUI.Add(new GazeButton(new Rect(pos.x + 40, pos.y - 80, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
                             gazeUI.Add(new GazeButton(new Rect(pos.x - 260, pos.y - 80, 220, 200), "150 \n BUILD SHIPS", myStyle, buildButton));
                         }   
-=======
-                        attackingHex = selectedHexagon;
-                        gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y + 50, 220, 200), "ATTACK", myStyle, attackButton));
-                        gazeUI.Add(new GazeButton(new Rect(pos.x + 40, pos.y - 80, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
-                        gazeUI.Add(new GazeButton(new Rect(pos.x - 260, pos.y - 80, 220, 200), "150 \n BUILD SHIPS", myStyle, buildButton));
->>>>>>> 3f0f55d23fdff88ce68353542c3c7baf13017745
                     }
                     else
                     {

@@ -10,14 +10,17 @@ public class SelectionMenu : MonoBehaviour {
 
     public int raceIndex;
 
+    public int width;
+    public int height;
+
     private static int selectedRaceIdx = -1; // 0 for research, 1 for military, 2 for economy
 
     private Vector3 noScale = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3 highlightScale = new Vector3 (0.05f, 0.05f, 0.0f);
 
-    private Rect scaleInset = new Rect(-10, 0, 240, 300);
+    private Rect scaleInset;
 
-    private Rect noScaleInset  = new Rect(0, 0, 220, 280);
+    private Rect noScaleInset; 
 
     private bool alienSelected = false;
 
@@ -28,6 +31,8 @@ public class SelectionMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        scaleInset  = new Rect(-10, 0, width + 20, height + 20);
+        noScaleInset = new Rect(0, 0, width, height);
        // GUI.matrix = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(horizRatio, vertRatio, 1));
         GameObject militaryAlien = GameObject.Find("MilitaryAlienRace");
         GameObject economyAlien = GameObject.Find("EconomyAlienRace");
