@@ -39,7 +39,8 @@ public class MilitaryMenu : MonoBehaviour {
     // Attack start action 
     public void button1_Action()
     {
-        attackingHex.GetComponent<HexField>().prepareShip();
+        NetworkView view = attackingHex.networkView;
+        view.RPC("prepareShip", RPCMode.AllBuffered);
         bool attack = true;
         int troops = mainController.moveTroops(selectedHexagon);
         if (troops > 0)
@@ -52,7 +53,8 @@ public class MilitaryMenu : MonoBehaviour {
     // Move troops start action
     public void button2_Action()
     {
-        attackingHex.GetComponent<HexField>().prepareShip();
+        NetworkView view = attackingHex.networkView;
+        view.RPC("prepareShip", RPCMode.AllBuffered);
         bool attack = false;
         int troops = mainController.moveTroops(selectedHexagon);
         //mainController.setRanges();
@@ -80,9 +82,12 @@ public class MilitaryMenu : MonoBehaviour {
     // Move here action
     public void button4_Action()
     {
-        HexField currentField = gameObject.GetComponent<HexField>();
-        attackingHex.GetComponent<HexField>().unPrepareShip();
-        attackingHex.GetComponent<HexField>().sendShip(attackingHex, selectedHexagon);
+        NetworkView attackingView = attackingHex.networkView;
+        NetworkViewID attackingViewId = attackingView.viewID;
+        attackingView.RPC("unPrepareShip", RPCMode.AllBuffered);
+        NetworkView selectedView = selectedHexagon.networkView;
+        NetworkViewID selectedViewId = selectedView.viewID;
+        attackingView.RPC("sendShip", RPCMode.AllBuffered, attackingViewId, selectedViewId);
 
         mainController.sendTroops(selectedHexagon);
 
@@ -104,10 +109,13 @@ public class MilitaryMenu : MonoBehaviour {
     // Attack here action
     public void button5_Action()
     {
-        mainController.sendAttack(selectedHexagon);
-
-        HexField currentField = gameObject.GetComponent<HexField>();
-        currentField.sendShip(attackingHex, selectedHexagon);
+        mainController.sendAttack(selectedHexagon);        
+        
+        NetworkView attackingView = attackingHex.networkView;
+        NetworkViewID attackingViewId = attackingView.viewID;
+        NetworkView selectedView = selectedHexagon.networkView;
+        NetworkViewID selectedViewId = selectedView.viewID;
+        attackingView.RPC("sendShip", RPCMode.AllBuffered, attackingViewId, selectedViewId);
 
         Debug.Log("Button5_Pressed");
         foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
@@ -120,7 +128,8 @@ public class MilitaryMenu : MonoBehaviour {
     public void button6_Action()
     {
         mainController.cancelTroopMovement();
-        attackingHex.GetComponent<HexField>().unPrepareShip();
+        NetworkView view = attackingHex.networkView;
+        view.RPC("unPrepareShip", RPCMode.AllBuffered);
         Debug.Log("Button6_Pressed");
         foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
         {
@@ -135,13 +144,6 @@ public class MilitaryMenu : MonoBehaviour {
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.LASER;
         placeEmptySpaceShip();
         type = "LASER";
-    }
-
-    private void placeEmptySpaceShip()
-    {
-        HexField currentField = selectedHexagon.GetComponent<HexField>();
-        currentField.initiateTroopBuilding(CustomGameProperties.alienRace, selectedHexagon);
-       
     }
     // Specialise on Protons
     public void button8_Action()
@@ -260,6 +262,14 @@ public class MilitaryMenu : MonoBehaviour {
         menuOpen = false;
         clicked = false;
         showInfoPanel = false;
+    }
+
+    private void placeEmptySpaceShip()
+    {
+        NetworkView view = selectedHexagon.networkView;
+        NetworkViewID id = view.viewID;
+        view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id);
+       
     }
 
     public static bool isOpen()
