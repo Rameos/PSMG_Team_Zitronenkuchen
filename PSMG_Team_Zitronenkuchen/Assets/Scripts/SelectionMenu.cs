@@ -18,9 +18,11 @@ public class SelectionMenu : MonoBehaviour {
     private Vector3 noScale = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3 highlightScale = new Vector3 (0.05f, 0.05f, 0.0f);
 
-    private Rect scaleInset;
+    private Rect scaleInsetMIL = new Rect (-10, 0, 329, 228);
+    private Rect scaleInsetECO = new Rect(-10, 0, 240, 300);
 
-    private Rect noScaleInset; 
+    private Rect noScaleInsetMIL = new Rect(0, 0, 309, 208);
+    private Rect noScaleInsetECO = new Rect(0, 0, 220, 280);
 
     private bool alienSelected = false;
 
@@ -31,8 +33,6 @@ public class SelectionMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        scaleInset  = new Rect(-10, 0, width + 20, height + 20);
-        noScaleInset = new Rect(0, 0, width, height);
        // GUI.matrix = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(horizRatio, vertRatio, 1));
         GameObject militaryAlien = GameObject.Find("MilitaryAlienRace");
         GameObject economyAlien = GameObject.Find("EconomyAlienRace");
@@ -44,7 +44,11 @@ public class SelectionMenu : MonoBehaviour {
     {
         if (raceIndex != selectedRaceIdx)
         {
-            gameObject.guiTexture.pixelInset = scaleInset;
+            if (raceIndex == 1)
+            {
+                gameObject.guiTexture.pixelInset = scaleInsetMIL;
+            }
+            else gameObject.guiTexture.pixelInset = scaleInsetECO;
             highlightText();
             audio.PlayOneShot(selectSound);
         }
@@ -103,13 +107,21 @@ public class SelectionMenu : MonoBehaviour {
     private void scaleAlienBigger(string tag)
     {
         GameObject alien = GameObject.FindGameObjectWithTag(tag);
-        alien.guiTexture.pixelInset = scaleInset;
+        if (tag == "MilitaryRace")
+        {
+            alien.guiTexture.pixelInset = scaleInsetMIL;
+        }
+        else alien.guiTexture.pixelInset = scaleInsetECO;
 
     }
     private void rescaleAlien(string tag)
     {
         GameObject alien = GameObject.FindGameObjectWithTag(tag);
-        alien.guiTexture.pixelInset = noScaleInset;
+        if (tag == "MilitaryRace")
+        {
+            alien.guiTexture.pixelInset = noScaleInsetMIL;
+        }
+        else alien.guiTexture.pixelInset = noScaleInsetECO;
         alien.guiText.color = Color.white;
     }
 
