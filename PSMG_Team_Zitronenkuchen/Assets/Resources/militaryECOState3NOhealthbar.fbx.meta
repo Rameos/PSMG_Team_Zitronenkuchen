@@ -1,20 +1,13 @@
 fileFormatVersion: 2
-guid: 8d48c1040b592d04494bbc7dcb2a16d6
+guid: 7324f8fa712200d44a12ffb942561759
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
-    100000: Building
-    100002: //RootNode
-    100004: Spaceship
-    400000: Building
-    400002: //RootNode
-    400004: Spaceship
-    2300000: Building
-    2300002: Spaceship
-    3300000: Building
-    3300002: Spaceship
-    4300000: Spaceship
-    4300002: Building
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Building
     7400000: Default Take
     9500000: //RootNode
   materials:

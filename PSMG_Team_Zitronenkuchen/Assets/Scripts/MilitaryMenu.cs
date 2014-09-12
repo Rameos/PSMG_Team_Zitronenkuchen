@@ -24,6 +24,7 @@ public class MilitaryMenu : MonoBehaviour {
     private GameObject economyBuilding;
 
     private GameObject selectedHexagon;
+    private GameObject attackingHex;
 
     private ChangeFieldStateOnClick fieldScript;
     private MainController mainController;
@@ -38,6 +39,7 @@ public class MilitaryMenu : MonoBehaviour {
     // Attack start action 
     public void button1_Action()
     {
+        attackingHex.GetComponent<HexField>().prepareShip();
         bool attack = true;
         int troops = mainController.moveTroops(selectedHexagon);
         if (troops > 0)
@@ -50,6 +52,7 @@ public class MilitaryMenu : MonoBehaviour {
     // Move troops start action
     public void button2_Action()
     {
+        attackingHex.GetComponent<HexField>().prepareShip();
         bool attack = false;
         int troops = mainController.moveTroops(selectedHexagon);
         //mainController.setRanges();
@@ -67,6 +70,7 @@ public class MilitaryMenu : MonoBehaviour {
             if (mainController.buildTroops())
             {
                 ((MilitarySpecialisation) selectedHexagon.GetComponent<HexField>().spec).RecruitCounter += 5;
+               
             }
             clicked = true;
             Debug.Log("Button3_Pressed");
@@ -76,6 +80,14 @@ public class MilitaryMenu : MonoBehaviour {
     // Move here action
     public void button4_Action()
     {
+        HexField currentField = gameObject.GetComponent<HexField>();
+        attackingHex.GetComponent<HexField>().unPrepareShip();
+        attackingHex.GetComponent<HexField>().sendShip(attackingHex, selectedHexagon);
+
+        mainController.sendTroops(selectedHexagon);
+
+
+        Debug.Log("Button4_Pressed");
         if (!clicked)
         {
             mainController.sendTroops(selectedHexagon);
@@ -88,10 +100,15 @@ public class MilitaryMenu : MonoBehaviour {
             clicked = true;
         }
     }
+
     // Attack here action
     public void button5_Action()
     {
         mainController.sendAttack(selectedHexagon);
+
+        HexField currentField = gameObject.GetComponent<HexField>();
+        currentField.sendShip(attackingHex, selectedHexagon);
+
         Debug.Log("Button5_Pressed");
         foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
         {
@@ -103,6 +120,7 @@ public class MilitaryMenu : MonoBehaviour {
     public void button6_Action()
     {
         mainController.cancelTroopMovement();
+        attackingHex.GetComponent<HexField>().unPrepareShip();
         Debug.Log("Button6_Pressed");
         foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
         {
@@ -113,17 +131,45 @@ public class MilitaryMenu : MonoBehaviour {
     // Specialise on Laser
     public void button7_Action()
     {
+        Debug.Log("LASER");
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.LASER;
+<<<<<<< HEAD
+=======
+        placeEmptySpaceShip();
+        type = "LASER";
+        troopTypeSelected = true;
+>>>>>>> 3f0f55d23fdff88ce68353542c3c7baf13017745
+    }
+
+    private void placeEmptySpaceShip()
+    {
+        HexField currentField = selectedHexagon.GetComponent<HexField>();
+        currentField.initiateTroopBuilding(CustomGameProperties.alienRace, selectedHexagon);
+       
     }
     // Specialise on Protons
     public void button8_Action()
     {
+        Debug.Log("PROTONS");
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.PROTONS;
+<<<<<<< HEAD
+=======
+        placeEmptySpaceShip();
+        type = "PROTONS";
+        troopTypeSelected = true;
+>>>>>>> 3f0f55d23fdff88ce68353542c3c7baf13017745
     }
     // Specialise on EMP
     public void button9_Action()
     {
+        Debug.Log("EMP");
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.EMP;
+<<<<<<< HEAD
+=======
+        placeEmptySpaceShip();
+        type = "EMP";
+        troopTypeSelected = true;
+>>>>>>> 3f0f55d23fdff88ce68353542c3c7baf13017745
     }
 
     #endregion
@@ -178,6 +224,7 @@ public class MilitaryMenu : MonoBehaviour {
                 {
                     if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).Troops < 100)
                     {
+<<<<<<< HEAD
                         showInfoPanel = true;
                         if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).RecruitCounter == 0)
                         {
@@ -185,6 +232,12 @@ public class MilitaryMenu : MonoBehaviour {
                             gazeUI.Add(new GazeButton(new Rect(pos.x + 40, pos.y - 80, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
                             gazeUI.Add(new GazeButton(new Rect(pos.x - 260, pos.y - 80, 220, 200), "150 \n BUILD SHIPS", myStyle, buildButton));
                         }   
+=======
+                        attackingHex = selectedHexagon;
+                        gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y + 50, 220, 200), "ATTACK", myStyle, attackButton));
+                        gazeUI.Add(new GazeButton(new Rect(pos.x + 40, pos.y - 80, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
+                        gazeUI.Add(new GazeButton(new Rect(pos.x - 260, pos.y - 80, 220, 200), "150 \n BUILD SHIPS", myStyle, buildButton));
+>>>>>>> 3f0f55d23fdff88ce68353542c3c7baf13017745
                     }
                     else
                     {

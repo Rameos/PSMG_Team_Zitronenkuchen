@@ -28,8 +28,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
             Vector3 pos = new Vector3(Screen.width / 2, Screen.height / 2, 0);
             Vector3 nullVect = new Vector3(0, 0, 0);
 
-            
-            Debug.Log(pos);
+          
             
             if (!set)
             {
