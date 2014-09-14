@@ -67,6 +67,7 @@ public class MilitaryMenu : MonoBehaviour {
     // Recruit action
     public void button3_Action()
     {
+
         if (!clicked)
         {
             if (mainController.buildTroops())
@@ -77,6 +78,7 @@ public class MilitaryMenu : MonoBehaviour {
             clicked = true;
             Debug.Log("Button3_Pressed");
         }
+        ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
         
     }
     // Move here action
@@ -258,7 +260,8 @@ public class MilitaryMenu : MonoBehaviour {
         GameObject field = GameObject.FindGameObjectWithTag("Field");
         int layerDef = LayerMask.NameToLayer("Default");
         moveToLayer(field.transform, layerDef);
-        ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
+        Debug.Log("Was is mit meinem hex passiert??" + selectedHexagon);
+        //ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
         menuOpen = false;
         clicked = false;
         showInfoPanel = false;
@@ -288,7 +291,7 @@ public class MilitaryMenu : MonoBehaviour {
     {
         GUI.skin = mySkin;
         //Draw every Button from the ArrayList gazeUI
-        if (isDrawing)
+        if (isDrawing && selectedHexagon != null)
         {
             if ((selectedHexagon.GetComponent<HexField>().owner == 1 && Network.isServer) || (selectedHexagon.GetComponent<HexField>().owner == 2 && Network.isClient))
             {

@@ -158,6 +158,7 @@ public class HexField : MonoBehaviour {
     [RPC]
     void buildBase(NetworkViewID id, int selectedRace, int callingOwner)
     {
+        
         ArrayList highlights = new ArrayList();
         string resource = "";
         ArrayList highlights2 = new ArrayList();
@@ -165,6 +166,7 @@ public class HexField : MonoBehaviour {
         Debug.Log("Build base for Race " + selectedRace);
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
+        
 
         //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         GameObject baseBuilding = null;
@@ -263,6 +265,7 @@ public class HexField : MonoBehaviour {
             setColor(resource, highlights);
             highlights.Clear();
         }
+        ChangeFieldStateOnClick.resetHighlighting(hexagon);
         
     }
 
@@ -341,6 +344,8 @@ public class HexField : MonoBehaviour {
             lower += spaceship.transform.position;
             spaceship.transform.position = Vector3.Lerp(spaceship.transform.position, lower,0.12f);
         }
+
+       
             
     }
 
@@ -367,6 +372,7 @@ public class HexField : MonoBehaviour {
 
         Destroy(spaceship);
         animateFlyingShip(origin, destination);
+        ChangeFieldStateOnClick.resetHighlighting(origin);
 
      
        
@@ -428,6 +434,7 @@ public class HexField : MonoBehaviour {
 
         setColor(resource, highlights);
         highlights.Clear();
+        ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
     }
 
     /*[RPC]
@@ -510,6 +517,7 @@ public class HexField : MonoBehaviour {
         highlights3.Clear();
         highlights4.Clear();
         highlights5.Clear();
+        ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
     }
 
     [RPC]
