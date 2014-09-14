@@ -293,6 +293,10 @@ public class HexField : MonoBehaviour {
             {
                 
                 Destroy(tempSpaceship);
+
+
+               
+
                 if (destinationNeedsShip)
                 {
                     NetworkView view = destinationHex.networkView;
@@ -309,9 +313,19 @@ public class HexField : MonoBehaviour {
     {
         Debug.Log("doing the thingi");
         tempSpaceship = Instantiate(spaceshipOrig, origin.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        tempSpaceship.tag = "temporaryship";
+
+        GameObject [] buggyShips = GameObject.FindGameObjectsWithTag("temporaryship");
+
+        foreach (GameObject ship in buggyShips)
+        {
+            if (ship != tempSpaceship)
+            {
+                Destroy(ship);
+            }
+        }
 
         destinationHex = destination;
-
         direction = (destination.transform.position - origin.transform.position).normalized * 0.04f;
         
 

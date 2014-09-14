@@ -431,6 +431,7 @@ public class MainController : MonoBehaviour {
                 else if (sendOrigin.Equals(node.Hex))
                 {
                     ((MilitarySpecialisation)node).Troops = 0;
+                    ((MilitarySpecialisation)node).WeaponType = 0;
                 }
             }
         }
