@@ -252,7 +252,9 @@ public class HexField : MonoBehaviour {
 
     private void animateFlyingShip(GameObject origin, GameObject destination)
     {
+        Debug.Log("doing the thingi");
         tempSpaceship = Instantiate(spaceshipOrig, origin.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+
         destinationHex = destination;
 
         direction = (destination.transform.position - origin.transform.position).normalized * 0.04f;
@@ -290,10 +292,11 @@ public class HexField : MonoBehaviour {
             if (child.name == "spaceshipECO(Clone)" || child.name == "spaceshipMIL(Clone)")
                destinationNeedsShip = false;
 
-             if (child.name == "baseECO(Clone)" || child.name == "baseMIL(Clone)")
+             if (child.name == "baseECO(Clone)")
                destinationNeedsShip = false;
         }
 
+        Destroy(spaceship);
         animateFlyingShip(origin, destination);
 
      
