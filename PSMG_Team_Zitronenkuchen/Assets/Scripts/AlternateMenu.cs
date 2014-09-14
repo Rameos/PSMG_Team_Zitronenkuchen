@@ -51,6 +51,7 @@ public class AlternateMenu : MonoBehaviour {
         else if (isEyetracker)
         {
             // start using eyetracker and mouse
+            CustomGameProperties.usesMouse = false;
             GazeControlComponent.Instance.StartCalibration();
             Application.LoadLevel("Selection_Menu");
         }
