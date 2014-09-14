@@ -28,8 +28,11 @@ public class ShowGazeCursor : MonoBehaviour
 
         }
 
-        Vector3 posGaze = (gazeModel.posGazeLeft + gazeModel.posGazeRight) * 0.5f;
-        GUI.DrawTexture(new Rect(posGaze.x, posGaze.y, gazeCursor.width, gazeCursor.height), gazeCursor);
+        if (!CustomGameProperties.usesMouse)
+        {
+            Vector3 posGaze = (gazeModel.posGazeLeft + gazeModel.posGazeRight) * 0.5f;
+            GUI.DrawTexture(new Rect(posGaze.x, posGaze.y, gazeCursor.width, gazeCursor.height), gazeCursor); 
+        }
         
     }
 }
