@@ -315,7 +315,7 @@ public class HexField : MonoBehaviour {
         }
         direction = (destination.transform.position - origin.transform.position).normalized * 0.04f;
         
-        if (spaceshipOrig.transform.name == "spaceshipMIL")
+        if (CustomGameProperties.alienRace == 1)
         {
             Debug.Log("!!!!!!");
             resource = "spaceshipMIL(Clone)/Sphere_001";
