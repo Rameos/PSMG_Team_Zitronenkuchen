@@ -22,6 +22,7 @@ public class HexField : MonoBehaviour {
     private GameObject tempSpaceship;
     private GameObject destinationHex;
     private Vector3 direction;
+    private Quaternion spaceshipQuaternion;
     GameObject spaceshipOrig;
     bool destinationNeedsShip = true;
     public AudioClip spaceShipRising = Resources.Load("UFO2", typeof(AudioClip)) as AudioClip;
@@ -233,6 +234,9 @@ public class HexField : MonoBehaviour {
     {
         NetworkView view = NetworkView.Find(id);
         GameObject hexagon = view.gameObject;
+
+        spaceshipQuaternion = (Network.isServer) ? Quaternion.Euler (0.0f, 0.0f, 0.0f) : Quaternion.Euler(0.0f, 180.0f, 0.0f);
+
         bool alreadyBuilt = false;
         foreach (Transform child in hexagon.transform)
         {
@@ -245,7 +249,7 @@ public class HexField : MonoBehaviour {
             ArrayList highlights = new ArrayList();
             
             spaceshipOrig = (selectedRace == 1) ? Resources.Load("spaceshipMIL", typeof(GameObject)) as GameObject : Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject;
-            spaceship = Instantiate(spaceshipOrig, hexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+            spaceship = Instantiate(spaceshipOrig, hexagon.transform.position, spaceshipQuaternion) as GameObject;
            
             spaceship.transform.parent = hexagon.transform;
 
@@ -330,7 +334,7 @@ public class HexField : MonoBehaviour {
     {
 
         
-        tempSpaceship = Instantiate(spaceshipOrig, origin.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        tempSpaceship = Instantiate(spaceshipOrig, origin.transform.position, spaceshipQuaternion) as GameObject;
         tempSpaceship.tag = "temporaryship";
         destinationHex = destination;
       
@@ -347,7 +351,8 @@ public class HexField : MonoBehaviour {
                 Destroy(ship);
             }
         }
-        direction = (destination.transform.position - origin.transform.position).normalized * 0.04f;
+        direction = (Network.isServer) ? (destination.transform.position - origin.transform.position).normalized * 0.04f : (destination.transform.position - origin.transform.position).normalized * 0.04f*(-1);
+        
         
        
 
@@ -408,6 +413,8 @@ public class HexField : MonoBehaviour {
         GameObject milBuildingState1 = null;
         GameObject milBuildingState2 = null;
         GameObject milBuildingState3 = null;
+
+        Quaternion buildingQuaternion = (Network.isServer) ? Quaternion.Euler(0.0f, 0.0f, 0.0f) : Quaternion.Euler(0.0f, 180.0f, 0.0f);
         
         if (selectedRace == 1)
         {
@@ -424,9 +431,9 @@ public class HexField : MonoBehaviour {
             highlights.Add(1);
             resource = "militaryECOState3(Clone)";
         }       
-        GameObject militaryBuildingState1 = Instantiate(milBuildingState1, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
-        GameObject militaryBuildingState2 = Instantiate(milBuildingState2, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
-        GameObject militaryBuildingState3 = Instantiate(milBuildingState3, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        GameObject militaryBuildingState1 = Instantiate(milBuildingState1, selectedHexagon.transform.position, buildingQuaternion) as GameObject;
+        GameObject militaryBuildingState2 = Instantiate(milBuildingState2, selectedHexagon.transform.position, buildingQuaternion) as GameObject;
+        GameObject militaryBuildingState3 = Instantiate(milBuildingState3, selectedHexagon.transform.position,buildingQuaternion) as GameObject;
         //selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
 
         militaryBuildingState1.transform.parent = selectedHexagon.transform;
