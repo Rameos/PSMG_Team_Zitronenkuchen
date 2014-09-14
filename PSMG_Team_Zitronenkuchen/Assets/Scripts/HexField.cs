@@ -158,6 +158,7 @@ public class HexField : MonoBehaviour {
     [RPC]
     void buildBase(NetworkViewID id, int selectedRace, int callingOwner)
     {
+        
         ArrayList highlights = new ArrayList();
         string resource = "";
         ArrayList highlights2 = new ArrayList();
@@ -165,8 +166,6 @@ public class HexField : MonoBehaviour {
         Debug.Log("Build base for Race " + selectedRace);
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-
-        //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         GameObject baseBuilding = null;
         if (selectedRace == 1)
         {
@@ -189,20 +188,7 @@ public class HexField : MonoBehaviour {
         GameObject basicBuilding = Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         selectedHexagon.GetComponent<HexField>().owner = callingOwner;
         FinishedBuilding = true;
-        //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
-        //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         basicBuilding.transform.parent = selectedHexagon.transform;
-        /*GameObject unitText = new GameObject();
-        TextMesh text = unitText.AddComponent<TextMesh>();
-        text.characterSize = 0.1f;
-        Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-        text.font = font;
-        text.renderer.material = font.material;
-        text.anchor = TextAnchor.MiddleCenter;
-        unitText.transform.parent = selectedHexagon.transform;
-        unitText.transform.position = selectedHexagon.transform.position;
-        unitText.transform.Rotate(new Vector3(45, 0, 0));*/
-        
         setColor(resource, highlights);
         setColor(resource2, highlights2);
         highlights.Clear();
@@ -213,14 +199,13 @@ public class HexField : MonoBehaviour {
     {
         Material highlightServer = Resources.Load("Materials/Red", typeof(Material)) as Material;
         Material highlightClient = Resources.Load("Materials/Blue", typeof(Material)) as Material;
-        Debug.Log(highlightServer);
         Transform element = transform.Find(resource);
         Debug.Log(element);
         Material[] mats;
         mats = element.renderer.materials;
         foreach (int num in highlights)
         {
-            if (CustomGameProperties.conntectionType == 1)
+            if (owner == 1)
             {
                 mats[num] = highlightServer;
             }
@@ -263,6 +248,7 @@ public class HexField : MonoBehaviour {
             setColor(resource, highlights);
             highlights.Clear();
         }
+        ChangeFieldStateOnClick.resetHighlighting(hexagon);
         
     }
 
@@ -313,6 +299,9 @@ public class HexField : MonoBehaviour {
     {
         Debug.Log("doing the thingi");
         tempSpaceship = Instantiate(spaceshipOrig, origin.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+        destinationHex = destination;
+        string resource = "";
+        ArrayList highlights = new ArrayList();
         tempSpaceship.tag = "temporaryship";
 
         GameObject [] buggyShips = GameObject.FindGameObjectsWithTag("temporaryship");
@@ -324,10 +313,21 @@ public class HexField : MonoBehaviour {
                 Destroy(ship);
             }
         }
-
-        destinationHex = destination;
         direction = (destination.transform.position - origin.transform.position).normalized * 0.04f;
         
+        if (CustomGameProperties.alienRace == 1)
+        {
+            Debug.Log("!!!!!!");
+            resource = "spaceshipMIL(Clone)/Sphere_001";
+            highlights = new ArrayList() { 1 };
+        }
+        else
+        {
+            resource = "spaceshipECO(Clone)";
+            highlights = new ArrayList() { 1, 2 };
+        }
+        setColor(resource, highlights);
+        highlights.Clear();
 
     }
 
@@ -341,6 +341,8 @@ public class HexField : MonoBehaviour {
             lower += spaceship.transform.position;
             spaceship.transform.position = Vector3.Lerp(spaceship.transform.position, lower,0.12f);
         }
+
+       
             
     }
 
@@ -367,6 +369,7 @@ public class HexField : MonoBehaviour {
 
         Destroy(spaceship);
         animateFlyingShip(origin, destination);
+        ChangeFieldStateOnClick.resetHighlighting(origin);
 
      
        
@@ -428,6 +431,7 @@ public class HexField : MonoBehaviour {
 
         setColor(resource, highlights);
         highlights.Clear();
+        ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
     }
 
     /*[RPC]
@@ -510,6 +514,7 @@ public class HexField : MonoBehaviour {
         highlights3.Clear();
         highlights4.Clear();
         highlights5.Clear();
+        ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
     }
 
     [RPC]
