@@ -457,7 +457,7 @@ public class HexField : MonoBehaviour {
             ecoBuildingState3 = Resources.Load("economyMILState3", typeof(GameObject)) as GameObject;
             highlights.Add(2);
             highlights.Add(4);
-            resource = "economyMILState2(Clone)/Cylinder_001";
+            resource = "economyMILState2(Clone)/Cylinder_002";
             resource2 = "economyMILState3(Clone)/Cylinder_001";
         }
         else
