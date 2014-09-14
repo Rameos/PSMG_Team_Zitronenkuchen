@@ -308,12 +308,12 @@ public class MainController : MonoBehaviour {
             if (node is MilitarySpecialisation)
             {
                 NetworkView nview = node.Hex.networkView;
-                nview.RPC("showTroops", RPCMode.AllBuffered, ((MilitarySpecialisation)node).Troops);
+                //nview.RPC("showTroops", RPCMode.AllBuffered, ((MilitarySpecialisation)node).Troops);
             }
             else if (node is BaseSpecialisation)
             {
                 NetworkView nview = node.Hex.networkView;
-                nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)node).Troops);
+                //nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)node).Troops);
             }
            
         }

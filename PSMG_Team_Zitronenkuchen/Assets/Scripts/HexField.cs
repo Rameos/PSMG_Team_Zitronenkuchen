@@ -158,6 +158,10 @@ public class HexField : MonoBehaviour {
     [RPC]
     void buildBase(NetworkViewID id, int selectedRace, int callingOwner)
     {
+        ArrayList highlights = new ArrayList();
+        string resource = "";
+        ArrayList highlights2 = new ArrayList();
+        string resource2 = "";
         Debug.Log("Build base for Race " + selectedRace);
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
@@ -167,10 +171,20 @@ public class HexField : MonoBehaviour {
         if (selectedRace == 1)
         {
             baseBuilding = Resources.Load("baseMIL", typeof(GameObject)) as GameObject;
+            highlights.Add(1);
+            resource = "baseMIL(Clone)/Cylinder";
         }
         else
         {
             baseBuilding = Resources.Load("baseECO", typeof(GameObject)) as GameObject;
+            highlights.Add(2);
+            highlights.Add(3);
+            highlights.Add(4);
+            resource = "baseECO(Clone)/Silo";
+            //spaceship
+            highlights2.Add(1);
+            highlights2.Add(2);
+            resource2 = "baseECO(Clone)/Spaceship";
         }
         GameObject basicBuilding = Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         selectedHexagon.GetComponent<HexField>().owner = callingOwner;
@@ -188,6 +202,31 @@ public class HexField : MonoBehaviour {
         unitText.transform.parent = selectedHexagon.transform;
         unitText.transform.position = selectedHexagon.transform.position;
         unitText.transform.Rotate(new Vector3(45, 0, 0));*/
+        
+        setColor(resource, highlights);
+        setColor(resource2, highlights2);
+        highlights.Clear();
+        highlights2.Clear();
+    }
+
+    private void setColor(string resource, ArrayList highlights)
+    {
+        Material highlightServer = Resources.Load("Materials/Red", typeof(Material)) as Material;
+        Material highlightClient = Resources.Load("Materials/Blue", typeof(Material)) as Material;
+        Debug.Log(highlightServer);
+        Transform element = transform.Find(resource);
+        Debug.Log(element);
+        Material[] mats;
+        mats = element.renderer.materials;
+        foreach (int num in highlights)
+        {
+            if (CustomGameProperties.conntectionType == 1)
+            {
+                mats[num] = highlightServer;
+            }
+            else mats[num] = highlightClient;
+        }
+        element.renderer.materials = mats;
     }
 
     [RPC]
@@ -203,10 +242,26 @@ public class HexField : MonoBehaviour {
         }
 
         if (!alreadyBuilt) {
+            string resource = "";
+            ArrayList highlights = new ArrayList();
+            
             spaceshipOrig = (selectedRace == 1) ? Resources.Load("spaceshipMIL", typeof(GameObject)) as GameObject : Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject;
             spaceship = Instantiate(spaceshipOrig, hexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
            
             spaceship.transform.parent = hexagon.transform;
+
+            if (selectedRace == 1)
+            {
+                resource = "spaceshipMIL(Clone)/Sphere_001";
+                highlights = new ArrayList() { 1 };
+            }
+            else
+            {
+                resource = "spaceshipECO(Clone)";
+                highlights = new ArrayList() { 1, 2 };
+            }
+            setColor(resource, highlights);
+            highlights.Clear();
         }
         
     }
@@ -303,6 +358,9 @@ public class HexField : MonoBehaviour {
     [RPC]
     void buildMilitary(NetworkViewID id, int selectedRace, int builder)
     {
+        ArrayList highlights = new ArrayList();
+        string resource = "";
+
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
         GameObject milBuildingState1 = null;
@@ -320,6 +378,9 @@ public class HexField : MonoBehaviour {
             milBuildingState1 = Resources.Load("militaryECOState1", typeof(GameObject)) as GameObject;
             milBuildingState2 = Resources.Load("militaryECOState2", typeof(GameObject)) as GameObject; 
             milBuildingState3 = Resources.Load("militaryECOState3", typeof(GameObject)) as GameObject;
+
+            highlights.Add(1);
+            resource = "militaryECOState3(Clone)";
         }       
         GameObject militaryBuildingState1 = Instantiate(milBuildingState1, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         GameObject militaryBuildingState2 = Instantiate(milBuildingState2, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
@@ -347,6 +408,9 @@ public class HexField : MonoBehaviour {
         unitText.transform.parent = selectedHexagon.transform;
         unitText.transform.position = selectedHexagon.transform.position;
         unitText.transform.Rotate(new Vector3(45, 0, 0));*/
+
+        setColor(resource, highlights);
+        highlights.Clear();
     }
 
     /*[RPC]
@@ -371,6 +435,16 @@ public class HexField : MonoBehaviour {
     [RPC]
     void buildEconomy(NetworkViewID id, int selectedRace)
     {
+        ArrayList highlights = new ArrayList();
+        ArrayList highlights3 = new ArrayList();
+        ArrayList highlights4 = new ArrayList();
+        ArrayList highlights5 = new ArrayList();
+        string resource = "";
+        string resource2 = "";
+        string resource3 = "";
+        string resource4 = "";
+        string resource5 = "";
+
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
         GameObject ecoBuildingState1 = null;
@@ -381,12 +455,24 @@ public class HexField : MonoBehaviour {
             ecoBuildingState1 = Resources.Load("economyMILState1", typeof(GameObject)) as GameObject;
             ecoBuildingState2 = Resources.Load("economyMILState2", typeof(GameObject)) as GameObject;
             ecoBuildingState3 = Resources.Load("economyMILState3", typeof(GameObject)) as GameObject;
+            highlights.Add(2);
+            highlights.Add(4);
+            resource = "economyMILState2(Clone)/Cylinder_001";
+            resource2 = "economyMILState3(Clone)/Cylinder_001";
         }
         else
         {
             ecoBuildingState1 = Resources.Load("economyECOState1", typeof(GameObject)) as GameObject;
             ecoBuildingState2 = Resources.Load("economyECOState2", typeof(GameObject)) as GameObject;
             ecoBuildingState3 = Resources.Load("economyECOState3", typeof(GameObject)) as GameObject;
+            resource3 = "economyECOState1(Clone)";
+            highlights3.Add(1);
+            resource4 = "economyECOState2(Clone)";
+            highlights4.Add(1);
+            highlights4.Add(4);
+            resource5 = "economyECOState3(Clone)";
+            highlights5.Add(1);
+            highlights5.Add(3);
         }
         GameObject economyBuildingState1 = Instantiate(ecoBuildingState1, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         GameObject economyBuildingState2 = Instantiate(ecoBuildingState2, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
@@ -397,6 +483,16 @@ public class HexField : MonoBehaviour {
         economyBuildingState3.transform.parent = selectedHexagon.transform;
         economyBuildingState2.SetActive(false);
         economyBuildingState3.SetActive(false);
+
+        setColor(resource, highlights);
+        setColor(resource2, highlights);
+        setColor(resource3, highlights3);
+        setColor(resource4, highlights4);
+        setColor(resource5, highlights5);
+        highlights.Clear();
+        highlights3.Clear();
+        highlights4.Clear();
+        highlights5.Clear();
     }
 
     [RPC]
