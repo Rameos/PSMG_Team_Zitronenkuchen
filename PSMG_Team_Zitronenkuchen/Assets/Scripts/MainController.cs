@@ -35,6 +35,29 @@ public class MainController : MonoBehaviour {
         {
             Application.LoadLevel("Alternate_Main_Menu");
         }
+
+        foreach (Specialisation node in specialisedNodes)
+        {
+            if (node is MilitarySpecialisation)
+            {
+                Healthbar[] healthbars = node.Hex.GetComponentsInChildren<Healthbar>();
+                foreach (Healthbar bar in healthbars)
+                {
+                    NetworkView nview = bar.networkView;
+                    nview.RPC("showTroops", RPCMode.AllBuffered, ((MilitarySpecialisation)node).Troops);
+                } 
+            }
+            else if (node is BaseSpecialisation)
+            {
+                Healthbar[] healthbars = node.Hex.GetComponentsInChildren<Healthbar>();
+                foreach (Healthbar bar in healthbars)
+                {
+                    NetworkView nview = bar.networkView;
+                    nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)node).Troops);
+                }                
+            }
+
+        }
 	}
 
     void updateRessources()
@@ -303,20 +326,7 @@ public class MainController : MonoBehaviour {
         
         
         
-        foreach (Specialisation node in specialisedNodes)
-        {
-            if (node is MilitarySpecialisation)
-            {
-                NetworkView nview = node.Hex.networkView;
-                //nview.RPC("showTroops", RPCMode.AllBuffered, ((MilitarySpecialisation)node).Troops);
-            }
-            else if (node is BaseSpecialisation)
-            {
-                NetworkView nview = node.Hex.networkView;
-                //nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)node).Troops);
-            }
-           
-        }
+        
 
     }
 
