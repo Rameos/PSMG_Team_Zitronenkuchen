@@ -74,6 +74,7 @@ public class ConnectionBehaviour : MonoBehaviour
         {
             // client
             GUI.Label(new Rect(Screen.width / 2 - 150, Screen.height / 2 + 50 + 125, 300, 50), "Status: Connected as Client");
+            CustomGameProperties.conntectionType = 2;
             // disconnect button
             if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / + 80 + 125, 300, 50), "Disconnect"))
             {
@@ -85,6 +86,7 @@ public class ConnectionBehaviour : MonoBehaviour
         {
             // server
             GUI.Label(new Rect(Screen.width / 2 - 150, Screen.height / 2 + 50 + 125, 300, 50), "Status: Connected as Server");
+            CustomGameProperties.conntectionType = 1;
             // disconnect button
             if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 80 + 125, 300, 50), "Disconnect"))
             {
