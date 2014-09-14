@@ -204,7 +204,7 @@ public class MilitaryMenu : MonoBehaviour {
         {
             if (!(hex.GetComponent<HexField>().spec is BaseSpecialisation))
             {
-
+                Debug.Log(((MilitarySpecialisation)hex.GetComponent<HexField>().spec).WeaponType);
                 if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).WeaponType == 0)
                 {
                     showInfoPanel = false;

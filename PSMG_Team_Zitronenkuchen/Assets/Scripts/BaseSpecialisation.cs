@@ -90,6 +90,12 @@ public class BaseSpecialisation : Specialisation
                 case 3:
                     weaponType = EMP;
                     break;
+                case 0:
+                    weaponType = 0;
+                    break;
+                default:
+                    weaponType = 0;
+                    break;
             }
         }
     }
