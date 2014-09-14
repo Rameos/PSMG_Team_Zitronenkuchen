@@ -158,6 +158,7 @@ public class HexField : MonoBehaviour {
     [RPC]
     void buildBase(NetworkViewID id, int selectedRace, int callingOwner)
     {
+        
         ArrayList highlights = new ArrayList();
         string resource = "";
         ArrayList highlights2 = new ArrayList();
@@ -247,6 +248,7 @@ public class HexField : MonoBehaviour {
             setColor(resource, highlights);
             highlights.Clear();
         }
+        ChangeFieldStateOnClick.resetHighlighting(hexagon);
         
     }
 
@@ -277,6 +279,10 @@ public class HexField : MonoBehaviour {
             {
                 
                 Destroy(tempSpaceship);
+
+
+               
+
                 if (destinationNeedsShip)
                 {
                     NetworkView view = destinationHex.networkView;
@@ -291,10 +297,22 @@ public class HexField : MonoBehaviour {
 
     private void animateFlyingShip(GameObject origin, GameObject destination)
     {
+        Debug.Log("doing the thingi");
         tempSpaceship = Instantiate(spaceshipOrig, origin.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         destinationHex = destination;
         string resource = "";
         ArrayList highlights = new ArrayList();
+        tempSpaceship.tag = "temporaryship";
+
+        GameObject [] buggyShips = GameObject.FindGameObjectsWithTag("temporaryship");
+
+        foreach (GameObject ship in buggyShips)
+        {
+            if (ship != tempSpaceship)
+            {
+                Destroy(ship);
+            }
+        }
         direction = (destination.transform.position - origin.transform.position).normalized * 0.04f;
         
         if (spaceshipOrig.transform.name == "spaceshipMIL")
@@ -323,6 +341,8 @@ public class HexField : MonoBehaviour {
             lower += spaceship.transform.position;
             spaceship.transform.position = Vector3.Lerp(spaceship.transform.position, lower,0.12f);
         }
+
+       
             
     }
 
@@ -343,11 +363,13 @@ public class HexField : MonoBehaviour {
             if (child.name == "spaceshipECO(Clone)" || child.name == "spaceshipMIL(Clone)")
                destinationNeedsShip = false;
 
-             if (child.name == "baseECO(Clone)" || child.name == "baseMIL(Clone)")
+             if (child.name == "baseECO(Clone)")
                destinationNeedsShip = false;
         }
 
+        Destroy(spaceship);
         animateFlyingShip(origin, destination);
+        ChangeFieldStateOnClick.resetHighlighting(origin);
 
      
        
@@ -409,6 +431,7 @@ public class HexField : MonoBehaviour {
 
         setColor(resource, highlights);
         highlights.Clear();
+        ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
     }
 
     /*[RPC]
@@ -491,6 +514,7 @@ public class HexField : MonoBehaviour {
         highlights3.Clear();
         highlights4.Clear();
         highlights5.Clear();
+        ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
     }
 
     [RPC]

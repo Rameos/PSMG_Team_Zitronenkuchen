@@ -299,7 +299,7 @@ public class MainController : MonoBehaviour {
 
         //GUI.Label(new Rect(0, 0, 300, 150), ("Tirkid: " + tirkid + "   Research: " + researchPoints));
         GameObject ressourcelabel = GameObject.FindGameObjectWithTag("GUIRessources");
-        ressourcelabel.guiText.text = "Tirkid: " + tirkid; // +"   Research: " + researchPoints;
+        ressourcelabel.guiText.text = " " + tirkid; // +"   Research: " + researchPoints;
         
         
         
@@ -431,6 +431,7 @@ public class MainController : MonoBehaviour {
                 else if (sendOrigin.Equals(node.Hex))
                 {
                     ((MilitarySpecialisation)node).Troops = 0;
+                    ((MilitarySpecialisation)node).WeaponType = 0;
                 }
             }
         }
