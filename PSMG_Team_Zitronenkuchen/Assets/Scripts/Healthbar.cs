@@ -18,7 +18,7 @@ public class Healthbar : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 	    thisTransform = transform;
-        
+        troopSize = 0;
 	}
 	
 	// Update is called once per frame
@@ -27,16 +27,24 @@ public class Healthbar : MonoBehaviour {
         if (isFillState)
         {
             viewPortPosition.z = 100;
-            if (thisTransform.GetComponentInParent<HexField>().spec is MilitarySpecialisation)
-            {
-                troopSize = ((MilitarySpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops; 
-            }
-            else troopSize = ((BaseSpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops;
-            
+
+            //if (thisTransform.GetComponentInParent<HexField>().spec is MilitarySpecialisation)
+            //{
+            //    troopSize = ((MilitarySpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops;
+            //}
+            //else troopSize = ((BaseSpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops;
+
             troopPercentage = (float)troopSize / 100;
             fillTexture.guiTexture.pixelInset = new Rect(fillTexture.pixelInset.x, fillTexture.pixelInset.y, 75f * troopPercentage, fillTexture.pixelInset.height);
         }
         thisTransform.position = viewPortPosition;
 	}
+
+    [RPC]
+    public void showTroops(int troops)
+    {
+        //Debug.Log("show troops on " + gameObject.transform.parent.name + ", troops: "+troops);
+        troopSize = troops;
+    }
 }
 
