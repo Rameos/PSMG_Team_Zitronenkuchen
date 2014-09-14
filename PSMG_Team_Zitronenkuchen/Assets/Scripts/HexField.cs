@@ -200,7 +200,21 @@ public class HexField : MonoBehaviour {
         Material highlightServer = Resources.Load("Materials/Red", typeof(Material)) as Material;
         Material highlightClient = Resources.Load("Materials/Blue", typeof(Material)) as Material;
         Transform element = transform.Find(resource);
-        Debug.Log(element);
+
+        // element can be null because temporary spaceships are not children of hexfields
+        if (element == null)
+        {
+            if (CustomGameProperties.alienRace == 1)
+            {
+                element = tempSpaceship.transform.FindChild("Sphere_001").gameObject.transform;
+            }
+            else
+            {
+                element = tempSpaceship.transform;
+            }
+            
+        }
+
         Material[] mats;
         mats = element.renderer.materials;
         foreach (int num in highlights)
@@ -274,6 +288,23 @@ public class HexField : MonoBehaviour {
     {
         if (tempSpaceship != null)
         {
+            string resource = "";
+            ArrayList highlights = new ArrayList();
+            if (CustomGameProperties.alienRace == 1)
+            {
+                Debug.Log("!!!!!!");
+                resource = "spaceshipMIL(Clone)/Sphere_001";
+                highlights = new ArrayList() { 1 };
+            }
+            else
+            {
+                resource = "spaceshipECO(Clone)";
+                highlights = new ArrayList() { 1, 2 };
+            }
+            setColor(resource, highlights);
+            highlights.Clear();
+
+
             tempSpaceship.transform.Translate(direction * 18 * Time.deltaTime);
             if (Mathf.Abs(tempSpaceship.transform.position.x - destinationHex.transform.position.x) <= 0.018f && Mathf.Abs(tempSpaceship.transform.position.z - destinationHex.transform.position.z) <= 0.008f)
             {
@@ -297,12 +328,15 @@ public class HexField : MonoBehaviour {
 
     private void animateFlyingShip(GameObject origin, GameObject destination)
     {
-        Debug.Log("doing the thingi");
+
+        
         tempSpaceship = Instantiate(spaceshipOrig, origin.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
-        destinationHex = destination;
-        string resource = "";
-        ArrayList highlights = new ArrayList();
         tempSpaceship.tag = "temporaryship";
+        destinationHex = destination;
+      
+      
+
+        
 
         GameObject [] buggyShips = GameObject.FindGameObjectsWithTag("temporaryship");
 
@@ -315,19 +349,7 @@ public class HexField : MonoBehaviour {
         }
         direction = (destination.transform.position - origin.transform.position).normalized * 0.04f;
         
-        if (CustomGameProperties.alienRace == 1)
-        {
-            Debug.Log("!!!!!!");
-            resource = "spaceshipMIL(Clone)/Sphere_001";
-            highlights = new ArrayList() { 1 };
-        }
-        else
-        {
-            resource = "spaceshipECO(Clone)";
-            highlights = new ArrayList() { 1, 2 };
-        }
-        setColor(resource, highlights);
-        highlights.Clear();
+       
 
     }
 
