@@ -165,8 +165,6 @@ public class HexField : MonoBehaviour {
         Debug.Log("Build base for Race " + selectedRace);
         NetworkView view = NetworkView.Find(id);
         GameObject selectedHexagon = view.gameObject;
-
-        //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         GameObject baseBuilding = null;
         if (selectedRace == 1)
         {
@@ -189,20 +187,7 @@ public class HexField : MonoBehaviour {
         GameObject basicBuilding = Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         selectedHexagon.GetComponent<HexField>().owner = callingOwner;
         FinishedBuilding = true;
-        //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
-        //selectedHexagon.renderer.material = Resources.Load("baseMaterial", typeof(Material)) as Material;
         basicBuilding.transform.parent = selectedHexagon.transform;
-        /*GameObject unitText = new GameObject();
-        TextMesh text = unitText.AddComponent<TextMesh>();
-        text.characterSize = 0.1f;
-        Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-        text.font = font;
-        text.renderer.material = font.material;
-        text.anchor = TextAnchor.MiddleCenter;
-        unitText.transform.parent = selectedHexagon.transform;
-        unitText.transform.position = selectedHexagon.transform.position;
-        unitText.transform.Rotate(new Vector3(45, 0, 0));*/
-        
         setColor(resource, highlights);
         setColor(resource2, highlights2);
         highlights.Clear();
@@ -213,14 +198,13 @@ public class HexField : MonoBehaviour {
     {
         Material highlightServer = Resources.Load("Materials/Red", typeof(Material)) as Material;
         Material highlightClient = Resources.Load("Materials/Blue", typeof(Material)) as Material;
-        Debug.Log(highlightServer);
         Transform element = transform.Find(resource);
         Debug.Log(element);
         Material[] mats;
         mats = element.renderer.materials;
         foreach (int num in highlights)
         {
-            if (CustomGameProperties.conntectionType == 1)
+            if (owner == 1)
             {
                 mats[num] = highlightServer;
             }
@@ -309,9 +293,23 @@ public class HexField : MonoBehaviour {
     {
         tempSpaceship = Instantiate(spaceshipOrig, origin.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         destinationHex = destination;
-
+        string resource = "";
+        ArrayList highlights = new ArrayList();
         direction = (destination.transform.position - origin.transform.position).normalized * 0.04f;
         
+        if (spaceshipOrig.transform.name == "spaceshipMIL")
+        {
+            Debug.Log("!!!!!!");
+            resource = "spaceshipMIL(Clone)/Sphere_001";
+            highlights = new ArrayList() { 1 };
+        }
+        else
+        {
+            resource = "spaceshipECO(Clone)";
+            highlights = new ArrayList() { 1, 2 };
+        }
+        setColor(resource, highlights);
+        highlights.Clear();
 
     }
 
