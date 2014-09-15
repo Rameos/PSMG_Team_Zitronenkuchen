@@ -678,10 +678,6 @@ public class HexField : MonoBehaviour {
         GameObject hex = view.gameObject;
         //hex.GetComponent<HexField>().owner = 0;
         //hex.GetComponent<HexField>().specialisation = null;
-        Vector3 pos = hex.transform.position;
-        pos.y += 0.1f;
-        GameObject highlighter = Resources.Load("explo1", typeof(GameObject)) as GameObject;
-        Instantiate(highlighter, pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
         foreach (Transform child in hex.transform)
         {
             if (child.name != alienRace+"State3(Clone)" && child.name != "New Game Object")
