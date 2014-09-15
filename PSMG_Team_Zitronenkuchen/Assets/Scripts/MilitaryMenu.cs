@@ -306,6 +306,7 @@ public class MilitaryMenu : MonoBehaviour {
                     {
                         troopSize = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
                         type = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponName;
+                        Debug.Log(type);
                     }
                     GUI.Box(new Rect(Screen.width / 2 - 130, Screen.height / 2 - 180, 250, 200), "FLEET TYPE: \n " + type + "\n FLEET SIZE: \n" + troopSize);
                 }
