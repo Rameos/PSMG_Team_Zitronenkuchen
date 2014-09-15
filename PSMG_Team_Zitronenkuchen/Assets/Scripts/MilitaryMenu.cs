@@ -40,11 +40,12 @@ public class MilitaryMenu : MonoBehaviour {
     public void button1_Action()
     {
         NetworkView view = attackingHex.networkView;
-        view.RPC("prepareShip", RPCMode.AllBuffered);
+       
         bool attack = true;
         int troops = mainController.moveTroops(selectedHexagon);
         if (troops > 0)
         {
+            view.RPC("prepareShip", RPCMode.AllBuffered);
             mainController.startTroopSend(troops, attack);
         }
         Debug.Log("Button1_Pressed");
@@ -54,12 +55,13 @@ public class MilitaryMenu : MonoBehaviour {
     public void button2_Action()
     {
         NetworkView view = attackingHex.networkView;
-        view.RPC("prepareShip", RPCMode.AllBuffered);
+        
         bool attack = false;
         int troops = mainController.moveTroops(selectedHexagon);
         //mainController.setRanges();
         if (troops > 0)
         {
+            view.RPC("prepareShip", RPCMode.AllBuffered);
             mainController.startTroopSend(troops, attack);
         }
         Debug.Log("Button2_Pressed");

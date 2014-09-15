@@ -664,7 +664,6 @@ public class HexField : MonoBehaviour {
                 break;
             case 3:
                 state3.gameObject.SetActive(true);
-                state1.gameObject.SetActive(false);
                 state2.gameObject.SetActive(false);
                 break;
             default:
@@ -679,6 +678,7 @@ public class HexField : MonoBehaviour {
         GameObject hex = view.gameObject;
         //hex.GetComponent<HexField>().owner = 0;
         //hex.GetComponent<HexField>().specialisation = null;
+
         foreach (Transform child in hex.transform)
         {
             if (child.name != alienRace+"State3(Clone)" && child.name != "New Game Object")
