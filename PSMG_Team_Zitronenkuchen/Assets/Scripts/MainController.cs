@@ -428,24 +428,31 @@ public class MainController : MonoBehaviour {
                     {
                         if ((((MilitarySpecialisation)node).Troops + sendingTroops) <= 100) ((MilitarySpecialisation)node).Troops += sendingTroops;
                         else ((MilitarySpecialisation)node).Troops = 100;
+
                         ((MilitarySpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+                        Debug.Log("LOOK AT MY TYPE" + ((MilitarySpecialisation)node).WeaponType);
                     }
                     else if (node is BaseSpecialisation)
                     {
                         if ((((BaseSpecialisation)node).Troops + sendingTroops) <= 150) ((BaseSpecialisation)node).Troops += sendingTroops;
                         else ((BaseSpecialisation)node).Troops = 150;
                         ((BaseSpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+                        //Debug.Log("LOOK AT MY TYPE" + ((MilitarySpecialisation)node).WeaponType);
                     }
 
                 }
-                else if (sendOrigin.Equals(node.Hex))
+            }
+                foreach(Specialisation node in specialisedNodes) {
+                    if (sendOrigin.Equals(node.Hex))
                 {
                     ((MilitarySpecialisation)node).Troops = 0;
                     ((MilitarySpecialisation)node).WeaponType = 0;
                 }
+                 }
+                sendingTroops = 0;
             }
-        }
-        sendingTroops = 0;
+
+        
     }
 
     public void sendAttack(GameObject destination)
