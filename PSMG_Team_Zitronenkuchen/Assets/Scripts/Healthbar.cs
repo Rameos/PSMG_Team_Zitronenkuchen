@@ -23,18 +23,24 @@ public class Healthbar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        int fraction;
         Vector3 viewPortPosition = cam.WorldToViewportPoint(target.position + offset);
         if (isFillState)
         {
             viewPortPosition.z = 100;
 
-            //if (thisTransform.GetComponentInParent<HexField>().spec is MilitarySpecialisation)
-            //{
-            //    troopSize = ((MilitarySpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops;
-            //}
-            //else troopSize = ((BaseSpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops;
+            if (thisTransform.GetComponentInParent<HexField>().spec is MilitarySpecialisation)
+            {
+                troopSize = ((MilitarySpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops;
+                fraction = 100;
+            }
+            else
+            {
+                troopSize = ((BaseSpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops;
+                fraction = 150;
+            }
 
-            troopPercentage = (float)troopSize / 100;
+            troopPercentage = (float)troopSize / fraction;
             fillTexture.guiTexture.pixelInset = new Rect(fillTexture.pixelInset.x, fillTexture.pixelInset.y, 75f * troopPercentage, fillTexture.pixelInset.height);
         }
         thisTransform.position = viewPortPosition;
