@@ -664,7 +664,6 @@ public class HexField : MonoBehaviour {
                 break;
             case 3:
                 state3.gameObject.SetActive(true);
-                state1.gameObject.SetActive(false);
                 state2.gameObject.SetActive(false);
                 break;
             default:
