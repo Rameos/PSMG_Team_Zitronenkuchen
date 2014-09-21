@@ -40,9 +40,12 @@ public class MainController : MonoBehaviour {
         {
             if (node is MilitarySpecialisation)
             {
+                Debug.Log("I am military!");
                 Healthbar[] healthbars = node.Hex.GetComponentsInChildren<Healthbar>();
+                Debug.Log("mil: "+healthbars.Length+ "content: "+healthbars.ToString());
                 foreach (Healthbar bar in healthbars)
                 {
+                    Debug.Log("I have healthbars!");
                     NetworkView nview = bar.networkView;
                     nview.RPC("showTroops", RPCMode.AllBuffered, ((MilitarySpecialisation)node).Troops);
                 } 
@@ -50,8 +53,10 @@ public class MainController : MonoBehaviour {
             else if (node is BaseSpecialisation)
             {
                 Healthbar[] healthbars = node.Hex.GetComponentsInChildren<Healthbar>();
+                Debug.Log("base: " + healthbars.Length);
                 foreach (Healthbar bar in healthbars)
                 {
+                    Debug.Log(((BaseSpecialisation)node).Troops);
                     NetworkView nview = bar.networkView;
                     nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)node).Troops);
                 }                
