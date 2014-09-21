@@ -5,7 +5,7 @@ public class Healthbar : MonoBehaviour {
 
     public Transform target;
     public Vector3 offset = Vector3.up;
-    public bool isFillState = false;
+    public bool isFillState;
     public GUITexture fillTexture;
 
     private Transform thisTransform;
@@ -23,12 +23,26 @@ public class Healthbar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        
+	}
+
+    [RPC]
+    public void showTroops(int troops)
+    {
+        //Debug.Log("show troops on " + gameObject.transform.parent.name + ", troops: "+troops);
+        troopSize = troops;
+
+        //update
         int fraction;
         Vector3 viewPortPosition = cam.WorldToViewportPoint(target.position + offset);
         if (isFillState)
         {
             viewPortPosition.z = 100;
-
+            if (CustomGameProperties.cameraInUse == 2)
+            {
+                viewPortPosition.z = -100;
+            }
+            
             if (thisTransform.GetComponentInParent<HexField>().spec is MilitarySpecialisation)
             {
                 troopSize = ((MilitarySpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops;
@@ -42,15 +56,10 @@ public class Healthbar : MonoBehaviour {
 
             troopPercentage = (float)troopSize / fraction;
             fillTexture.guiTexture.pixelInset = new Rect(fillTexture.pixelInset.x, fillTexture.pixelInset.y, 75f * troopPercentage, fillTexture.pixelInset.height);
+            fillTexture.transform.localPosition = new Vector3(fillTexture.transform.localPosition.x, fillTexture.transform.localPosition.y, 100);
         }
         thisTransform.position = viewPortPosition;
-	}
-
-    [RPC]
-    public void showTroops(int troops)
-    {
-        //Debug.Log("show troops on " + gameObject.transform.parent.name + ", troops: "+troops);
-        troopSize = troops;
+        
     }
 }
 
