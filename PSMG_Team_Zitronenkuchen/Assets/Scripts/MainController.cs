@@ -24,6 +24,7 @@ public class MainController : MonoBehaviour {
         // researchPoints = 0;
         Debug.Log("Start");
         InvokeRepeating("updateRessources", 1, 1);
+        InvokeRepeating("updateTroops", 1, 0.2f);
         //InvokeRepeating("updateBuildingStates", 1, 1);
 	}
 
@@ -65,6 +66,34 @@ public class MainController : MonoBehaviour {
         }
 	}
 
+    void updateTroops()
+    {
+        foreach (Specialisation node in specialisedNodes)
+        {
+            if (node is MilitarySpecialisation)
+            {
+                if (((MilitarySpecialisation)node).Troops < 100)
+                {
+                    if (((MilitarySpecialisation)node).RecruitCounter >= 1)
+                    {
+                        //Debug.Log("Recruitcounter: " + ((MilitarySpecialisation)node).RecruitCounter + ", Time:" + Time.time);
+
+                        ((MilitarySpecialisation)node).recruit();
+                        ((MilitarySpecialisation)node).RecruitCounter--;
+
+
+                    }
+                    //Debug.Log(((MilitarySpecialisation)node).Troops + " troops on " + node.Pos);
+                    //Debug.Log("RECRUIT COUNTER : " + ((MilitarySpecialisation)node).RecruitCounter);
+                }
+                else
+                {
+                    ((MilitarySpecialisation)node).RecruitCounter = 0;
+                }
+            }
+        }
+    }
+
     void updateRessources()
     {
         updateBuildingStates();
@@ -81,23 +110,6 @@ public class MainController : MonoBehaviour {
             //{
             //    research(node.Level * 5);
             //}
-            else if (node is MilitarySpecialisation)
-            {
-                if (((MilitarySpecialisation)node).Troops < 100)
-                {
-                    if (((MilitarySpecialisation)node).RecruitCounter >= 1)
-                    {
-                        Debug.Log("Recruitcounter: "+((MilitarySpecialisation)node).RecruitCounter+", Time:"+Time.time);
-
-                        ((MilitarySpecialisation)node).recruit();
-                            ((MilitarySpecialisation)node).RecruitCounter--;
-                      
-                             
-                    }
-                    //Debug.Log(((MilitarySpecialisation)node).Troops + " troops on " + node.Pos);
-                    //Debug.Log("RECRUIT COUNTER : " + ((MilitarySpecialisation)node).RecruitCounter);
-                }              
-            }
             //else if (node is BaseSpecialisation)
             //{
             //    if (((BaseSpecialisation)node).Troops < 150)
@@ -495,62 +507,74 @@ public class MainController : MonoBehaviour {
                 if (node is MilitarySpecialisation) troops = ((MilitarySpecialisation)node).Troops;
                 if (node is BaseSpecialisation) troops = ((BaseSpecialisation)node).Troops;
                 bool attackSuccess = false;
+                //0.1 bonus for defender(1.0-0.9 = 0.1)
+                float attackModifier = 0.9f;
+                switch (attackerWeaponType)
+                {
+                    case MilitarySpecialisation.LASER:
+                        switch (defenderWeaponType)
+                        {
+                            case MilitarySpecialisation.LASER:
+                                // same weapon, attackmodifier not changed
+                                break;
+                            case MilitarySpecialisation.PROTONS:
+                                // attacker weapon beats defender weapon
+                                attackModifier += 0.2f;
+                                break;
+                            case MilitarySpecialisation.EMP:
+                                // defender weapon beats attacker weapon
+                                attackModifier -= 0.2f;
+                                break;
+                        }
+                        break;
+                    case MilitarySpecialisation.PROTONS:
+                        switch (defenderWeaponType)
+                        {
+                            case MilitarySpecialisation.LASER:
+                                // defender weapon beats attacker weapon
+                                attackModifier -= 0.2f;
+                                break;
+                            case MilitarySpecialisation.PROTONS:
+                                // same weapon, attackmodifier not changed
+                                break;
+                            case MilitarySpecialisation.EMP:
+                                // attacker weapon beats defender weapon
+                                attackModifier += 0.2f;
+                                break;
+                        }
+                        break;
+                    case MilitarySpecialisation.EMP:
+                        switch (defenderWeaponType)
+                        {
+                            case MilitarySpecialisation.LASER:
+                                // attacker weapon beats defender weapon
+                                attackModifier += 0.2f;
+                                break;
+                            case MilitarySpecialisation.PROTONS:
+                                // defender weapon beats attacker weapon
+                                attackModifier -= 0.2f;
+                                break;
+                            case MilitarySpecialisation.EMP:
+                                // same weapon, attackmodifier not changed
+                                break;
+                        }
+                        break;
+                }
+                Debug.Log("SentTroops: " + sentTroops + "; AttackModifier: " + attackModifier);
+                sentTroops = (int) (attackModifier * sentTroops);
+                Debug.Log("SentTroops with modifier: " + sentTroops);
                 if (troops < sentTroops)
                 {
                     attackSuccess = true;
-                }                
-                else if(troops > sentTroops)
+                }
+                else if (troops > sentTroops)
                 {
                     attackSuccess = false;
                 }
-                // tropps == senttroops
-                else
+                else if (troops == sentTroops)
                 {
-                    switch (attackerWeaponType)
-                    {
-                        case MilitarySpecialisation.LASER:
-                            switch (defenderWeaponType)
-                            {
-                                case MilitarySpecialisation.LASER:
-                                    attackSuccess = false;
-                                    break;
-                                case MilitarySpecialisation.PROTONS:
-                                    attackSuccess = true;
-                                    break;
-                                case MilitarySpecialisation.EMP:
-                                    attackSuccess = false;
-                                    break;
-                            }
-                            break;
-                        case MilitarySpecialisation.PROTONS:
-                            switch (defenderWeaponType)
-                            {
-                                case MilitarySpecialisation.LASER:
-                                    attackSuccess = false;
-                                    break;
-                                case MilitarySpecialisation.PROTONS:
-                                    attackSuccess = false;
-                                    break;
-                                case MilitarySpecialisation.EMP:
-                                    attackSuccess = true;
-                                    break;
-                            }
-                            break;
-                        case MilitarySpecialisation.EMP:
-                            switch (defenderWeaponType)
-                            {
-                                case MilitarySpecialisation.LASER:
-                                    attackSuccess = true;
-                                    break;
-                                case MilitarySpecialisation.PROTONS:
-                                    attackSuccess = false;
-                                    break;
-                                case MilitarySpecialisation.EMP:
-                                    attackSuccess = false;
-                                    break;
-                            }
-                            break;
-                    }
+                    // if troops are even after modifier, defender wins
+                    attackSuccess = false;
                 }
                 if (attackSuccess)
                 {
@@ -630,25 +654,9 @@ public class MainController : MonoBehaviour {
             destination.GetComponent<HexField>().isFilled = true;
             destination.GetComponent<HexField>().spec = spec;
             destination.networkView.RPC("setSpecialisation", RPCMode.AllBuffered, "Military");
-            foreach (Specialisation node in specialisedNodes)
-            {
-                if (destination.Equals(node.Hex))
-                {
-                    int troops = survivingTroops;
-                    if (node is MilitarySpecialisation)
-                    {
-                        ((MilitarySpecialisation)node).Troops = troops;
-                        ((MilitarySpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
-                        ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType = 0;
-                    }
-                    //doesn't happen, if node is base specialisation win is true!
-                    //if (node is BaseSpecialisation)
-                    //{
-                    //    troops = ((BaseSpecialisation)node).Troops;
-                    //    ((BaseSpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
-                    //}
-                }
-            }
+            ((MilitarySpecialisation)spec).Troops = survivingTroops;
+            ((MilitarySpecialisation)spec).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+            ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType = 0;
             destination.GetComponent<HexField>().colorOwnedArea();
         }
         

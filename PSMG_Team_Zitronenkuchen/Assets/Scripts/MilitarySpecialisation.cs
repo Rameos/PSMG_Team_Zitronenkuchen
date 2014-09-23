@@ -66,7 +66,7 @@ public class MilitarySpecialisation : Specialisation {
 
     public void recruit()
     {
-        troops += 5;
+        troops += 1;
     }
 
     public int WeaponType

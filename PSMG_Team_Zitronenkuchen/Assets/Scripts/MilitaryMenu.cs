@@ -74,7 +74,7 @@ public class MilitaryMenu : MonoBehaviour {
         {
             if (mainController.buildTroops())
             {
-                ((MilitarySpecialisation) selectedHexagon.GetComponent<HexField>().spec).RecruitCounter += 5;
+                ((MilitarySpecialisation) selectedHexagon.GetComponent<HexField>().spec).RecruitCounter += 25;
                
             }
             clicked = true;
