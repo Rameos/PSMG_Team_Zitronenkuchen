@@ -558,9 +558,11 @@ public class HexField : MonoBehaviour {
     [RPC]
     void showTroops(int troops)
     {
-
-        //gameObject.transform.GetComponentInChildren<TextMesh>().text = "" + troops;
-
+        Healthbar[] bars = gameObject.GetComponentsInChildren<Healthbar>();
+        foreach (Healthbar bar in bars)
+        {
+            bar.updateTroopsize((float)troops);
+        }
     }
 
     [RPC]

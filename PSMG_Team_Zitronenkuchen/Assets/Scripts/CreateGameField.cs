@@ -61,6 +61,7 @@ public class CreateGameField : MonoBehaviour
             CustomGameProperties.cameraInUse = 2;
             GameObject.FindGameObjectWithTag("CameraWrapper").transform.position = new Vector3(6.202f, 1.0f, 6.16f);
             GameObject.FindGameObjectWithTag("CameraWrapper").transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+            GameObject.FindGameObjectWithTag("CameraWrapperMiniMap").transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
         }
 
         GameObject.FindGameObjectWithTag("CameraWrapper").AddComponent<ScrollController> ();

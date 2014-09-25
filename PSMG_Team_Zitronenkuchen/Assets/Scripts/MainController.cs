@@ -37,33 +37,30 @@ public class MainController : MonoBehaviour {
             Application.LoadLevel("Alternate_Main_Menu");
         }
 
-        foreach (Specialisation node in specialisedNodes)
-        {
-            if (node is MilitarySpecialisation)
-            {
-                Debug.Log("I am military!");
-                Healthbar[] healthbars = node.Hex.GetComponentsInChildren<Healthbar>();
-                Debug.Log("mil: "+healthbars.Length+ "content: "+healthbars.ToString());
-                foreach (Healthbar bar in healthbars)
-                {
-                    Debug.Log("I have healthbars!");
-                    NetworkView nview = bar.networkView;
-                    nview.RPC("showTroops", RPCMode.AllBuffered, ((MilitarySpecialisation)node).Troops);
-                } 
-            }
-            else if (node is BaseSpecialisation)
-            {
-                Healthbar[] healthbars = node.Hex.GetComponentsInChildren<Healthbar>();
-                Debug.Log("base: " + healthbars.Length);
-                foreach (Healthbar bar in healthbars)
-                {
-                    Debug.Log(((BaseSpecialisation)node).Troops);
-                    NetworkView nview = bar.networkView;
-                    nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)node).Troops);
-                }                
-            }
+        //foreach (Specialisation node in specialisedNodes)
+        //{
+        //    if (node is MilitarySpecialisation)
+        //    {
+        //        Healthbar[] healthbars = node.Hex.GetComponentsInChildren<Healthbar>();
+        //        foreach (Healthbar bar in healthbars)
+        //        {
+        //            Debug.Log("Maincontroller bar: "+bar);
+        //            NetworkView nview = bar.networkView;
+        //            nview.RPC("showTroops", RPCMode.AllBuffered, ((MilitarySpecialisation)node).Troops);
+        //        } 
+        //    }
+        //    else if (node is BaseSpecialisation)
+        //    {
+        //        Healthbar[] healthbars = node.Hex.GetComponentsInChildren<Healthbar>();
+        //        foreach (Healthbar bar in healthbars)
+        //        {
+        //            Debug.Log("Maincontroller bar: " + bar);
+        //            NetworkView nview = bar.networkView;
+        //            nview.RPC("showTroops", RPCMode.AllBuffered, ((BaseSpecialisation)node).Troops);
+        //        }                
+        //    }
 
-        }
+        //}
 	}
 
     void updateTroops()
@@ -90,6 +87,14 @@ public class MainController : MonoBehaviour {
                 {
                     ((MilitarySpecialisation)node).RecruitCounter = 0;
                 }
+
+                NetworkView nview = node.Hex.networkView;
+                nview.RPC("showTroops", RPCMode.All, ((MilitarySpecialisation)node).Troops);
+            }
+            else if (node is BaseSpecialisation)
+            {
+                NetworkView nview = node.Hex.networkView;
+                nview.RPC("showTroops", RPCMode.All, ((BaseSpecialisation)node).Troops);
             }
         }
     }
