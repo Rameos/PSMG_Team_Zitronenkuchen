@@ -178,7 +178,7 @@ public class MilitaryMenu : MonoBehaviour {
     public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
     {
         
-        //Debug.Log(hex.GetComponent<HexField>().owner);
+        
 
         //Set the Actions of the Buttons
         
@@ -199,11 +199,15 @@ public class MilitaryMenu : MonoBehaviour {
 
         bool isSending = mainController.isSending()>0;
 
+        Debug.Log("Im not opennning because is sending is" + isSending);
+        Debug.Log("Stupid MainController says I have that many troops" + mainController.isSending());
+
 
         Debug.Log(isSending + ", " + hex.GetComponent<HexField>().InRange);
         //Create new Buttonelements and add them to the gazeUI
         if (!isSending && ((hex.GetComponent<HexField>().owner == 1 && Network.isServer) || (hex.GetComponent<HexField>().owner == 2 && Network.isClient)))
         {
+            Debug.Log("so i've got that far");
             if (!(hex.GetComponent<HexField>().spec is BaseSpecialisation))
             {
                 Debug.Log(((MilitarySpecialisation)hex.GetComponent<HexField>().spec).WeaponType);
@@ -220,6 +224,7 @@ public class MilitaryMenu : MonoBehaviour {
                     {
                         attackingHex = selectedHexagon;
                         showInfoPanel = true;
+                        Debug.Log("so i've got that far and somehow cant show you my buttons LOOOOOOOOOOOOOK");
                         if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).RecruitCounter == 0)
                         {
                             gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y + 50, 220, 200), "ATTACK", myStyle, attackButton));
@@ -251,6 +256,10 @@ public class MilitaryMenu : MonoBehaviour {
             showInfoPanel = false;
             gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
                 
+        } else if (isSending && hex == attackingHex) {
+            showInfoPanel = false;
+            gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y + 50, 220, 200), "CANCEL", myStyle, canceling));
+
         }
         //Debug.Log(gazeUI);
         menuOpen = true;

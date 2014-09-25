@@ -57,7 +57,7 @@ public class AlternateMenu : MonoBehaviour {
         }
         else if (isTutorial == true)
         {
-            //start tutorial
+            Application.LoadLevel("Tutorial");
         }
     }
 

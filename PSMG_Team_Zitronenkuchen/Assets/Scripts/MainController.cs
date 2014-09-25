@@ -452,7 +452,7 @@ public class MainController : MonoBehaviour {
                         else ((MilitarySpecialisation)node).Troops = 100;
 
                         ((MilitarySpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
-                        Debug.Log("LOOK AT MY TYPE" + ((MilitarySpecialisation)node).WeaponType);
+                      
                     }
                     else if (node is BaseSpecialisation)
                     {
@@ -472,6 +472,7 @@ public class MainController : MonoBehaviour {
                 }
                  }
                 sendingTroops = 0;
+               
             }
 
         

@@ -27,6 +27,17 @@ public class HexField : MonoBehaviour {
     bool destinationNeedsShip = true;
     public AudioClip spaceShipRising = Resources.Load("UFO2", typeof(AudioClip)) as AudioClip;
 
+    private bool isMovedOnField;
+    private float startTime;
+    private float distance;
+    private Vector3 startPos;
+    private Vector3 desiredPos;
+
+    private float sendingStartTime;
+    private float sendingDist;
+    private Vector3 hexStartPos;
+    private Vector3 hexDestPos;
+
     public ArrayList getSurroundingFields()
     {
         ArrayList list = new ArrayList();
@@ -278,11 +289,14 @@ public class HexField : MonoBehaviour {
         gameObject.AddComponent<AudioSource>();
         audio.PlayOneShot(spaceShipRising);
 
-        Vector3 elevate = new Vector3 (0.0f, 0.23f, 0.0f);
+        Vector3 elevate = new Vector3 (0.0f, 0.08f, 0.0f);
         if (spaceship != null)
         {
-            elevate += spaceship.transform.position;
-            spaceship.transform.position = Vector3.Lerp(spaceship.transform.position, elevate, 0.12f);
+            isMovedOnField = true;
+            startPos = spaceship.transform.position;
+            desiredPos = spaceship.transform.position + elevate;
+            distance = Vector3.Distance(startPos, desiredPos);
+            startTime = Time.time;
             
         }
             
@@ -292,11 +306,12 @@ public class HexField : MonoBehaviour {
     {
         if (tempSpaceship != null)
         {
+
             string resource = "";
             ArrayList highlights = new ArrayList();
             if (CustomGameProperties.alienRace == 1)
             {
-                Debug.Log("!!!!!!");
+
                 resource = "spaceshipMIL(Clone)/Sphere_001";
                 highlights = new ArrayList() { 1 };
             }
@@ -308,9 +323,11 @@ public class HexField : MonoBehaviour {
             setColor(resource, highlights);
             highlights.Clear();
 
+            float distCovered = (Time.time - sendingStartTime) * 0.22f;
+            float fracJourney = distCovered / sendingDist;
+            tempSpaceship.transform.position = Vector3.Lerp(hexStartPos, hexDestPos, fracJourney);
 
-            tempSpaceship.transform.Translate(direction * 18 * Time.deltaTime);
-            if (Mathf.Abs(tempSpaceship.transform.position.x - destinationHex.transform.position.x) <= 0.018f && Mathf.Abs(tempSpaceship.transform.position.z - destinationHex.transform.position.z) <= 0.008f)
+            if (tempSpaceship.transform.position.x == hexDestPos.x && tempSpaceship.transform.position.z == hexDestPos.z)
             {
                 
                 Destroy(tempSpaceship);
@@ -326,17 +343,32 @@ public class HexField : MonoBehaviour {
 
                 }
             }
-                
+
+        }
+
+        if (isMovedOnField)
+        {
+            float distCovered = (Time.time - startTime) * 0.08f;
+            float fracJourney = distCovered / distance;
+            spaceship.transform.position = Vector3.Lerp(startPos, desiredPos, fracJourney);
         }
     }
 
     private void animateFlyingShip(GameObject origin, GameObject destination)
     {
 
-        
-        tempSpaceship = Instantiate(spaceshipOrig, origin.transform.position, spaceshipQuaternion) as GameObject;
+        audio.PlayOneShot(spaceShipRising);
+
+        destinationHex = destination; 
+        tempSpaceship = Instantiate(spaceshipOrig, spaceship.transform.position, spaceshipQuaternion) as GameObject;
         tempSpaceship.tag = "temporaryship";
-        destinationHex = destination;
+
+     
+
+        hexDestPos = destination.transform.position;
+        hexStartPos = gameObject.transform.position;
+        sendingStartTime = Time.time;
+        sendingDist = Vector3.Distance(hexStartPos, hexDestPos);
       
       
 
@@ -351,7 +383,7 @@ public class HexField : MonoBehaviour {
                 Destroy(ship);
             }
         }
-        direction = (Network.isServer) ? (destination.transform.position - origin.transform.position).normalized * 0.04f : (destination.transform.position - origin.transform.position).normalized * 0.04f*(-1);
+        //direction = (Network.isServer) ? (destination.transform.position - origin.transform.position).normalized * 0.04f : (destination.transform.position - origin.transform.position).normalized * 0.04f*(-1);
         
         
        
@@ -361,12 +393,15 @@ public class HexField : MonoBehaviour {
     [RPC]
     public void unPrepareShip()
     {
-        Vector3 lower = new Vector3 (0.0f, - 0.25f, 0.0f);
+        Vector3 lower = new Vector3 (0.0f, - 0.08f, 0.0f);
 
         if (spaceship != null)
         {
-            lower += spaceship.transform.position;
-            spaceship.transform.position = Vector3.Lerp(spaceship.transform.position, lower,0.12f);
+            isMovedOnField = true;
+            startPos = spaceship.transform.position;
+            desiredPos = spaceship.transform.position + lower;
+            distance = Vector3.Distance(startPos, desiredPos);
+            startTime = Time.time;
         }
 
        
@@ -395,6 +430,7 @@ public class HexField : MonoBehaviour {
         }
 
         Destroy(spaceship);
+        isMovedOnField = false;
         animateFlyingShip(origin, destination);
         ChangeFieldStateOnClick.resetHighlighting(origin);
 
