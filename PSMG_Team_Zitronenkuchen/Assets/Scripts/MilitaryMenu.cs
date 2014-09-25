@@ -256,6 +256,10 @@ public class MilitaryMenu : MonoBehaviour {
             showInfoPanel = false;
             gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
                 
+        } else if (isSending && hex == attackingHex) {
+            showInfoPanel = false;
+            gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y + 50, 220, 200), "CANCEL", myStyle, canceling));
+
         }
         //Debug.Log(gazeUI);
         menuOpen = true;
