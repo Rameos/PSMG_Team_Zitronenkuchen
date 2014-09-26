@@ -5,52 +5,65 @@ public class Healthbar : MonoBehaviour {
 
     public Transform target;
     public Vector3 offset = Vector3.up;
-    public bool isFillState = false;
+    public bool isFillState;
     public GUITexture fillTexture;
 
     private Transform thisTransform;
     private Transform camTransform;
     private Camera cam = Camera.main;
 
-    private int troopSize;
+    public int troopSize;
     private float troopPercentage;
+    private int fraction;
 
 	// Use this for initialization
 	void Start () {
 	    thisTransform = transform;
-        troopSize = 0;
+        fillTexture.guiTexture.pixelInset = new Rect(fillTexture.pixelInset.x, fillTexture.pixelInset.y, 0f, fillTexture.pixelInset.height);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        int fraction;
+        //update
         Vector3 viewPortPosition = cam.WorldToViewportPoint(target.position + offset);
         if (isFillState)
         {
             viewPortPosition.z = 100;
-
-            if (thisTransform.GetComponentInParent<HexField>().spec is MilitarySpecialisation)
+            if (CustomGameProperties.cameraInUse == 2)
             {
-                troopSize = ((MilitarySpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops;
-                fraction = 100;
+                viewPortPosition.z = -100;
             }
-            else
-            {
-                //troopSize = ((BaseSpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops;
-                fraction = 150;
-            }
-
-            troopPercentage = (float)troopSize / fraction;
-            fillTexture.guiTexture.pixelInset = new Rect(fillTexture.pixelInset.x, fillTexture.pixelInset.y, 75f * troopPercentage, fillTexture.pixelInset.height);
+            Vector3 emptyBarPos = target.Find("Healthbar_Empty").transform.position;
+            fillTexture.transform.localPosition = new Vector3(emptyBarPos.x, emptyBarPos.y, 100);
         }
         thisTransform.position = viewPortPosition;
 	}
 
-    [RPC]
-    public void showTroops(int troops)
+  
+
+    public void updateTroopsize(float troops)
     {
-        //Debug.Log("show troops on " + gameObject.transform.parent.name + ", troops: "+troops);
-        troopSize = troops;
+        
+        if (isFillState)
+        {
+            
+
+            if (thisTransform.GetComponentInParent<HexField>().specialisation == "Military")
+            {
+                fraction = 100;
+                
+            }
+            else
+            {
+                fraction = 150;
+            }
+
+            troopPercentage = troops / fraction;
+            Debug.Log("troopsize(float): " + troopSize + " trooppercentage: " + troopPercentage + " thisTranform owner: " + thisTransform.GetComponentInParent<HexField>().owner);
+            fillTexture.guiTexture.pixelInset = new Rect(fillTexture.pixelInset.x, fillTexture.pixelInset.y, 75f * troopPercentage, fillTexture.pixelInset.height);
+            
+        }
+        
     }
 }
 
