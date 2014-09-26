@@ -54,17 +54,24 @@ public class MilitaryMenu : MonoBehaviour {
     // Move troops start action
     public void button2_Action()
     {
-        NetworkView view = attackingHex.networkView;
-        
-        bool attack = false;
-        int troops = mainController.moveTroops(selectedHexagon);
-        //mainController.setRanges();
-        if (troops > 0)
-        {
-            view.RPC("prepareShip", RPCMode.AllBuffered);
-            mainController.startTroopSend(troops, attack);
+        if (!clicked) {
+            NetworkView view = attackingHex.networkView;
+
+            Debug.Log("MAH TYPE IS SO COOL BECAUSE ITS 0:" + ((MilitarySpecialisation)attackingHex.GetComponent<HexField>().spec).WeaponType);
+
+            bool attack = false;
+            int troops = mainController.moveTroops(selectedHexagon);
+            //mainController.setRanges();
+            if (troops > 0)
+            {
+                view.RPC("prepareShip", RPCMode.AllBuffered);
+                mainController.startTroopSend(troops, attack);
+            }
+            Debug.Log("Button2_Pressed");
+
+            clicked = true;
         }
-        Debug.Log("Button2_Pressed");
+       
     }
     // Recruit action
     public void button3_Action()
@@ -86,19 +93,23 @@ public class MilitaryMenu : MonoBehaviour {
     // Move here action
     public void button4_Action()
     {
-        NetworkView attackingView = attackingHex.networkView;
-        NetworkViewID attackingViewId = attackingView.viewID;
-        attackingView.RPC("unPrepareShip", RPCMode.AllBuffered);
-        NetworkView selectedView = selectedHexagon.networkView;
-        NetworkViewID selectedViewId = selectedView.viewID;
-        attackingView.RPC("sendShip", RPCMode.AllBuffered, attackingViewId, selectedViewId);
-
-        mainController.sendTroops(selectedHexagon);
-
+        
 
         Debug.Log("Button4_Pressed");
         if (!clicked)
         {
+
+            Debug.Log("MAH TYPE IS SO COOL BECAUSE ITS 1:" + ((MilitarySpecialisation)attackingHex.GetComponent<HexField>().spec).WeaponType);
+            NetworkView attackingView = attackingHex.networkView;
+            NetworkViewID attackingViewId = attackingView.viewID;
+            attackingView.RPC("unPrepareShip", RPCMode.AllBuffered);
+            NetworkView selectedView = selectedHexagon.networkView;
+            NetworkViewID selectedViewId = selectedView.viewID;
+            attackingView.RPC("sendShip", RPCMode.AllBuffered, attackingViewId, selectedViewId);
+
+            mainController.sendTroops(selectedHexagon);
+
+            Debug.Log("MAH TYPE IS SO COOL BECAUSE ITS 2:" + ((MilitarySpecialisation)attackingHex.GetComponent<HexField>().spec).WeaponType);
             mainController.sendTroops(selectedHexagon);
             Debug.Log("Button4_Pressed");
             foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
@@ -148,6 +159,7 @@ public class MilitaryMenu : MonoBehaviour {
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.LASER;
         placeEmptySpaceShip();
         type = "LASER";
+        Debug.Log("MAH TYPE IS SO COOL BECAUSE ITS -1:" + ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType);
     }
     // Specialise on Protons
     public void button8_Action()
@@ -256,7 +268,7 @@ public class MilitaryMenu : MonoBehaviour {
             showInfoPanel = false;
             gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
                 
-        } else if (isSending && hex == attackingHex) {
+        } if (isSending && hex == attackingHex) {
             showInfoPanel = false;
             gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y + 50, 220, 200), "CANCEL", myStyle, canceling));
 

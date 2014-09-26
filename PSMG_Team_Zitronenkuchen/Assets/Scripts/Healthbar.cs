@@ -36,7 +36,7 @@ public class Healthbar : MonoBehaviour {
             }
             else
             {
-                troopSize = ((BaseSpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops;
+                //troopSize = ((BaseSpecialisation)(thisTransform.GetComponentInParent<HexField>().spec)).Troops;
                 fraction = 150;
             }
 

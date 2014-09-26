@@ -441,26 +441,54 @@ public class MainController : MonoBehaviour {
                         if ((((MilitarySpecialisation)node).Troops + sendingTroops) <= 100) ((MilitarySpecialisation)node).Troops += sendingTroops;
                         else ((MilitarySpecialisation)node).Troops = 100;
 
-                        ((MilitarySpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+                        int milint = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+                        if (milint != 0)
+                        {
+                            ((MilitarySpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+                        }
+                       
+                        
+                        ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).Troops = 0;
+                        ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType = 0;
+                        sendingTroops = 0;
+                        return;
                       
                     }
                     else if (node is BaseSpecialisation)
                     {
-                        if ((((BaseSpecialisation)node).Troops + sendingTroops) <= 150) ((BaseSpecialisation)node).Troops += sendingTroops;
-                        else ((BaseSpecialisation)node).Troops = 150;
-                        ((BaseSpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
-                        //Debug.Log("LOOK AT MY TYPE" + ((MilitarySpecialisation)node).WeaponType);
+                        int milint = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+                        if (milint != 0)
+                        {
+                            ((BaseSpecialisation)node).WeaponType = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
+                        }
+                       
+                        
+                        Debug.Log("I SUCCESFULLY ASSIGNED" + ((BaseSpecialisation)node).WeaponType+ "TO" + ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType);
+                        if ((((BaseSpecialisation)node).Troops + sendingTroops) <= 150)
+                        {
+                            ((BaseSpecialisation)node).Troops += sendingTroops;
+                        }
+                        else
+                        {
+                            ((BaseSpecialisation)node).Troops = 150;
+                        }
+                        ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).Troops = 0;
+                        ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType = 0;
+                        sendingTroops = 0;
+                        return;
+                        
                     }
 
                 }
             }
-                foreach(Specialisation node in specialisedNodes) {
+                /*foreach(Specialisation node in specialisedNodes) {
                     if (sendOrigin.Equals(node.Hex))
                 {
+                    Debug.Log("I GOT THERE TRUST");
                     ((MilitarySpecialisation)node).Troops = 0;
                     ((MilitarySpecialisation)node).WeaponType = 0;
                 }
-                 }
+                 } */
                 sendingTroops = 0;
                
             }
