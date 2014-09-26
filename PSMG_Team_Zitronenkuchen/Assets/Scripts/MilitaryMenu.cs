@@ -158,6 +158,7 @@ public class MilitaryMenu : MonoBehaviour {
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.LASER;
         placeEmptySpaceShip();
         type = "LASER";
+    }
         
     // Specialise on Protons
     public void button8_Action()
