@@ -21,7 +21,7 @@ public class MainController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        tirkid = 50000;
+        tirkid = 300;
         // researchPoints = 0;
         Debug.Log("Start");
         InvokeRepeating("updateRessources", 1, 1);
@@ -284,6 +284,7 @@ public class MainController : MonoBehaviour {
 
     private void extendInfluenceArea(GameObject hex)
     {
+        Debug.Log(hex.name + "THIS IS THE NAME OF MY HEX; I WANT TO EXTEND IT");
         ArrayList neighbours = hex.GetComponent<HexField>().getSurroundingFields();
         hex.GetComponent<HexField>().colorOwnedArea();
         foreach (GameObject obj in neighbours)

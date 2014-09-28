@@ -21,6 +21,8 @@ public class HexField : MonoBehaviour {
     private string resourceRPC; // because RPC does not support as parameter type
     private ArrayList highlightsRPC; // same here
 
+
+
     private GameObject origin;
     private GameObject spaceship;
     private GameObject tempSpaceship;
@@ -327,7 +329,7 @@ public class HexField : MonoBehaviour {
     public void prepareShip()
     {
         //does not work yet
-        gameObject.AddComponent<AudioSource>();
+        origin.AddComponent<AudioSource>();
         audio.PlayOneShot(spaceShipRising);
 
         Vector3 elevate = new Vector3 (0.0f, 0.08f, 0.0f);
@@ -350,6 +352,7 @@ public class HexField : MonoBehaviour {
 
 
 
+            
             if (CustomGameProperties.alienRace == 1)
             {
 
@@ -365,7 +368,6 @@ public class HexField : MonoBehaviour {
             NetworkView originView = origin.networkView;
             originView.RPC("setColorViaRPC", RPCMode.AllBuffered);
             highlightsRPC.Clear();
-
             float distCovered = (Time.time - sendingStartTime) * 0.22f;
             float fracJourney = distCovered / sendingDist;
             tempSpaceship.transform.position = Vector3.Lerp(hexStartPos, hexDestPos, fracJourney);
@@ -393,18 +395,19 @@ public class HexField : MonoBehaviour {
         return destinationNeedsShip;
     }
 
-    private void animateFlyingShip(GameObject origin, GameObject destination)
+    [RPC]
+    private void animateFlyingShip()
     {
-
+        origin.AddComponent<AudioSource>();
         audio.PlayOneShot(spaceShipRising);
 
-        destinationHex = destination; 
+       
         tempSpaceship = Instantiate(spaceshipOrig, spaceship.transform.position, spaceshipQuaternion) as GameObject;
         tempSpaceship.tag = "temporaryship";
 
      
 
-        hexDestPos = destination.transform.position;
+        hexDestPos = destinationHex.transform.position;
         hexStartPos = gameObject.transform.position;
         sendingStartTime = Time.time;
         sendingDist = Vector3.Distance(hexStartPos, hexDestPos);
@@ -458,8 +461,10 @@ public class HexField : MonoBehaviour {
     {
         NetworkView originView = NetworkView.Find(originId);
         origin = originView.gameObject;
+        Debug.Log(origin.name + "THATS MY NAME; LOOOOOK");
         NetworkView destinationView = NetworkView.Find(destinationId);
         GameObject destination = destinationView.gameObject;
+        destinationHex = destination;
 
         Vector3 destinationLoc = destination.transform.position;
         Vector3 movement = origin.transform.position - destinationLoc;
@@ -480,7 +485,9 @@ public class HexField : MonoBehaviour {
         }
        
         isMovedOnField = false;
-        animateFlyingShip(origin, destination);
+
+
+        originView.RPC("animateFlyingShip", RPCMode.AllBuffered);
         ChangeFieldStateOnClick.resetHighlighting(origin);
 
      
