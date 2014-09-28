@@ -262,6 +262,8 @@ public class MilitaryMenu : MonoBehaviour {
             }
             else
             {
+                Debug.Log("SO YOUR ASSUMPTION IS: " + (hex == attackingHex)); 
+                if (!(hex == attackingHex))
                 gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "MOVE HERE", myStyle, moving));
             }
             showInfoPanel = false;

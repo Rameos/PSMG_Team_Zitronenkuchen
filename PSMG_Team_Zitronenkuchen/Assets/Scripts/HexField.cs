@@ -18,6 +18,7 @@ public class HexField : MonoBehaviour {
     private bool finishedBuilding = false;
     private int troopsOnField = 0;
 
+    private GameObject origin;
     private GameObject spaceship;
     private GameObject tempSpaceship;
     private GameObject destinationHex;
@@ -329,19 +330,10 @@ public class HexField : MonoBehaviour {
 
             if (tempSpaceship.transform.position.x == hexDestPos.x && tempSpaceship.transform.position.z == hexDestPos.z)
             {
-                
-                Destroy(tempSpaceship);
 
-
-               
-
-                if (destinationNeedsShip)
-                {
-                    NetworkView view = destinationHex.networkView;
-                    NetworkViewID id = view.viewID;
-                    view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id);
-
-                }
+                NetworkView originView = origin.networkView;
+                NetworkViewID originid = originView.viewID;
+                originView.RPC("destroyTempShip", RPCMode.AllBuffered);
             }
 
         }
@@ -352,6 +344,11 @@ public class HexField : MonoBehaviour {
             float fracJourney = distCovered / distance;
             spaceship.transform.position = Vector3.Lerp(startPos, desiredPos, fracJourney);
         }
+    }
+
+    public bool destinationHasNoShip()
+    {
+        return destinationNeedsShip;
     }
 
     private void animateFlyingShip(GameObject origin, GameObject destination)
@@ -391,6 +388,13 @@ public class HexField : MonoBehaviour {
     }
 
     [RPC]
+    private void destroyTempShip()
+    {
+        Debug.Log("I AM DESTRYOUNG");
+        Destroy(tempSpaceship);
+    }
+
+    [RPC]
     public void unPrepareShip()
     {
         Vector3 lower = new Vector3 (0.0f, - 0.08f, 0.0f);
@@ -412,7 +416,7 @@ public class HexField : MonoBehaviour {
     public void sendShip(NetworkViewID originId, NetworkViewID destinationId)
     {
         NetworkView originView = NetworkView.Find(originId);
-        GameObject origin = originView.gameObject;
+        origin = originView.gameObject;
         NetworkView destinationView = NetworkView.Find(destinationId);
         GameObject destination = destinationView.gameObject;
 
@@ -429,7 +433,11 @@ public class HexField : MonoBehaviour {
                destinationNeedsShip = false;
         }
 
-        Destroy(spaceship);
+        if (owner == destination.GetComponent<HexField>().owner)
+        {
+            Destroy(spaceship);
+        }
+       
         isMovedOnField = false;
         animateFlyingShip(origin, destination);
         ChangeFieldStateOnClick.resetHighlighting(origin);

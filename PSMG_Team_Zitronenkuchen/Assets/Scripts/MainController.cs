@@ -440,6 +440,15 @@ public class MainController : MonoBehaviour {
 
     public void sendTroops(GameObject destination)
     {
+
+
+        if (sendOrigin.GetComponent<HexField>().destinationHasNoShip())
+        {
+            NetworkView view = destination.networkView;
+            NetworkViewID id = view.viewID;
+            view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id);
+        }
+
         if (sendOrigin != destination)
         {
             foreach (Specialisation node in specialisedNodes)
@@ -491,15 +500,14 @@ public class MainController : MonoBehaviour {
 
                 }
             }
-                /*foreach(Specialisation node in specialisedNodes) {
-                    if (sendOrigin.Equals(node.Hex))
-                {
-                    Debug.Log("I GOT THERE TRUST");
-                    ((MilitarySpecialisation)node).Troops = 0;
-                    ((MilitarySpecialisation)node).WeaponType = 0;
-                }
-                 } */
                 sendingTroops = 0;
+
+                if (sendOrigin.GetComponent<HexField>().destinationHasNoShip())
+                {
+                    NetworkView view = destination.networkView;
+                    NetworkViewID id = view.viewID;
+                    view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id);
+                }
                
             }
 

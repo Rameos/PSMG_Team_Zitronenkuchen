@@ -59,7 +59,6 @@ public class Healthbar : MonoBehaviour {
             }
 
             troopPercentage = troops / fraction;
-            Debug.Log("troopsize(float): " + troopSize + " trooppercentage: " + troopPercentage + " thisTranform owner: " + thisTransform.GetComponentInParent<HexField>().owner);
             fillTexture.guiTexture.pixelInset = new Rect(fillTexture.pixelInset.x, fillTexture.pixelInset.y, 75f * troopPercentage, fillTexture.pixelInset.height);
             
         }
