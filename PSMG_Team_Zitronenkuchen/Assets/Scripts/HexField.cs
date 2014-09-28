@@ -334,6 +334,7 @@ public class HexField : MonoBehaviour {
                 NetworkView originView = origin.networkView;
                 NetworkViewID originid = originView.viewID;
                 originView.RPC("destroyTempShip", RPCMode.AllBuffered);
+                MainController.receiveAnimationCallback();
             }
 
         }

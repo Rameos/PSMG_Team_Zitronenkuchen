@@ -11,7 +11,8 @@ public class MainController : MonoBehaviour {
     public ArrayList removeNodes = new ArrayList();
     private ArrayList labelUI = new ArrayList();
     private int sendingTroops = 0;
-    private GameObject sendOrigin;
+    private static GameObject sendOrigin;
+    private static GameObject destinationHex;
 
     public AudioClip building;
     public AudioClip denied;
@@ -442,12 +443,7 @@ public class MainController : MonoBehaviour {
     {
 
 
-        if (sendOrigin.GetComponent<HexField>().destinationHasNoShip())
-        {
-            NetworkView view = destination.networkView;
-            NetworkViewID id = view.viewID;
-            view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id);
-        }
+        destinationHex = destination;
 
         if (sendOrigin != destination)
         {
@@ -512,6 +508,18 @@ public class MainController : MonoBehaviour {
             }
 
         
+    }
+
+    public static void receiveAnimationCallback()
+    {
+
+        
+        if (sendOrigin.GetComponent<HexField>().destinationHasNoShip())
+        {
+            NetworkView view = destinationHex.networkView;
+            NetworkViewID id = view.viewID;
+            view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id);
+        }
     }
 
     public void sendAttack(GameObject destination)
