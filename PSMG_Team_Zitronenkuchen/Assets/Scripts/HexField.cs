@@ -18,6 +18,9 @@ public class HexField : MonoBehaviour {
     private bool finishedBuilding = false;
     private int troopsOnField = 0;
 
+    private string resourceRPC; // because RPC does not support as parameter type
+    private ArrayList highlightsRPC; // same here
+
     private GameObject origin;
     private GameObject spaceship;
     private GameObject tempSpaceship;
@@ -202,6 +205,7 @@ public class HexField : MonoBehaviour {
         selectedHexagon.GetComponent<HexField>().owner = callingOwner;
         FinishedBuilding = true;
         basicBuilding.transform.parent = selectedHexagon.transform;
+
         setColor(resource, highlights);
         setColor(resource2, highlights2);
         highlights.Clear();
@@ -231,6 +235,42 @@ public class HexField : MonoBehaviour {
         Material[] mats;
         mats = element.renderer.materials;
         foreach (int num in highlights)
+        {
+            if (owner == 1)
+            {
+                mats[num] = highlightServer;
+            }
+            else mats[num] = highlightClient;
+        }
+        element.renderer.materials = mats;
+    }
+
+    [RPC]
+    private void setColorViaRPC()
+    {
+
+        Debug.Log("MY RPC CALL" + highlightsRPC);
+        Material highlightServer = Resources.Load("Materials/Red", typeof(Material)) as Material;
+        Material highlightClient = Resources.Load("Materials/Blue", typeof(Material)) as Material;
+        Transform element = transform.Find(resourceRPC);
+
+        // element can be null because temporary spaceships are not children of hexfields
+        if (element == null)
+        {
+            if (CustomGameProperties.alienRace == 1)
+            {
+                element = tempSpaceship.transform.FindChild("Sphere_001").gameObject.transform;
+            }
+            else
+            {
+                element = tempSpaceship.transform;
+            }
+
+        }
+
+        Material[] mats;
+        mats = element.renderer.materials;
+        foreach (int num in highlightsRPC)
         {
             if (owner == 1)
             {
@@ -308,21 +348,23 @@ public class HexField : MonoBehaviour {
         if (tempSpaceship != null)
         {
 
-            string resource = "";
-            ArrayList highlights = new ArrayList();
+
+
             if (CustomGameProperties.alienRace == 1)
             {
 
-                resource = "spaceshipMIL(Clone)/Sphere_001";
-                highlights = new ArrayList() { 1 };
+                resourceRPC = "spaceshipMIL(Clone)/Sphere_001";
+                highlightsRPC = new ArrayList() { 1 };
             }
             else
             {
-                resource = "spaceshipECO(Clone)";
-                highlights = new ArrayList() { 1, 2 };
+                resourceRPC = "spaceshipECO(Clone)";
+                highlightsRPC = new ArrayList() { 1, 2 };
             }
-            setColor(resource, highlights);
-            highlights.Clear();
+
+            NetworkView originView = origin.networkView;
+            originView.RPC("setColorViaRPC", RPCMode.AllBuffered);
+            highlightsRPC.Clear();
 
             float distCovered = (Time.time - sendingStartTime) * 0.22f;
             float fracJourney = distCovered / sendingDist;
@@ -331,8 +373,7 @@ public class HexField : MonoBehaviour {
             if (tempSpaceship.transform.position.x == hexDestPos.x && tempSpaceship.transform.position.z == hexDestPos.z)
             {
 
-                NetworkView originView = origin.networkView;
-                NetworkViewID originid = originView.viewID;
+               
                 originView.RPC("destroyTempShip", RPCMode.AllBuffered);
                 MainController.receiveAnimationCallback();
             }
@@ -367,8 +408,8 @@ public class HexField : MonoBehaviour {
         hexStartPos = gameObject.transform.position;
         sendingStartTime = Time.time;
         sendingDist = Vector3.Distance(hexStartPos, hexDestPos);
-      
-      
+
+
 
         
 
@@ -391,7 +432,6 @@ public class HexField : MonoBehaviour {
     [RPC]
     private void destroyTempShip()
     {
-        Debug.Log("I AM DESTRYOUNG");
         Destroy(tempSpaceship);
     }
 
