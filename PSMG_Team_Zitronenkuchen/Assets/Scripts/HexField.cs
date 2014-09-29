@@ -368,6 +368,7 @@ public class HexField : MonoBehaviour {
             NetworkView originView = origin.networkView;
             originView.RPC("setColorViaRPC", RPCMode.AllBuffered);
             highlightsRPC.Clear();
+
             float distCovered = (Time.time - sendingStartTime) * 0.22f;
             float fracJourney = distCovered / sendingDist;
             tempSpaceship.transform.position = Vector3.Lerp(hexStartPos, hexDestPos, fracJourney);

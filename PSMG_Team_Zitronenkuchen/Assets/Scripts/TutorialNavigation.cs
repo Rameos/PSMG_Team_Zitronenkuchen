@@ -20,6 +20,7 @@ public class TutorialNavigation : MonoBehaviour {
             Destroy(GameObject.FindGameObjectWithTag("IntroStars"));
             Destroy(GameObject.FindGameObjectWithTag("SkipText"));
             Destroy(GameObject.FindGameObjectWithTag("MainCamera").GetComponent("AudioSource"));
+            Application.LoadLevel("Tutorial");
         }
     }
      
