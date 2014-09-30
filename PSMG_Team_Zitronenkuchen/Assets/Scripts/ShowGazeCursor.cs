@@ -5,20 +5,13 @@ using System.Runtime.InteropServices;
 using iViewX;
 
 public class ShowGazeCursor : MonoBehaviour
-{
-
-    
+{    
 
     //Position and Texture for the Gaze
     public Texture2D gazeCursor;
 
     
     private bool isGazeCursorActive = false;
-
-    void Start()
-    {
-        //Screen.lockCursor = true;
-    }
 
     void OnGUI()
     {

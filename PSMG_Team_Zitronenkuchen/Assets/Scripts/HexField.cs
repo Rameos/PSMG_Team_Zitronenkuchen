@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * This script is assigned to each Hexfield.
+ * It contains a lot of RPC methods for actions that have to be called on both players(like building) or from one player to the other(like processing attacks)
+ * It also contains methods for determining the hexfields directly sourrounding itself(radius=2)
+ **/
 public class HexField : MonoBehaviour {
 
     public int owner;
     public string specialisation;
-    //public int upgradLevel; not needed yet
+
     public Material ownedMaterial;
     public Material defaultMaterial;
     public int xPos;
@@ -44,6 +49,7 @@ public class HexField : MonoBehaviour {
     private Vector3 hexStartPos;
     private Vector3 hexDestPos;
 
+    // get a List of Hexfields which are next to the current HexField(radius = 2)
     public ArrayList getSurroundingFields()
     {
         ArrayList list = new ArrayList();
@@ -55,21 +61,25 @@ public class HexField : MonoBehaviour {
         int endJ = 2;
         bool bottomLimit = false;
         if (xPos <= 1)
-        { // left edge
+        { 
+            // left edge
             bottomLimit = true;
             startI = (-1) * xPos;
         }
         if (yPos <= 1)
-        { // lower edge
+        { 
+            // lower edge
             bottomLimit = true;
             startJ = (-1) * yPos;
         }
         if (xPos >= 48)
-        { // right edge
+        { 
+            // right edge
             endI = 49 - xPos;
         }
         if (yPos >= 48)
-        { // upper edge
+        { 
+            // upper edge
             endJ = 49 - yPos;
         }
         for (int i = startI; i <= endI; i++)
@@ -83,16 +93,16 @@ public class HexField : MonoBehaviour {
             }
         }
         if (xPos % 2 == 0 && yPos <= 47)
-        { // even row
-            // Debug.Log("even");
+        { 
+            // even row
             if (xPos != 0){
                 list.Remove(hexArray[xPos - 1, yPos + 2]);
             }
             list.Remove(hexArray[xPos + 1, yPos + 2]);
         }
         else if (!bottomLimit)
-        { // odd row
-            // Debug.Log("odd");
+        { 
+            // odd row
             if (xPos != 0)
             {
                 list.Remove(hexArray[xPos - 1, yPos - 2]);
@@ -135,6 +145,7 @@ public class HexField : MonoBehaviour {
         }
     }
 
+    // create an two dimensional array containing all Hexfields ordered by their x and y position
     private void fillHexArray()
     {
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("hex");
@@ -144,74 +155,24 @@ public class HexField : MonoBehaviour {
         }
     }
 
+    // color current HexField as owned
     public void colorOwnedArea()
     {
         ownedMaterial = Resources.Load("OwnedMaterial", typeof(Material)) as Material;
-        if (ownedMaterial == null)
+        if (ownedMaterial != null)
         {
-            Debug.Log("loading failed, check existence of Resources folder in Assets");
-        }
-        //if (!isFilled)
-        //{
-            gameObject.renderer.material = ownedMaterial;
-        //}       
+            gameObject.renderer.material = ownedMaterial; 
+        }           
     }
 
+    // decolor current HexField as not owned
     public void decolorUnownedArea()
     {
         defaultMaterial = Resources.Load("HexLava", typeof(Material)) as Material;
-        if (defaultMaterial == null)
-        {
-            Debug.Log("loading failed, check existence of Resources folder in Assets");
-        }
-        if (true)
+        if (defaultMaterial != null)
         {
             gameObject.renderer.material = defaultMaterial;
-            Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            Debug.Log(Network.isServer);
-            Debug.Log(gameObject);
-        } 
-    }
-
-    [RPC]
-    void buildBase(NetworkViewID id, int selectedRace, int callingOwner)
-    {
-        
-        ArrayList highlights = new ArrayList();
-        string resource = "";
-        ArrayList highlights2 = new ArrayList();
-        string resource2 = "";
-        Debug.Log("Build base for Race " + selectedRace);
-        NetworkView view = NetworkView.Find(id);
-        GameObject selectedHexagon = view.gameObject;
-        GameObject baseBuilding = null;
-        if (selectedRace == 1)
-        {
-            baseBuilding = Resources.Load("baseMIL", typeof(GameObject)) as GameObject;
-            highlights.Add(1);
-            resource = "baseMIL(Clone)/Cylinder";
         }
-        else
-        {
-            baseBuilding = Resources.Load("baseECO", typeof(GameObject)) as GameObject;
-            highlights.Add(2);
-            highlights.Add(3);
-            highlights.Add(4);
-            resource = "baseECO(Clone)/Silo";
-            //spaceship
-            highlights2.Add(1);
-            highlights2.Add(2);
-            resource2 = "baseECO(Clone)/Spaceship";
-        }
-        GameObject basicBuilding = Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
-        selectedHexagon.GetComponent<HexField>().owner = callingOwner;
-        FinishedBuilding = true;
-        basicBuilding.transform.parent = selectedHexagon.transform;
-
-        setColor(resource, highlights);
-        setColor(resource2, highlights2);
-        highlights.Clear();
-        highlights2.Clear();
     }
 
     private void setColor(string resource, ArrayList highlights)
@@ -250,8 +211,6 @@ public class HexField : MonoBehaviour {
     [RPC]
     private void setColorViaRPC()
     {
-
-        Debug.Log("MY RPC CALL" + highlightsRPC);
         Material highlightServer = Resources.Load("Materials/Red", typeof(Material)) as Material;
         Material highlightClient = Resources.Load("Materials/Blue", typeof(Material)) as Material;
         Transform element = transform.Find(resourceRPC);
@@ -283,6 +242,7 @@ public class HexField : MonoBehaviour {
         element.renderer.materials = mats;
     }
 
+
     [RPC]
     public void initiateTroopBuilding(int selectedRace, NetworkViewID id)
     {
@@ -294,6 +254,7 @@ public class HexField : MonoBehaviour {
         bool alreadyBuilt = false;
         foreach (Transform child in hexagon.transform)
         {
+            // check if there already is a spaceship
             if (child.name == "spaceshipECO(Clone)" || child.name == "spaceshipMIL(Clone)")
                 alreadyBuilt = true;
         }
@@ -302,6 +263,7 @@ public class HexField : MonoBehaviour {
             string resource = "";
             ArrayList highlights = new ArrayList();
             
+            // instantiate a new spaceship
             spaceshipOrig = (selectedRace == 1) ? Resources.Load("spaceshipMIL", typeof(GameObject)) as GameObject : Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject;
             spaceship = Instantiate(spaceshipOrig, hexagon.transform.position, spaceshipQuaternion) as GameObject;
            
@@ -309,11 +271,13 @@ public class HexField : MonoBehaviour {
 
             if (selectedRace == 1)
             {
+                // military race -> military spaceship
                 resource = "spaceshipMIL(Clone)/Sphere_001";
                 highlights = new ArrayList() { 1 };
             }
             else
             {
+                // economy race -> economy spaceship
                 resource = "spaceshipECO(Clone)";
                 highlights = new ArrayList() { 1, 2 };
             }
@@ -324,11 +288,10 @@ public class HexField : MonoBehaviour {
         
     }
 
-    
+    // prepare move/attack. elevate ship and play sound
     [RPC]
     public void prepareShip()
     {
-        //does not work yet
         origin.AddComponent<AudioSource>();
         audio.PlayOneShot(spaceShipRising);
 
@@ -339,8 +302,7 @@ public class HexField : MonoBehaviour {
             startPos = spaceship.transform.position;
             desiredPos = spaceship.transform.position + elevate;
             distance = Vector3.Distance(startPos, desiredPos);
-            startTime = Time.time;
-            
+            startTime = Time.time;            
         }
             
     }
@@ -348,14 +310,10 @@ public class HexField : MonoBehaviour {
     void Update()
     {
         if (tempSpaceship != null)
-        {
-
-
-
-            
+        {  
+            // there is a spaceship
             if (CustomGameProperties.alienRace == 1)
             {
-
                 resourceRPC = "spaceshipMIL(Clone)/Sphere_001";
                 highlightsRPC = new ArrayList() { 1 };
             }
@@ -369,14 +327,14 @@ public class HexField : MonoBehaviour {
             originView.RPC("setColorViaRPC", RPCMode.AllBuffered);
             highlightsRPC.Clear();
 
+            // animate movement of spaceship to its destination
             float distCovered = (Time.time - sendingStartTime) * 0.22f;
             float fracJourney = distCovered / sendingDist;
             tempSpaceship.transform.position = Vector3.Lerp(hexStartPos, hexDestPos, fracJourney);
 
             if (tempSpaceship.transform.position.x == hexDestPos.x && tempSpaceship.transform.position.z == hexDestPos.z)
             {
-
-               
+                // spaceship arrived at destination. destroy spaceship
                 originView.RPC("destroyTempShip", RPCMode.AllBuffered);
                 MainController.receiveAnimationCallback();
             }
@@ -385,6 +343,7 @@ public class HexField : MonoBehaviour {
 
         if (isMovedOnField)
         {
+            // animate movement of spaceship to its destination
             float distCovered = (Time.time - startTime) * 0.08f;
             float fracJourney = distCovered / distance;
             spaceship.transform.position = Vector3.Lerp(startPos, desiredPos, fracJourney);
@@ -402,21 +361,17 @@ public class HexField : MonoBehaviour {
         origin.AddComponent<AudioSource>();
         audio.PlayOneShot(spaceShipRising);
 
-       
+        // instantiate a temporary ship which will be moved to its destination(in update)
         tempSpaceship = Instantiate(spaceshipOrig, spaceship.transform.position, spaceshipQuaternion) as GameObject;
         tempSpaceship.tag = "temporaryship";
 
-     
-
+        // set destination for temporary ship
         hexDestPos = destinationHex.transform.position;
         hexStartPos = gameObject.transform.position;
         sendingStartTime = Time.time;
-        sendingDist = Vector3.Distance(hexStartPos, hexDestPos);
+        sendingDist = Vector3.Distance(hexStartPos, hexDestPos);        
 
-
-
-        
-
+        // "garbage collector" for temporary ships which somehow weren't destroyed
         GameObject [] buggyShips = GameObject.FindGameObjectsWithTag("temporaryship");
 
         foreach (GameObject ship in buggyShips)
@@ -426,7 +381,6 @@ public class HexField : MonoBehaviour {
                 Destroy(ship);
             }
         }
-        //direction = (Network.isServer) ? (destination.transform.position - origin.transform.position).normalized * 0.04f : (destination.transform.position - origin.transform.position).normalized * 0.04f*(-1);
         
         
        
@@ -439,6 +393,7 @@ public class HexField : MonoBehaviour {
         Destroy(tempSpaceship);
     }
 
+    // reset prepared(elevated) ship to its default position
     [RPC]
     public void unPrepareShip()
     {
@@ -457,12 +412,13 @@ public class HexField : MonoBehaviour {
             
     }
 
+    // send a ship from the field represented by the originID to the field represented by the destinationID
     [RPC]
     public void sendShip(NetworkViewID originId, NetworkViewID destinationId)
     {
         NetworkView originView = NetworkView.Find(originId);
         origin = originView.gameObject;
-        Debug.Log(origin.name + "THATS MY NAME; LOOOOOK");
+
         NetworkView destinationView = NetworkView.Find(destinationId);
         GameObject destination = destinationView.gameObject;
         destinationHex = destination;
@@ -473,10 +429,11 @@ public class HexField : MonoBehaviour {
         
         foreach (Transform child in destination.transform)
         {
+            // other ships or bases don't need a ship.
             if (child.name == "spaceshipECO(Clone)" || child.name == "spaceshipMIL(Clone)")
                destinationNeedsShip = false;
 
-             if (child.name == "baseECO(Clone)")
+            if (child.name == "baseECO(Clone)" || child.name == "baseMIL(Clone)")
                destinationNeedsShip = false;
         }
 
@@ -495,6 +452,52 @@ public class HexField : MonoBehaviour {
        
     }
 
+    // build a BaseSpecialisation on the hexfield(given through its networkviwid)
+    [RPC]
+    void buildBase(NetworkViewID id, int selectedRace, int callingOwner)
+    {
+        ArrayList highlights = new ArrayList();
+        string resource = "";
+        ArrayList highlights2 = new ArrayList();
+        string resource2 = "";
+
+        NetworkView view = NetworkView.Find(id);
+        GameObject selectedHexagon = view.gameObject;
+        GameObject baseBuilding = null;
+        if (selectedRace == 1)
+        {
+            // player building the Specialisation is Military race
+            baseBuilding = Resources.Load("baseMIL", typeof(GameObject)) as GameObject;
+            highlights.Add(1);
+            resource = "baseMIL(Clone)/Cylinder";
+        }
+        else
+        {
+            // player building the Specialisation is Economy race
+            baseBuilding = Resources.Load("baseECO", typeof(GameObject)) as GameObject;
+            highlights.Add(2);
+            highlights.Add(3);
+            highlights.Add(4);
+            resource = "baseECO(Clone)/Silo";
+            //spaceship
+            highlights2.Add(1);
+            highlights2.Add(2);
+            resource2 = "baseECO(Clone)/Spaceship";
+        }
+        // building is instantiated on each player. Not(!) via network.instantiate. Thus communication has to run via the HexField script's RPC methods
+        GameObject basicBuilding = Instantiate(baseBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
+
+        selectedHexagon.GetComponent<HexField>().owner = callingOwner;
+        FinishedBuilding = true;
+        basicBuilding.transform.parent = selectedHexagon.transform;
+
+        setColor(resource, highlights);
+        setColor(resource2, highlights2);
+        highlights.Clear();
+        highlights2.Clear();
+    }
+
+    // build a MilitarySpecialisation on the hexfield(given through its networkviwid)
     [RPC]
     void buildMilitary(NetworkViewID id, int selectedRace, int builder)
     {
@@ -507,8 +510,10 @@ public class HexField : MonoBehaviour {
         GameObject milBuildingState2 = null;
         GameObject milBuildingState3 = null;
 
+        // the 
         Quaternion buildingQuaternion = (Network.isServer) ? Quaternion.Euler(0.0f, 0.0f, 0.0f) : Quaternion.Euler(0.0f, 180.0f, 0.0f);
         
+        // load and Instantiate 3 states. every state represents a different building phase. During the build process(handled by the maincontroller) these states are toggled after each other. Thus a "building animation" is created
         if (selectedRace == 1)
         {
             milBuildingState1 = Resources.Load("militaryMILState1", typeof(GameObject)) as GameObject;
@@ -527,7 +532,6 @@ public class HexField : MonoBehaviour {
         GameObject militaryBuildingState1 = Instantiate(milBuildingState1, selectedHexagon.transform.position, buildingQuaternion) as GameObject;
         GameObject militaryBuildingState2 = Instantiate(milBuildingState2, selectedHexagon.transform.position, buildingQuaternion) as GameObject;
         GameObject militaryBuildingState3 = Instantiate(milBuildingState3, selectedHexagon.transform.position,buildingQuaternion) as GameObject;
-        //selectedHexagon.renderer.material = Resources.Load("militaryMaterial", typeof(Material)) as Material;
 
         militaryBuildingState1.transform.parent = selectedHexagon.transform;
         militaryBuildingState2.transform.parent = selectedHexagon.transform;
@@ -538,43 +542,16 @@ public class HexField : MonoBehaviour {
 
         if ((builder == 2 && Network.isServer) || builder == 1 && Network.isClient)
         {
+            // if the enemy is building in the influence area of the player the field the enemy built on is now no longer in the players influence area
             decolorUnownedArea();
         }
-        /*GameObject unitText = new GameObject();
-        TextMesh text = unitText.AddComponent<TextMesh>();
-        text.characterSize = 0.1f;
-        Font font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-        text.font = font;
-        text.renderer.material = font.material;
-        text.anchor = TextAnchor.MiddleCenter;
-        unitText.transform.parent = selectedHexagon.transform;
-        unitText.transform.position = selectedHexagon.transform.position;
-        unitText.transform.Rotate(new Vector3(45, 0, 0));*/
 
         setColor(resource, highlights);
         highlights.Clear();
         ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
     }
 
-    /*[RPC]
-    void buildResearch(NetworkViewID id)
-    {
-        NetworkView view = NetworkView.Find(id);
-        GameObject selectedHexagon = view.gameObject;
-        GameObject resBuilding = null;
-        if (selectedRace == 1)
-        {
-            resBuilding = Resources.Load("economyMIL", typeof(GameObject)) as GameObject;
-        }
-        else
-        {
-            resBuilding = Resources.Load("economyECONOMY", typeof(GameObject)) as GameObject;
-        }
-        GameObject researchBuilding = Instantiate(resBuilding, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
-        //selectedHexagon.renderer.material = Resources.Load("researchMaterial", typeof(Material)) as Material;
-        researchBuilding.transform.parent = selectedHexagon.transform;
-    }*/
-
+    // build a EconomySpecialisation on the hexfield(given through its networkviwid)
     [RPC]
     void buildEconomy(NetworkViewID id, int selectedRace)
     {
@@ -593,6 +570,8 @@ public class HexField : MonoBehaviour {
         GameObject ecoBuildingState1 = null;
         GameObject ecoBuildingState2 = null;
         GameObject ecoBuildingState3 = null;
+
+        // load and Instantiate 3 states. every state represents a different building phase. During the build process(handled by the maincontroller) these states are toggled after each other. Thus a "building animation" is created
         if (selectedRace == 1)
         {
             ecoBuildingState1 = Resources.Load("economyMILState1", typeof(GameObject)) as GameObject;
@@ -620,7 +599,7 @@ public class HexField : MonoBehaviour {
         GameObject economyBuildingState1 = Instantiate(ecoBuildingState1, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         GameObject economyBuildingState2 = Instantiate(ecoBuildingState2, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
         GameObject economyBuildingState3 = Instantiate(ecoBuildingState3, selectedHexagon.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as GameObject;
-        //selectedHexagon.renderer.material = Resources.Load("economyMaterial", typeof(Material)) as Material;
+
         economyBuildingState1.transform.parent = selectedHexagon.transform;
         economyBuildingState2.transform.parent = selectedHexagon.transform;
         economyBuildingState3.transform.parent = selectedHexagon.transform;
@@ -648,6 +627,7 @@ public class HexField : MonoBehaviour {
         hex.GetComponent<HexField>().yPos = y;
     }
 
+    // visualize the troopsize on the field via HealthBar
     [RPC]
     void showTroops(int troops)
     {
@@ -676,20 +656,24 @@ public class HexField : MonoBehaviour {
             finishedBuilding = false;
         }
     }
+
+    // this method is called from the attacker's maincontroller and executed only on the defenders side.
     [RPC]
-    void processAttack(NetworkViewID id, int sendingTroops, int attackerWeaponType)
+    void processAttack(NetworkViewID id, int sendingTroops, int attackerWeaponType, int attackerRace)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
-        GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().receiveAttack(hex, sendingTroops, attackerWeaponType);
+        GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().receiveAttack(hex, sendingTroops, attackerWeaponType, attackerRace);
     }
 
+    // called after the from the defenders side after his maincontroller evaluated the attack as successful
     [RPC]
     void successfulAttack(NetworkViewID id, int survivingTroops, Vector3 pos, bool win)
     {
         StartCoroutine(SuccessfulAttack(id, survivingTroops, pos, win));
     }
 
+    // call the maincontroller's attack success on the attacker's side after a short delay
     private IEnumerator SuccessfulAttack(NetworkViewID id, int survivingTroops, Vector3 pos, bool win)
     {
         yield return new WaitForSeconds(3);
@@ -698,7 +682,7 @@ public class HexField : MonoBehaviour {
         GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>().attackSuccess(hex, survivingTroops, pos, win);
     }
 
-    
+    // called on the defender's side after her lost a fight. destroys everything on this hexfield(his military building, spaceship, healthbars etc)
     [RPC]
     void explobumm(NetworkViewID id)
     {
@@ -708,7 +692,6 @@ public class HexField : MonoBehaviour {
         {
             Object.Destroy(child.gameObject);
             Destroy(tempSpaceship);
-            //TODO: explobumm(Partikeleffekt)
         }
     }
 
@@ -720,10 +703,10 @@ public class HexField : MonoBehaviour {
         hex.GetComponent<HexField>().owner = owner;
     }
 
+    // toggle between buildingstates. this creates an building animation.
     [RPC]
     void toggleVisibility(NetworkViewID id, int state, string alienRaceBuilding)
     {
-        Debug.Log(gameObject.name + "I am trying to toggle");
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
         Transform state1 = null;
@@ -731,21 +714,20 @@ public class HexField : MonoBehaviour {
         Transform state3 = null;
         foreach (Transform child in hex.transform)
         {
-            Debug.Log("child name:"+ child.name);
-            if (child.name == alienRaceBuilding + "State1(Clone)")
+            if (child.name.Equals(alienRaceBuilding + "State1(Clone)", System.StringComparison.InvariantCultureIgnoreCase))
             {
-                Debug.Log("child name:" + child.name);
                 state1 = child;
             }
-            if (child.name == alienRaceBuilding + "State2(Clone)")
+            if (child.name.Equals(alienRaceBuilding + "State2(Clone)", System.StringComparison.InvariantCultureIgnoreCase))
             {
                 state2 = child;
             }
-            if (child.name == alienRaceBuilding + "State3(Clone)")
+            if (child.name.Equals(alienRaceBuilding + "State3(Clone)", System.StringComparison.InvariantCultureIgnoreCase))
             {
                 state3 = child;
             }     
         }
+
         switch (state)
         {
             case 1:
@@ -766,13 +748,12 @@ public class HexField : MonoBehaviour {
         }
     }
 
+    // called at the end of the building animation. destroy everything but the final building state
     [RPC]
     void destroyBuilding(NetworkViewID id, string alienRace)
     {
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
-        //hex.GetComponent<HexField>().owner = 0;
-        //hex.GetComponent<HexField>().specialisation = null;
 
         foreach (Transform child in hex.transform)
         {

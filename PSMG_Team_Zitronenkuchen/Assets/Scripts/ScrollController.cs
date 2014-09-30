@@ -2,6 +2,9 @@
 using System.Collections;
 using iViewX;
 
+/**
+ * This class handles the scrolling of the camera along the map(including checking that the camera does not move outside the map borders)
+ **/
 public class ScrollController : MonoBehaviourWithGazeComponent
 {
 
@@ -38,6 +41,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     private float viewPortY;
 
     private Vector3 movement;
+
     // Use this for initialization
     void Start()
     {
@@ -61,7 +65,6 @@ public class ScrollController : MonoBehaviourWithGazeComponent
            borderBottom = gameField.transform.position.z;
            borderLeft = gameField.transform.position.x + 1.0f;
            borderRight = CreateGameField.getFieldWidth() - 0.7f;
-           //Debug.Log("Network is server");
 
        }
        else
@@ -70,15 +73,12 @@ public class ScrollController : MonoBehaviourWithGazeComponent
            borderTop = gameField.transform.position.z;
            borderLeft = CreateGameField.getFieldWidth() - 0.7f;
            borderRight = gameField.transform.position.x;
-           //Debug.Log(borderBottom + "top" + borderTop + "left" + borderLeft + "right" + borderRight);
        }
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        //diagonal movement already possible
 
         if (Input.mousePosition.x <= left)
         {
@@ -113,7 +113,6 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 
         determineDirection(direction);
         movement = new Vector3(speed * xDirection, 0, speed * yDirection);
-        //Debug.Log(movement.x + movement.z);
         camera.transform.Translate(movement * Time.deltaTime * 2);
         
 
@@ -220,23 +219,6 @@ public class ScrollController : MonoBehaviourWithGazeComponent
                 xDirection = 0;
                 yDirection = (hitBottomBorder()) ? 0 : -1;
                 break;
-            /* might use later, when eyetrackerscrolling returns :(
-            case "UpRight":
-                xDirection = 1;
-                yDirection = 1;
-                break;
-            case "DownRight":
-                xDirection = 1;
-                yDirection = -1;
-                break;
-            case "DownLeft":
-                xDirection = -1;
-                yDirection = -1;
-                break;
-            case "UpLeft":
-                xDirection = -1;
-                yDirection = 1;
-                break; */
         }
     }
 

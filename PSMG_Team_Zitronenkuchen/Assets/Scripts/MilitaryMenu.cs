@@ -2,31 +2,26 @@
 using System.Collections;
 using iViewX;
 
+/**
+ * This script is responsible for showing a popup menu for fields that have a military specialisation and handel its own button's actions like recruiting moving and attacking.
+ **/
 public class MilitaryMenu : MonoBehaviour {
 
-    // Setup your style of the Buttons
-    // Note: you must define your own style.
+    // style of the Buttons
     public GUIStyle myStyle;
     public GUISkin mySkin;
 
+    // sound to be played when a button action is selected
     public AudioClip select;
 
     private static bool menuOpen = false;
-
-    // Save all GazeButtonElements in an arrayList / List
+ 
     private ArrayList gazeUI = new ArrayList();
-    // Set an Status for the Drawing of the Elements
     private bool isDrawing = false;
-
-    private Vector3 positionOfHexagon;
-    private GameObject militaryBuilding;
-    private GameObject researchBuilding;
-    private GameObject economyBuilding;
 
     private GameObject selectedHexagon;
     private GameObject attackingHex;
 
-    private ChangeFieldStateOnClick fieldScript;
     private MainController mainController;
 
     private bool clicked = false;
@@ -36,6 +31,7 @@ public class MilitaryMenu : MonoBehaviour {
     private int troopSize;
 
     #region ButtonActions
+
     // Attack start action 
     public void button1_Action()
     {
@@ -45,33 +41,34 @@ public class MilitaryMenu : MonoBehaviour {
         int troops = mainController.moveTroops(selectedHexagon);
         if (troops > 0)
         {
+            // only continue if there are troops to attack with
             view.RPC("prepareShip", RPCMode.AllBuffered);
             mainController.startTroopSend(troops, attack);
         }
-        Debug.Log("Button1_Pressed");
     }
 
     // Move troops start action
     public void button2_Action()
     {
-        if (!clicked) {
+        if (!clicked) 
+        {
             NetworkView view = attackingHex.networkView;
-
 
             bool attack = false;
             int troops = mainController.moveTroops(selectedHexagon);
-            //mainController.setRanges();
+
             if (troops > 0)
             {
+                // only continue if there are troops to move
                 view.RPC("prepareShip", RPCMode.AllBuffered);
                 mainController.startTroopSend(troops, attack);
-            }
-            
+            }            
 
             clicked = true;
         }
        
     }
+
     // Recruit action
     public void button3_Action()
     {
@@ -80,24 +77,21 @@ public class MilitaryMenu : MonoBehaviour {
         {
             if (mainController.buildTroops())
             {
+                // only increase recruitcounter if the player can afford it
                 ((MilitarySpecialisation) selectedHexagon.GetComponent<HexField>().spec).RecruitCounter += 25;
                
             }
             clicked = true;
-            Debug.Log("Button3_Pressed");
         }
         ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
         
     }
+
     // Move here action
     public void button4_Action()
-    {
-        
-
-        Debug.Log("Button4_Pressed");
+    {        
         if (!clicked)
         {
-
              
             NetworkView attackingView = attackingHex.networkView;
             NetworkViewID attackingViewId = attackingView.viewID;
@@ -108,9 +102,7 @@ public class MilitaryMenu : MonoBehaviour {
 
             mainController.sendTroops(selectedHexagon);
 
-           
-            mainController.sendTroops(selectedHexagon);
-            Debug.Log("Button4_Pressed");
+            // reset Highlighting of possible targets
             foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
             {
                 Destroy(highlighter);
@@ -131,30 +123,32 @@ public class MilitaryMenu : MonoBehaviour {
         NetworkViewID selectedViewId = selectedView.viewID;
         attackingView.RPC("sendShip", RPCMode.AllBuffered, attackingViewId, selectedViewId);
 
-        Debug.Log("Button5_Pressed");
+        // reset Highlighting of possible targets
         foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
         {
             Destroy(highlighter);
         }
         mainController.resetRanges();
     }
+
     // Cancel Troop send action
     public void button6_Action()
     {
         mainController.cancelTroopMovement();
         NetworkView view = attackingHex.networkView;
         view.RPC("unPrepareShip", RPCMode.AllBuffered);
-        Debug.Log("Button6_Pressed");
+
+        // reset Highlighting of possible targets
         foreach (GameObject highlighter in GameObject.FindGameObjectsWithTag("Highlighter"))
         {
             Destroy(highlighter);
         }
         mainController.resetRanges();
     }
+
     // Specialise on Laser
     public void button7_Action()
     {
-        Debug.Log("LASER");
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.LASER;
         placeEmptySpaceShip();
         type = "LASER";
@@ -163,7 +157,6 @@ public class MilitaryMenu : MonoBehaviour {
     // Specialise on Protons
     public void button8_Action()
     {
-        Debug.Log("PROTONS");
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.PROTONS;
         placeEmptySpaceShip();
         type = "PROTONS";
@@ -171,7 +164,6 @@ public class MilitaryMenu : MonoBehaviour {
     // Specialise on EMP
     public void button9_Action()
     {
-        Debug.Log("EMP");
         ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponType = MilitarySpecialisation.EMP;
         placeEmptySpaceShip();
         type = "EMP";
@@ -182,22 +174,14 @@ public class MilitaryMenu : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        Debug.Log("StartPopup");
         mainController = GameObject.FindGameObjectWithTag("MainController").GetComponent<MainController>();
     }
 
+    // called from changefieldstateonclick when space is pressed on a military or base node
     public void openMenu(Vector3 pos, GameObject hex, ChangeFieldStateOnClick script)
-    {
-        
-        
-
-        //Set the Actions of the Buttons
-        
-
-        fieldScript = script;
-
+    { 
         selectedHexagon = hex;
-
+        //Set the Actions of the Buttons 
         buttonCallbackListener attackButton = button1_Action;
         buttonCallbackListener moveButton = button2_Action;
         buttonCallbackListener buildButton = button3_Action;
@@ -210,20 +194,16 @@ public class MilitaryMenu : MonoBehaviour {
 
         bool isSending = mainController.isSending()>0;
 
-        Debug.Log("Im not opennning because is sending is" + isSending);
-        Debug.Log("Stupid MainController says I have that many troops" + mainController.isSending());
-
-
-        Debug.Log(isSending + ", " + hex.GetComponent<HexField>().InRange);
         //Create new Buttonelements and add them to the gazeUI
         if (!isSending && ((hex.GetComponent<HexField>().owner == 1 && Network.isServer) || (hex.GetComponent<HexField>().owner == 2 && Network.isClient)))
         {
-            Debug.Log("so i've got that far");
+            // troops are not sent and player tries to open popupmenu on his own military or base node
             if (!(hex.GetComponent<HexField>().spec is BaseSpecialisation))
             {
-                Debug.Log(((MilitarySpecialisation)hex.GetComponent<HexField>().spec).WeaponType);
+                // military node
                 if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).WeaponType == 0)
                 {
+                    // Military node not specialised yet. show specialisation options
                     showInfoPanel = false;
                     gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y - 180, 220, 200), "LASER \n FLEET", myStyle, laser));
                     gazeUI.Add(new GazeButton(new Rect(pos.x + 20, pos.y, 220, 200), " PROTON \n TORPEDO FLEET", myStyle, protons));
@@ -231,11 +211,12 @@ public class MilitaryMenu : MonoBehaviour {
                 }
                 else
                 {
+                    // military node is already specialised. show info panel
+                    showInfoPanel = true;
                     if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).Troops < 100)
                     {
+                        // troop max not reached. recruiting is possible
                         attackingHex = selectedHexagon;
-                        showInfoPanel = true;
-                        Debug.Log("so i've got that far and somehow cant show you my buttons LOOOOOOOOOOOOOK");
                         if (((MilitarySpecialisation)hex.GetComponent<HexField>().spec).RecruitCounter == 0)
                         {
                             gazeUI.Add(new GazeButton(new Rect(pos.x - 110, pos.y + 50, 220, 200), "ATTACK", myStyle, attackButton));
@@ -245,47 +226,43 @@ public class MilitaryMenu : MonoBehaviour {
                     }
                     else
                     {
-                        showInfoPanel = true;
                         gazeUI.Add(new GazeButton(new Rect(pos.x - 260, pos.y - 80, 220, 200), "ATTACK", myStyle, attackButton));
                         gazeUI.Add(new GazeButton(new Rect(pos.x + 40, pos.y - 80, 220, 200), " \n MOVE TROOPS", myStyle, moveButton));
                     }
                 }
             }
+            // Base node. only info panel is shown
             else showInfoPanel = true;
         }
-        else if (isSending && hex.GetComponent<HexField>().InRange) // troops are being sent
+        else if (isSending && hex.GetComponent<HexField>().InRange) 
         {
-            Debug.Log("Owner: "+hex.GetComponent<HexField>().owner+", Is Server?"+Network.isServer);
+            // troops are being sent
             if ((hex.GetComponent<HexField>().owner == 2 && Network.isServer) || (hex.GetComponent<HexField>().owner == 1 && Network.isClient))
             {
+                // player opened menu on enemy node
                 gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "ATACK HERE", myStyle, attacking));
             }
             else
             {
-                Debug.Log("SO YOUR ASSUMPTION IS: " + (hex == attackingHex)); 
+                // player opened menu on own node
                 if (!(hex == attackingHex))
                 gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y - 150, 220, 200), "MOVE HERE", myStyle, moving));
             }
             showInfoPanel = false;
             gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y +  50, 220, 200), "CANCEL", myStyle, canceling));
                 
-        } if (isSending && hex == attackingHex) {
+        } if (isSending && hex == attackingHex)
+        {
+            // plaver opened menu on the node from which he is moving/attacking. enable cancel
             showInfoPanel = false;
             gazeUI.Add(new GazeButton(new Rect(pos.x - 100, pos.y + 50, 220, 200), "CANCEL", myStyle, canceling));
 
         }
-        //Debug.Log(gazeUI);
         menuOpen = true;
     }
 
     void closeMenu()
     {
-        Debug.Log("closeMenu");
-        GameObject field = GameObject.FindGameObjectWithTag("Field");
-        int layerDef = LayerMask.NameToLayer("Default");
-        moveToLayer(field.transform, layerDef);
-        
-        //ChangeFieldStateOnClick.resetHighlighting(selectedHexagon);
         menuOpen = false;
         clicked = false;
         showInfoPanel = false;
@@ -295,20 +272,12 @@ public class MilitaryMenu : MonoBehaviour {
     {
         NetworkView view = selectedHexagon.networkView;
         NetworkViewID id = view.viewID;
-        view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id);
-       
+        view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id);       
     }
 
     public static bool isOpen()
     {
         return menuOpen;
-    }
-
-    void moveToLayer(Transform root, int layer)
-    {
-        root.gameObject.layer = layer;
-        foreach (Transform child in root)
-            moveToLayer(child, layer);
     }
 
     void OnGUI()
@@ -321,6 +290,7 @@ public class MilitaryMenu : MonoBehaviour {
             {
                 if (showInfoPanel)
                 {
+                    // show weaponname and troopcount in the infopanel
                     if (selectedHexagon.GetComponent<HexField>().spec is MilitarySpecialisation)
                     {
                         troopSize = ((MilitarySpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
@@ -330,7 +300,6 @@ public class MilitaryMenu : MonoBehaviour {
                     {
                         troopSize = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).Troops;
                         type = ((BaseSpecialisation)selectedHexagon.GetComponent<HexField>().spec).WeaponName;
-                        Debug.Log(type);
                     }
                     GUI.Box(new Rect(Screen.width / 2 - 130, Screen.height / 2 - 180, 250, 200), "FLEET TYPE: \n " + type + "\n FLEET SIZE: \n" + troopSize);
                 }
@@ -339,12 +308,6 @@ public class MilitaryMenu : MonoBehaviour {
             {
                 button.OnGUI();
             }
-        }
-
-        if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Space)
-        {
-            //Debug.Log("You pressed Space");
-
         }
     }
 

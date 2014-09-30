@@ -1,4 +1,10 @@
-﻿// LAN UDP-Broadcast Service Script
+﻿/** 
+ * This script is retrieved from http://forum.unity3d.com/threads/working-script-for-udp-broadcast-over-lan-to-find-servers.34353/ and was only slightly changed to fix some bugs caused by newer Unity versions
+ * It is used to connect the players without knowing their ips. If a player searches and finds no server he initializes one and starts announcing that he has a server. If a player searches and finds another one announcing he connects to this server's ip.
+ * This script only searches for the IP address, the Initialization of the Server and the Connecting are defined in the Connection Behaviour script and called as delegate from this script.
+ * Further information on this script see the comments of the creator below.
+ **/
+// LAN UDP-Broadcast Service Script
 // 12-11-2009
 // Made by Jordin Kee aka Jordos
 // You may use and/or modify this script as you like. Crediting is welcome, but not required.
@@ -109,12 +115,10 @@ public class LANBroadcastService : MonoBehaviour
 
         if (currentState == enuState.Searching)
         {
-            Debug.Log("currently searching");
             // Check the list of messages to see if there is any 'i have a server ready' message present
             foreach (ReceivedMessage objMessage in lstReceivedMessages)
             {
                 // If we have a server that is ready, call the right delegate and stop searching
-                Debug.Log("received message is ready: " + objMessage.bIsReady);
                 if (objMessage.bIsReady)
                 {
                     StopSearching();
@@ -126,8 +130,6 @@ public class LANBroadcastService : MonoBehaviour
             // Check if we're ready searching.
             if (currentState == enuState.Searching && ((DateTime.Now.Ticks) / ((long) Math.Pow(10, 7))) > fTimeSearchStarted + fTimeToSearch)
             {
-                Debug.Log("Now: " + ((DateTime.Now.Ticks) / ((float)Math.Pow(10, 7))) + ", Time started: " + fTimeSearchStarted + ", time to search: " + fTimeToSearch);
-                Debug.Log("search is over");
                 // We are. Now determine who's gonna be the server.
 
                 // This string holds the ip of the new server. We will start off pointing ourselves as the new server
@@ -135,7 +137,6 @@ public class LANBroadcastService : MonoBehaviour
                 // Next, we loop through the other messages, to see if there are other players that have more right to be the server (based on IP)
                 foreach (ReceivedMessage objMessage in lstReceivedMessages)
                 {
-                    Debug.Log("search over, received message ip: " + objMessage.strIP);
                     if (ScoreOfIP(objMessage.strIP) > ScoreOfIP(strIPOfServer))
                     {
                         // The score of this received message is higher, so this will be our new server
@@ -145,7 +146,6 @@ public class LANBroadcastService : MonoBehaviour
                 // If after the loop the highest IP is still our own, call delegate to start a server and stop searching
                 if (strIPOfServer == playerAddress)
                 {
-                    Debug.Log("We will start Server");
                     StopSearching();
                     strMessage = "We will start server.";
                     delWhenServerMustStarted();
@@ -153,7 +153,6 @@ public class LANBroadcastService : MonoBehaviour
                 // If it's not, someone else must start the server. We will simply have to wait as the server is clearly not ready yet
                 else
                 {
-                    Debug.Log("Another player will start Server");
                     strMessage = "Found server. Waiting for server to get ready...";
                     // Clear the list and do the search again.
                     lstReceivedMessages.Clear();
@@ -196,7 +195,6 @@ public class LANBroadcastService : MonoBehaviour
     // Method to start this object announcing this is a server, used by the script itself
     private void StartAnnouncing()
     {
-        Debug.Log("Started Server");
         currentState = enuState.Announcing;
         strMessage = "Announcing we are a server...";
     }

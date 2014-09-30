@@ -1,9 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * This script is assigned to each EconomySpecialisation the player builds
+ **/
 public class EconomySpecialisation : Specialisation {
 
     private int buildCounter = 1;
+
+    // call constructor of the base class
     public EconomySpecialisation(GameObject hex, Vector3 pos) : base(hex, pos) { }
 
     public override int Cost
@@ -19,7 +24,6 @@ public class EconomySpecialisation : Specialisation {
         get { return "eco"; }
     }
 
-    // maybe needed later for not building instant
     public override int BuildCounter
     {
         get

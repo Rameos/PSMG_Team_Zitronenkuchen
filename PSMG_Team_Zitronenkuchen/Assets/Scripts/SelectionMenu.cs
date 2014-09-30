@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * This script is attached to the Selection_Menu scene and handels the selection of Alien races.
+ **/
 public class SelectionMenu : MonoBehaviour {
 
     public AudioClip selectSound;
@@ -13,7 +16,8 @@ public class SelectionMenu : MonoBehaviour {
     public int width;
     public int height;
 
-    private static int selectedRaceIdx = -1; // 0 for research, 1 for military, 2 for economy
+    // 1 for military, 2 for economy
+    private static int selectedRaceIdx = -1; 
 
     private Vector3 noScale = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3 highlightScale = new Vector3 (0.05f, 0.05f, 0.0f);
@@ -33,7 +37,6 @@ public class SelectionMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-       // GUI.matrix = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(horizRatio, vertRatio, 1));
         GameObject militaryAlien = GameObject.Find("MilitaryAlienRace");
         GameObject economyAlien = GameObject.Find("EconomyAlienRace");
         militaryAlien.transform.position = new Vector3(0.10f,0.30f, 0);
@@ -55,6 +58,7 @@ public class SelectionMenu : MonoBehaviour {
         
     }
 
+    // player selected a race. highlight the race(image and text). eventually de-highlight the previous selected race
     void OnMouseUp()
     { 
         switch (gameObject.tag)
@@ -125,7 +129,7 @@ public class SelectionMenu : MonoBehaviour {
         alien.guiText.color = Color.white;
     }
 
-    //returns index of selected race:  0 for research, 1 for military, 2 for economy
+    //returns index of selected race:  1 for military, 2 for economy
     public static int getRaceType()
     {
         return selectedRaceIdx;

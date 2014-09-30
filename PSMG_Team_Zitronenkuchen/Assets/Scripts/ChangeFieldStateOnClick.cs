@@ -2,15 +2,15 @@
 using System.Collections;
 using iViewX;
 
+/**
+ * This script is assigned to every Hexfield
+ * It manages highlighting the hexfield on gaze and the opening of popupmenues when spacebar is clicked
+ **/
 public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 {
+    // if field is already specialised(built on) or not
     private bool set = false;
- 
-    PopUpMenu popUpMenu;
-    MilitaryMenu milMenu;
-    HexField currentField;
     
-
 
     public override void OnGazeEnter(RaycastHit hit)
     {
@@ -24,38 +24,25 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // user staring at the field and pressing space -> open menu
+            // user gazing at the field and pressing space -> open menu
             Vector3 pos = new Vector3(Screen.width / 2, Screen.height / 2, 0);
-            Vector3 nullVect = new Vector3(0, 0, 0);
 
           
             
             if (!set)
             {
-                // field not set yet
+                // field has no specialisation -> show normal popup(build) menu
                 showPopupMenu(pos);
             }
 
             else if ((hit.transform.gameObject.GetComponent<HexField>().specialisation == "Military" || hit.transform.gameObject.GetComponent<HexField>().specialisation == "Base") && hit.transform.gameObject.GetComponent<HexField>().FinishedBuilding == true)
             {                
-                // field set to military or base
-                if ((hit.transform.gameObject.GetComponent<HexField>().owner == 1 && Network.isServer) || (hit.transform.gameObject.GetComponent<HexField>().owner == 2 && Network.isClient))
-                {
-                    //necessary???!!!
-                    if (hit.transform.gameObject.GetComponent<HexField>().specialisation == "Military")
-                    {
-                        if (((MilitarySpecialisation)hit.transform.gameObject.GetComponent<HexField>().spec).RecruitCounter == 0) showMilitaryMenu(pos);
-                    }
-                    else
-                    {                       
-                        if (((BaseSpecialisation)hit.transform.gameObject.GetComponent<HexField>().spec).RecruitCounter == 0) showMilitaryMenu(pos);
-                    }      
-                }
+                // field has military or base specialisation
                 showMilitaryMenu(pos);
             }
             else
             {
-                // if user hits already set field that ius nit military -> nothing happens
+                // if user hits already set field that is nit military(own or opponent economy) -> nothing happens
             }
             
                 
@@ -71,6 +58,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
     {
         if (!PopUpMenu.isOpen() && !MilitaryMenu.isOpen())
         {
+            // only highlight the hexfield the player gazes on when no menu is opened
             gameObject.transform.renderer.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
         }
     }
@@ -81,50 +69,33 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
         resetMaterial();
     }
 
+
     private void resetMaterial()
     {
         if (!PopUpMenu.isOpen() && !MilitaryMenu.isOpen())
         {
+            // only reset the material on the hexfield the player gazes on when no menu is opened
             gameObject.transform.renderer.material.shader = Shader.Find("Diffuse"); 
         }
     }
 
 
 
-    // show the standard popup menu when a field which is not set was clicked
+    // show the standard popup menu(build menu)
     private void showPopupMenu(Vector3 pos)
     {
-        // Debug.Log("showPopupMenu");
-
-        GameObject field = GameObject.FindGameObjectWithTag("Field");
-        int layer = LayerMask.NameToLayer("Ignore Raycast");
-        moveToLayer(field.transform, layer);
-
-        popUpMenu = GameObject.FindWithTag("PointLight").GetComponent<PopUpMenu>();
+        PopUpMenu popUpMenu = GameObject.FindWithTag("PointLight").GetComponent<PopUpMenu>();
         popUpMenu.openMenu(pos, gameObject, this);
     }
 
-    // show military menu when a military field is clicked
+    // show military menu
     private void showMilitaryMenu(Vector3 pos)
     {
-        // Debug.Log("showMilitaryMenu");
-
-        GameObject field = GameObject.FindGameObjectWithTag("Field");
-        int layer = LayerMask.NameToLayer("Ignore Raycast");
-        moveToLayer(field.transform, layer);
-
-        milMenu = GameObject.FindWithTag("PointLight").GetComponent<MilitaryMenu>();
+        MilitaryMenu milMenu = GameObject.FindWithTag("PointLight").GetComponent<MilitaryMenu>();
         milMenu.openMenu(pos, gameObject, this);
     }
 
-    void moveToLayer(Transform root, int layer)
-    {
-        root.gameObject.layer = layer;
-        foreach (Transform child in root)
-            moveToLayer(child, layer);
-    }
-
-
+    // mark field as set
     [RPC]
     public void fieldSet()
     {

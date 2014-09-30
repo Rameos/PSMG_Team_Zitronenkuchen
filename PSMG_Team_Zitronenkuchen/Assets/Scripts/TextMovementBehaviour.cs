@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * This class handles Text Movement in the Intro scene
+ **/
 public class TextMovementBehaviour : MonoBehaviour {
 
     Vector3 destination;
     Vector3 start;
     private float startTime;
     private float movementLength;
+
 	// Use this for initialization
 	void Start () {
       destination = new Vector3(0.0216f, 1.4106f, -9.531f);

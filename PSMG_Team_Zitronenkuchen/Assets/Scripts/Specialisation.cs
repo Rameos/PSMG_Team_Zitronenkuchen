@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * This abstract class is the base for the Military, Economy and BaseSpecialisation.
+ **/
 public abstract class Specialisation {
 
     private GameObject hex;

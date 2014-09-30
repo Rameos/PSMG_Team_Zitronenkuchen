@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * This script is assigned to the MilitarySpecialisation of each player
+ **/
 public class MilitarySpecialisation : Specialisation {
 
     private int troops = 0;
@@ -12,6 +15,7 @@ public class MilitarySpecialisation : Specialisation {
     public const int PROTONS = 2;
     public const int EMP = 3;
 
+    // call constructor of base class
     public MilitarySpecialisation(GameObject hex, Vector3 pos) : base(hex, pos) { }
 
     public override int Cost
@@ -51,7 +55,6 @@ public class MilitarySpecialisation : Specialisation {
         }
     }
 
-    // maybe needed later for not building instant
     public override int BuildCounter
     {
         get
@@ -104,11 +107,11 @@ public class MilitarySpecialisation : Specialisation {
         {
             switch(weaponType)
             {
-                case 1:
+                case LASER:
                     return "LASER";
-                case 2:
+                case PROTONS:
                     return "PROTONS";
-                case 3:
+                case EMP:
                     return "EMP";
                 default:
                     return "NONE";

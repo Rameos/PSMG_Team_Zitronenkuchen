@@ -2,6 +2,9 @@
 using System.Collections;
 using iViewX;
 
+/**
+ * This Script is used by the Alternate_Main_Menu Scene to navigate in the Main Menu, determine if only Mouse or Eyetracker and Mouse is selected and to Start the Game or Tutorial
+ **/
 public class AlternateMenu : MonoBehaviour {
 
     public bool isQuit = false;
@@ -14,14 +17,14 @@ public class AlternateMenu : MonoBehaviour {
 
     void OnMouseEnter()
     {
-        // option selected
+        // option selected - highlight color
         renderer.material.color = Color.cyan;
         audio.PlayOneShot(selectSound);
     }
 
     void OnMouseExit()
     {
-        // option deselected
+        // option deselected - default color
         renderer.material.color = Color.white;
     }
 
@@ -46,17 +49,18 @@ public class AlternateMenu : MonoBehaviour {
             // start using only mouse
             CustomGameProperties.usesMouse = true;
             Application.LoadLevel("Selection_Menu");
-            //TODO make sure Eyetracker is not used!
         }
         else if (isEyetracker)
         {
             // start using eyetracker and mouse
             CustomGameProperties.usesMouse = false;
+            // calibrate before starting
             GazeControlComponent.Instance.StartCalibration();
             Application.LoadLevel("Selection_Menu");
         }
         else if (isTutorial == true)
         {
+            // start the tutorial
             Application.LoadLevel("Tutorial");
         }
     }

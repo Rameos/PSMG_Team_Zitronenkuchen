@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ *  This script is attached to the Selection_Menu scene and handels the general navigation in this Menu scene.
+ **/
 public class SelectionMenuNavigation : MonoBehaviour {
 
     public AudioClip selectSound;
@@ -20,10 +23,12 @@ public class SelectionMenuNavigation : MonoBehaviour {
 
     void OnMouseUp()
     {
-        if (gameObject.tag == "StartGame" && ConnectionBehaviour.initializedServer)
+        if (gameObject.tag == "StartGame" && ConnectionBehaviour.initializedServer && Network.isServer)
         {
+            // only the server can start the game
             audio.PlayOneShot(UFO);
-            if (Network.isServer) networkView.RPC("LoadLevel", RPCMode.AllBuffered, "Create_Gamefield");
+            // call load level rpc method on both(!) players
+            networkView.RPC("LoadLevel", RPCMode.AllBuffered, "Create_Gamefield");
         }
 
         if (gameObject.tag == "BackToMenu") 
@@ -34,12 +39,8 @@ public class SelectionMenuNavigation : MonoBehaviour {
 
     void OnMouseExit()
     {
-        gameObject.guiText.color = new Color32(87, 192, 195, 255); //initialcolor
-    }
-	
-	// Update is called once per frame
-	void Update () {
-
+        //initialcolor
+        gameObject.guiText.color = new Color32(87, 192, 195, 255); 
     }
 
     [RPC]
@@ -50,8 +51,6 @@ public class SelectionMenuNavigation : MonoBehaviour {
 
     private IEnumerator loadLevel(string level)
     {
-        // omitted code
-
         Application.LoadLevel(level);
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();

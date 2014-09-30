@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * This script is assigned to the BaseSpecialisation of each player
+ **/
 public class BaseSpecialisation : Specialisation
 {
 	private int troops = 0;
@@ -12,9 +15,10 @@ public class BaseSpecialisation : Specialisation
     public const int PROTONS = 2;
     public const int EMP = 3;
 
-    // call base constructor
+    // call constructor of base class
     public BaseSpecialisation(GameObject hex, Vector3 pos) : base(hex, pos) { }
 
+    // bases are built autmatically at the beginning and cannot be built by the player later on. thus they cost no ressources
     public override int Cost
     {
         get
@@ -52,7 +56,6 @@ public class BaseSpecialisation : Specialisation
         }
     }
 
-    // maybe needed later for not building instant
     public override int BuildCounter
     {
         get
@@ -64,12 +67,6 @@ public class BaseSpecialisation : Specialisation
             buildCounter = value;
         }
     }
-
-    // increase troop count
-    //public void recruit()
-    //{
-    //    troops += 5;
-    //}
 
     public int WeaponType
     {
@@ -90,9 +87,6 @@ public class BaseSpecialisation : Specialisation
                 case 3:
                     weaponType = EMP;
                     break;
-                case 0:
-                    weaponType = 0;
-                    break;
                 default:
                     weaponType = 0;
                     break;
@@ -106,11 +100,11 @@ public class BaseSpecialisation : Specialisation
         {
             switch (weaponType)
             {
-                case 1:
+                case LASER:
                     return "LASER";
-                case 2:
+                case PROTONS:
                     return "PROTONS";
-                case 3:
+                case EMP:
                     return "EMP";
                 default:
                     return "NONE";
