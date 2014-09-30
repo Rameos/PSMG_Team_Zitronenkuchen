@@ -26,6 +26,8 @@ public class MainController : MonoBehaviour {
     public AudioClip building;
     public AudioClip denied;
 
+    private static bool successfullyAttacked = false;
+
     private int selectedRace = CustomGameProperties.alienRace;
 
 	// Use this for initialization
@@ -454,12 +456,12 @@ public class MainController : MonoBehaviour {
                         ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType = 0;
                         sendingTroops = 0;
 
-                        if (sendOrigin.GetComponent<HexField>().destinationHasNoShip())
+                       /* if (sendOrigin.GetComponent<HexField>().destinationHasNoShip())
                         {
                             NetworkView view = destination.networkView;
                             NetworkViewID id = view.viewID;
                             view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, selectedRace, id);
-                        }
+                        } */
                         return;
                       
                     }
@@ -500,12 +502,13 @@ public class MainController : MonoBehaviour {
 
     // called from hexfield after the troop movement animation is finished. builds a new ship on the destination if it needs one
     public static void receiveAnimationCallback()
-    {        
-        if (sendOrigin.GetComponent<HexField>().destinationHasNoShip())
+    {
+        if (sendOrigin.GetComponent<HexField>().destinationHasNoShip() || successfullyAttacked)
         {
             NetworkView view = destinationHex.networkView;
             NetworkViewID id = view.viewID;
-            view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id);
+            view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id, true);
+            successfullyAttacked = false;
         }
     }
 
@@ -513,6 +516,7 @@ public class MainController : MonoBehaviour {
     // as the enemy specialisations are not available to the player this is solved by a number of rpc calls
     public void sendAttack(GameObject destination)
     {
+        destinationHex = destination;
         NetworkViewID destinationNviewId = destination.networkView.viewID;
         int attackerWeapontype = ((MilitarySpecialisation)sendOrigin.GetComponent<HexField>().spec).WeaponType;
 
@@ -629,14 +633,18 @@ public class MainController : MonoBehaviour {
                     // if troops are even after modifier, defender wins
                     attackSuccess = false;
                 }
+
+                
                 if (attackSuccess)
                 {
+                    successfullyAttacked = true;
                     // successful attack. specialisation of the defender is destroyed
                     int survivingTroops = sentTroops - troops;
                     int owner = 0;
                     if (Network.isServer) owner = 2;
                     if (Network.isClient) owner = 1;
                     destination.GetComponent<HexField>().owner = owner;
+                    
                     specialisedNodes.Remove(node);
                     NetworkViewID destinationNviewId = destination.networkView.viewID;
                     node.Hex.networkView.RPC("explobumm", RPCMode.All, destinationNviewId);

@@ -45,7 +45,7 @@ public class ConnectionBehaviour : MonoBehaviour
             gameObject.guiText.color = new Color32 (218, 164, 59, 255); //orange
             clickedConnect = true;
             // try to connect to localhost. only for testing on one machine(with to unity instances). commented out by default
-            // if (Network.peerType == NetworkPeerType.Disconnected) Network.Connect(ip, connectionPort);
+            //if (Network.peerType == NetworkPeerType.Disconnected) Network.Connect(ip, connectionPort);
             // try to connect via the lanbroadcastservice. if there is already a server running connect will be called with that server's ip address. if there is no server running initialize will be called. not working for testing on localhost!
             gameObject.GetComponent<LANBroadcastService>().StartSearchBroadCasting(Connect, Initialize);
         }
@@ -60,12 +60,13 @@ public class ConnectionBehaviour : MonoBehaviour
             // not connected
             GUI.Label(new Rect(Screen.width / 2 - 150, Screen.height / 2 + 50 + 125, 300, 50), "Status: Disconnected");
 
-            // For initializing a server on the localhost for local testing. commented out by default.
-            //if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 80 + 125, 300, 50), "Initialize Server"))
-            //{                
-            //    Network.InitializeServer(32, connectionPort, false);
-            //    initializedServer = true;
-            //}
+            //For initializing a server on the localhost for local testing. commented out by default.
+            /*
+          if (GUI.Button(new Rect(Screen.width / 2 - 160, Screen.height / 2 + 80 + 125, 300, 50), "Initialize Server"))
+            {                
+               Network.InitializeServer(32, connectionPort, false);
+               initializedServer = true;
+            }*/
 
         }
         else if (Network.peerType == NetworkPeerType.Client)

@@ -11,6 +11,8 @@ public class HexField : MonoBehaviour {
     public int owner;
     public string specialisation;
 
+    private bool spaceshipParked = false;
+
     public Material ownedMaterial;
     public Material defaultMaterial;
     public int xPos;
@@ -25,7 +27,6 @@ public class HexField : MonoBehaviour {
 
     private string resourceRPC; // because RPC does not support as parameter type
     private ArrayList highlightsRPC; // same here
-
 
 
     private GameObject origin;
@@ -216,7 +217,7 @@ public class HexField : MonoBehaviour {
         Transform element = transform.Find(resourceRPC);
 
         // element can be null because temporary spaceships are not children of hexfields
-        if (element == null)
+        if (element == null && tempSpaceship != null)
         {
             if (CustomGameProperties.alienRace == 1)
             {
@@ -229,27 +230,36 @@ public class HexField : MonoBehaviour {
 
         }
 
-        Material[] mats;
-        mats = element.renderer.materials;
-        foreach (int num in highlightsRPC)
+        if (tempSpaceship != null)
         {
-            if (owner == 1)
+            Material[] mats;
+            mats = element.renderer.materials;
+            foreach (int num in highlightsRPC)
             {
-                mats[num] = highlightServer;
+                if (owner == 1)
+                {
+                    mats[num] = highlightServer;
+                }
+                else mats[num] = highlightClient;
             }
-            else mats[num] = highlightClient;
+            element.renderer.materials = mats;
         }
-        element.renderer.materials = mats;
+        
     }
 
 
     [RPC]
-    public void initiateTroopBuilding(int selectedRace, NetworkViewID id)
+    public void initiateTroopBuilding(int selectedRace, NetworkViewID id, bool overTakeMode)
     {
+
+        spaceshipParked = true;
         NetworkView view = NetworkView.Find(id);
         GameObject hexagon = view.gameObject;
 
         spaceshipQuaternion = (Network.isServer) ? Quaternion.Euler (0.0f, 0.0f, 0.0f) : Quaternion.Euler(0.0f, 180.0f, 0.0f);
+
+
+        spaceshipOrig = (selectedRace == 1) ? Resources.Load("spaceshipMIL", typeof(GameObject)) as GameObject : Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject;
 
         bool alreadyBuilt = false;
         foreach (Transform child in hexagon.transform)
@@ -259,14 +269,16 @@ public class HexField : MonoBehaviour {
                 alreadyBuilt = true;
         }
 
+        //if (overTakeMode) alreadyBuilt = false;
+
         if (!alreadyBuilt) {
             string resource = "";
             ArrayList highlights = new ArrayList();
             
             // instantiate a new spaceship
-            spaceshipOrig = (selectedRace == 1) ? Resources.Load("spaceshipMIL", typeof(GameObject)) as GameObject : Resources.Load("spaceshipECO", typeof(GameObject)) as GameObject;
+            
             spaceship = Instantiate(spaceshipOrig, hexagon.transform.position, spaceshipQuaternion) as GameObject;
-           
+
             spaceship.transform.parent = hexagon.transform;
 
             if (selectedRace == 1)
@@ -284,7 +296,6 @@ public class HexField : MonoBehaviour {
             setColor(resource, highlights);
             highlights.Clear();
         }
-        ChangeFieldStateOnClick.resetHighlighting(hexagon);
         
     }
 
@@ -339,18 +350,30 @@ public class HexField : MonoBehaviour {
             {
                 // spaceship arrived at destination. destroy spaceship
                 originView.RPC("destroyTempShip", RPCMode.AllBuffered);
-                MainController.receiveAnimationCallback();
+                originView.RPC("informMainController", RPCMode.AllBuffered);
+                
             }
 
         }
 
-        if (isMovedOnField)
+
+
+        if (isMovedOnField && spaceship != null)
         {
             // animate movement of spaceship to its destination
             float distCovered = (Time.time - startTime) * 0.08f;
             float fracJourney = distCovered / distance;
             spaceship.transform.position = Vector3.Lerp(startPos, desiredPos, fracJourney);
         }
+
+
+    }
+
+
+    [RPC]
+    public void informMainController()
+    {
+        MainController.receiveAnimationCallback();
     }
 
     public bool destinationHasNoShip()
@@ -361,8 +384,7 @@ public class HexField : MonoBehaviour {
     [RPC]
     private void animateFlyingShip()
     {
-        origin.AddComponent<AudioSource>();
-        audio.PlayOneShot(spaceShipRising);
+ 
 
         // instantiate a temporary ship which will be moved to its destination(in update)
         tempSpaceship = Instantiate(spaceshipOrig, spaceship.transform.position, spaceshipQuaternion) as GameObject;
@@ -443,7 +465,12 @@ public class HexField : MonoBehaviour {
         if (owner == destination.GetComponent<HexField>().owner)
         {
             Destroy(spaceship);
+            spaceshipParked = false;
         }
+       
+            
+
+
        
         isMovedOnField = false;
 
@@ -757,14 +784,32 @@ public class HexField : MonoBehaviour {
     {
         NetworkView view = NetworkView.Find(id);
         GameObject hex = view.gameObject;
+        bool spaceShipOnField = false;
 
         foreach (Transform child in hex.transform)
         {
-            if (child.name != alienRace+"State3(Clone)" && child.name != "New Game Object")
+            if (child.name == "spaceshipECO(Clone)" || child.name == "spaceshipMIL(Clone)")
+            {
+                spaceShipOnField = true;
+            }
+
+            if (child.name != alienRace+"State3(Clone)" && child.name != "New Game Object" && child.name != "spaceshipECO(Clone)" && child.name != "spaceshipMIL(Clone)" )
             {
                 Object.Destroy(child.gameObject);
             }
+
+           
+               
+
+           
         }
+
+        if (!spaceShipOnField && spaceshipParked)
+        {
+            view.RPC("initiateTroopBuilding",RPCMode.AllBuffered, CustomGameProperties.alienRace, id, false);
+        }
+
+       
         
     }
     

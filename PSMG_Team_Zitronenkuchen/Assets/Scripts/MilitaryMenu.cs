@@ -272,7 +272,7 @@ public class MilitaryMenu : MonoBehaviour {
     {
         NetworkView view = selectedHexagon.networkView;
         NetworkViewID id = view.viewID;
-        view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id);       
+        view.RPC("initiateTroopBuilding", RPCMode.AllBuffered, CustomGameProperties.alienRace, id, false);       
     }
 
     public static bool isOpen()

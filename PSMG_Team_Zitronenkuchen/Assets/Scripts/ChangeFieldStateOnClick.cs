@@ -51,7 +51,7 @@ public class ChangeFieldStateOnClick : MonoBehaviourWithGazeComponent
 
     public static void resetHighlighting(GameObject currentHex)
     {
-        currentHex.transform.renderer.material.shader = Shader.Find("Diffuse");
+        if (currentHex != null)currentHex.transform.renderer.material.shader = Shader.Find("Diffuse");
     }
 
     private void highlightMaterial()
