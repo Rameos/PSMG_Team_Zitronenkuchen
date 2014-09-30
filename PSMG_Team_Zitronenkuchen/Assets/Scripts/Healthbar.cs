@@ -29,8 +29,8 @@ public class Healthbar : MonoBehaviour {
         if (isFillState)
         {
             viewPortPosition.z = 100;
-            if (CustomGameProperties.cameraInUse == 2)
-            {
+            if (CustomGameProperties.cameraInUse == 2 && thisTransform.GetComponentInParent<HexField>().specialisation == "Military")
+            {                
                 viewPortPosition.z = -100;
             }
             Vector3 emptyBarPos = target.Find("Healthbar_Empty").transform.position;
