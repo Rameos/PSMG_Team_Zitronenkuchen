@@ -35,6 +35,7 @@ public class InstructionNavigationBehaviour : MonoBehaviour {
             gameObject.guiText.color = new Color32(255, 255, 255, 255); //initialcolor
     }
 
+    //view instructions in full screen and rescale on full screen
     void OnMouseUp()
     {
         if (!onFullScreen)
@@ -52,6 +53,7 @@ public class InstructionNavigationBehaviour : MonoBehaviour {
 
     }
 
+    //instructions that are not viewed are hidden
     private void hideOtherInstructions()
     {
         GameObject backBtn = GameObject.Find("BackText");
@@ -68,6 +70,8 @@ public class InstructionNavigationBehaviour : MonoBehaviour {
         }
     }
 
+
+    //instruction that were hidden are reenabled
     private void reActivateOtherInstructions()
     {
         GameObject backBtn = GameObject.Find("BackText");
@@ -84,6 +88,7 @@ public class InstructionNavigationBehaviour : MonoBehaviour {
         }
     }
 
+    //istruction image is scaled to fullscreen, text changes to actual instruction
     private void scaleInstructionToFullScreen()
     {
         float distance = 0.28f;
@@ -144,6 +149,7 @@ public class InstructionNavigationBehaviour : MonoBehaviour {
         gameObject.transform.position = scaledPosition;
     }
 
+    //instruction is rescaled, text changes to instruction caption
     private void rescaleInstruction()
     {
         gameObject.guiText.font = initialFont;
@@ -154,7 +160,7 @@ public class InstructionNavigationBehaviour : MonoBehaviour {
         gameObject.transform.position = initialPosition;
     }
 
-	// Use this for initialization
+	// initial texts and positions are assigned
 	void Start () {
 
 

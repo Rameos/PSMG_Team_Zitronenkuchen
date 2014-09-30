@@ -14,9 +14,10 @@ public class BackButtonBehaviour : MonoBehaviour {
     void OnMouseExit()
     {
        
-            gameObject.guiText.color = new Color32(87, 192, 195, 255); 
+            gameObject.guiText.color = new Color32(87, 192, 195, 255); //turquoise
     }
 
+    //hovering over back button
     void OnMouseEnter()
     {
         audio.PlayOneShot(selectSound);
@@ -24,6 +25,7 @@ public class BackButtonBehaviour : MonoBehaviour {
 
     }
 
+    //clicking back button, back to menu
     void OnMouseUp()
     {
 

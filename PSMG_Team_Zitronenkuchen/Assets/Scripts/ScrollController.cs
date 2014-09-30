@@ -1,15 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
-using iViewX;
 
 /**
  * This class handles the scrolling of the camera along the map(including checking that the camera does not move outside the map borders)
  **/
-public class ScrollController : MonoBehaviourWithGazeComponent
+public class ScrollController : MonoBehaviour
 {
 
-    private int framesSinceEntering = 0;
-    private bool entered = false;
+
 
     private int xDirection = 1; //default 1, -1 if opposite direction, 0 if no movement
     private int yDirection = 1; //default 1, -1 if opposite direction, 0 if no movement
@@ -47,8 +45,6 @@ public class ScrollController : MonoBehaviourWithGazeComponent
     {
         camera = GameObject.FindGameObjectWithTag("CameraWrapper");
 
-        
-
         right = Screen.width-5.0f;
         up = Screen.height-5.0f;
 
@@ -57,6 +53,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         
     }
 
+    //client camera has different rotation -> borders are opposed
     private void setUpBorder()
     {
       
@@ -108,6 +105,8 @@ public class ScrollController : MonoBehaviourWithGazeComponent
 
     }
 
+
+    //move camera into desired direction
     private void moveCamera(string direction)
     {
 
@@ -119,6 +118,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
        
     }
 
+    //check for camera collision with bottom border
     private bool hitBottomBorder()
     {
         if (Network.isServer)
@@ -138,6 +138,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         return false;
     }
 
+    //check for camera collision with top border
     private bool hitTopBorder()
     {
         if (Network.isServer)
@@ -157,6 +158,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         return false;
     }
 
+    //check for camera collision with left border
     private bool hitLeftBorder()
     {
         if (Network.isServer)
@@ -175,6 +177,8 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         }
         return false;
     }
+
+    //check for camera collision with right border
     private bool hitRightBorder()
     {
         if (Network.isServer)
@@ -194,11 +198,7 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         return false;
     }
 
-    private void reEnableMovement()
-    {
-        framesSinceEntering = 0;
-    }
-
+    //camera movement direction is determined
     private void determineDirection(string direction)
     {
         switch (direction)
@@ -222,19 +222,6 @@ public class ScrollController : MonoBehaviourWithGazeComponent
         }
     }
 
-    public override void OnGazeEnter(RaycastHit hit)
-    {
-        entered = true;
-    }
-
-    public override void OnGazeStay(RaycastHit hit)
-    {
-    }
-
-    public override void OnGazeExit()
-    {
-        entered = false;
-    }
 
 
 }

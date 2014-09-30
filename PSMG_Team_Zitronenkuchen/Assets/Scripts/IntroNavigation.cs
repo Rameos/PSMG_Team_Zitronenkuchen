@@ -14,6 +14,8 @@ public class TutorialNavigation : MonoBehaviour {
 	
 	}
 
+
+    //skip intro by pressing space bar, tutorial level is loaded
     void OnGUI () {
         if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Space)
         {
