@@ -15,7 +15,8 @@ public class InstructionNavigationBehaviour : MonoBehaviour {
 
 
     public AudioClip selectSound;
-
+    public Font initialFont;
+    public Font fullTextFont;
     public int instructionId;
 
     void OnMouseEnter()
@@ -94,22 +95,22 @@ public class InstructionNavigationBehaviour : MonoBehaviour {
 
                 break;
             case 2:
-                instructionText = "Your building range is indicated by grey field. Focus the hexagon you wish to\n build on and press the space bar to open a menu. You can either biuld military\n or economy buildings. Military enlarge your building rage and enable fleet\n strengthening. Economy buildings generate Tirkid.";
+                instructionText = "Your building range is indicated by grey fields. Focus the hexagon you wish to\n build on and press the space bar to open a menu. You can either biuld military\n or economy nodes. Military enlarges your building range and enables fleet\n strengthening. Economy buildings generate Tirkid.";
                 distance = 0.37f;
                 break;
             case 3:
-                instructionText = "After placing a military building focus the hexagon and press the space bar again.\n You can now choose a weapon type. Your space ship can be either armed with Proton\n Torpedo, Laser or Electromagnetic Pulse (EMP) cannons. Protons are inferior to \nLaser but beat EMP. Thus Laser lose to Protons but defeat EMP. EMP are superior to Laser.\n You ca'nt further interact with economy buildings. They are busy digging up Tirkid. ";
+                instructionText = "After placing a military building focus the hexagon and press the space bar again.\n You can now choose a weapon type. Your space ship can either be armed with Proton\n Torpedo, Laser or Electromagnetic Pulse (EMP) cannons. Protons are inferior to \nLaser but beat EMP. Thus Laser loses to Protons but defeats EMP. EMP are superior to Laser.\n You ca'nt further interact with economy buildings. They are busy digging up Tirkid. ";
                 distance = 0.37f;
                 break;
             case 4:
-                instructionText = "After wisely choosing a weapon type focus the hexagon and press the space bar again.\n You now have to build ships. The cost for 25 ships is 150 Tirkid units. The maximum \nnumber of ships of a military node is 100. The grey bar will be filled once you reach\n the maximum size.";
+                instructionText = "After wisely choosing a weapon type focus the hexagon and press the space bar again.\n You now have to build ships. The cost for 25 ships is 150 Tirkid units. The maximum \nnumber of ships on a military node is 100. The grey bar will be filled once you reach\n the maximum size.";
                 distance = 0.37f;
                 break;
             case 5:
-                instructionText = "You can also move the troops from one military node to another or your base if they\n are located within the range. This might come in handy for strengthening your base\n because it can not produce troopps itself.";
+                instructionText = "You can also move the troops from one military node to another or your base if they\n are located within the range. This might come in handy for strengthening your base\n because it can't produce troops itself.";
                 break;
             case 6:
-                instructionText = "Nodes you can send your troops to other nodes that are highlighted. You can either send\n troops to unspecialised miltary nodes or military nodes with the same weapon type.\n Your base is an option as well if it is not armed with a different weapon type.";
+                instructionText = "Military nodes you can send your troops to other nodes that are highlighted. You can either send\n troops to unspecialised miltary nodes or military nodes with the same weapon type.\n Your base is an option as well if it is not armed with a different weapon type.";
 
                 break;
             case 7:
@@ -117,7 +118,7 @@ public class InstructionNavigationBehaviour : MonoBehaviour {
 
                 break;
             case 8:
-                instructionText = "In order to send troops from a military node to attack the opponent focus the\n hexagon and press the space bar again. After selecting the attack option you can\n attack one opposing military node ore the base if they are located within the range.\n If fleet sizes are equal the weapon type is decisive. Weapon types are explained\n in 'CHOOSING A FLEET'";
+                instructionText = "In order to send troops from a military node to attack the opponent focus the\n hexagon and press the space bar again. After selecting the attack option you can\n attack an opposing military node or the base if they are located within the range.\n If fleet sizes are equal the weapon type is decisive. Weapon types are explained\n in 'CHOOSING A FLEET'";
                 distance = 0.37f;
                 break;
             case 9:
@@ -135,6 +136,7 @@ public class InstructionNavigationBehaviour : MonoBehaviour {
 
         onFullScreen = true;
 
+        gameObject.guiText.font = fullTextFont;
         gameObject.guiText.text = instructionText;
         gameObject.guiText.fontSize = 40;
         gameObject.guiText.color = new Color32(255, 255, 255, 255); //initialcolor
@@ -144,6 +146,7 @@ public class InstructionNavigationBehaviour : MonoBehaviour {
 
     private void rescaleInstruction()
     {
+        gameObject.guiText.font = initialFont;
         gameObject.guiText.fontSize = 25;
         gameObject.guiText.text = initialText;
         onFullScreen = false;
