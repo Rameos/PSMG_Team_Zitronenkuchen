@@ -14,7 +14,6 @@ public abstract class Specialisation {
     {
         this.hex = hex;
         this.pos = pos;
-        Debug.Log("pos " + pos);
     }
 
 

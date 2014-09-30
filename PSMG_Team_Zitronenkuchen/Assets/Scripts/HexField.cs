@@ -292,8 +292,11 @@ public class HexField : MonoBehaviour {
     [RPC]
     public void prepareShip()
     {
-        origin.AddComponent<AudioSource>();
-        audio.PlayOneShot(spaceShipRising);
+        if (origin != null)
+        {
+            origin.AddComponent<AudioSource>();
+            audio.PlayOneShot(spaceShipRising);
+        }
 
         Vector3 elevate = new Vector3 (0.0f, 0.08f, 0.0f);
         if (spaceship != null)
